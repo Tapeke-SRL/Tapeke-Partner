@@ -34,7 +34,7 @@ class index extends Component {
       SPopup.alert("No se puede modificar un horario ya pasado");
       SNavigation.goBack();
       return <SText>El horario ya se vencio</SText>
-    } 
+    }
     return <Container>
       <SHr height={32} />
       <SText center fontSize={16} bold>¿Quieres modificar el horario de atención para esta fecha?</SText>
@@ -87,6 +87,7 @@ class index extends Component {
 
         }).catch(e => {
           console.error(e);
+          SPopup.alert(e.error)
 
         })
         // this.setState({ loading: true, error: "" });

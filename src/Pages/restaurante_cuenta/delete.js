@@ -17,6 +17,7 @@ class index extends DPA.delete {
             key_usuario: ""
         }).then((resp) => {
             SNavigation.goBack();
+            SNavigation.goBack();
         }).catch(e => {
             console.error(e);
 

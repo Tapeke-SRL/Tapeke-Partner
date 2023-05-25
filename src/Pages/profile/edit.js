@@ -10,7 +10,7 @@ class index extends DPA.edit {
     constructor(props) {
         super(props, {
             Parent: Parent,
-            title:"Editar perfil",
+            title: "Editar perfil",
             excludes: [],
         });
         this.pk = Model.usuario.Action.getKey();
@@ -50,9 +50,9 @@ class index extends DPA.edit {
             return;
         }
         var dataUser = Parent.model.Action.getByKey(this.pk);
-        if(!dataUser) return;
-        if(data.Password != dataUser.Password)  data.Password = CryptoJS.MD5(data.Password).toString();
-        
+        if (!dataUser) return;
+        if (data.Password != dataUser.Password) data.Password = CryptoJS.MD5(data.Password).toString();
+
         Parent.model.Action.editar({
             data: {
                 ...this.data,
@@ -66,18 +66,18 @@ class index extends DPA.edit {
         })
     }
 
-    $submitName() {
-        return ""
-    }
-    $footer() {
-        return <DatosDocumentosEditar key_usuario={this.pk} onSubmit={() => {
-            return new Promise((resolve, reject) => {
-                this.presolve = resolve;
-                this.form.submit();
-                // resolve("KEY_USUARIO");
-            })
-        }} />
-    }
+    // $submitName() {
+    //     return ""
+    // }
+    // $footer() {
+    //     return <DatosDocumentosEditar key_usuario={this.pk} onSubmit={() => {
+    //         return new Promise((resolve, reject) => {
+    //             this.presolve = resolve;
+    //             this.form.submit();
+    //             // resolve("KEY_USUARIO");
+    //         })
+    //     }} />
+    // }
 }
 
 export default connect(index);
