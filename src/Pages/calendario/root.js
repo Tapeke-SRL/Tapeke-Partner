@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { SButtom, SHr, SLoad, SNavigation, SPage, SText, SView, SPopup, STheme, SImage, SMath, SIcon, SScrollView2, SDate, SList } from 'servisofts-component';
+import { SButtom, SHr, SLoad, SNavigation, SPage, SText, SView, SPopup, STheme, SImage, SMath, SIcon, SScrollView2, SDate, SList, SList2 } from 'servisofts-component';
 import Container from '../../Components/Container';
 import SSocket from 'servisofts-socket'
 import PBarraFooter from '../../Components/PBarraFooter';
 import Model from '../../Model';
 import AccentBar from '../../Components/AccentBar';
+import TopBar from '../../Components/TopBar';
 
 
 
@@ -82,7 +83,7 @@ class root extends Component {
     renderListaHoras = () => {
         let data = Model.horario.Action.getAllBy({ key_restaurante: this.pk, dia: this.state.curDay.getDayOfWeek() });
         if (!data) return <SLoad />
-        return <SList
+        return <SList2
             // center
             horizontal
             initSpace={0}
@@ -95,13 +96,14 @@ class root extends Component {
 
     render() {
         return (<SPage
-            title={"Calendario"}
+            hidden
             footer={<PBarraFooter url={"calendario"} />}
             center
             onRefresh={(re) => {
                 Model.horario.Action.CLEAR();
             }}
-            header={<AccentBar />}
+            header={<TopBar type={"usuario"} />}
+            // header={<AccentBar />}
         >
             <SView col={"xs-11.5 md-8"} flex>
                 <SHr />
@@ -111,7 +113,7 @@ class root extends Component {
                     <SScrollView2 ref={ref => this.scroll = ref} contentContainerStyle={{
                         width: null
                     }}>
-                        <SList
+                        <SList2
                             horizontal
                             center
                             space={0}

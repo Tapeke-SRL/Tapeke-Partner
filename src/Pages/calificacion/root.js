@@ -8,6 +8,7 @@ import SSocket from 'servisofts-socket'
 import PBarraFooter from '../../Components/PBarraFooter';
 import Calificacion from './Components/Calificacion';
 import AccentBar from '../../Components/AccentBar';
+import TopBar from '../../Components/TopBar';
 
 
 class root extends Component {
@@ -23,12 +24,17 @@ class root extends Component {
     render() {
 
         return (<SPage
-            title={"Calificación"}
+            // title={"Calificación"}
+            hidden
             footer={<PBarraFooter url={"calificacion"} />}
             onRefresh={() => {
                 Model.calificacion.Action.CLEAR();
             }}
-            header={<AccentBar />}
+            header={<>
+                <TopBar type={"usuario"} />
+                <AccentBar />
+            </>}
+        // header={}
         >
             <Container>
                 <Calificacion />

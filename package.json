@@ -1,6 +1,6 @@
 {
   "name": "tapeke_restaurante_app",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "description": "tapeke_restaurante_app",
   "scripts": {
     "start": "react-native start",
@@ -50,7 +50,7 @@
     "redux-thunk": "^2.3.0",
     "servisofts-component": "2.11.1",
     "servisofts-model": "1.0.1",
-    "servisofts-page": "1.0.1",
+    "servisofts-page": "file:../../servisofts-page/dist",
     "servisofts-rn-chat": "1.0.4",
     "servisofts-rn-geolocation": "1.0.1",
     "servisofts-rn-roles_permisos": "1.0.1",

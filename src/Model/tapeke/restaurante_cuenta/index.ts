@@ -11,11 +11,11 @@ export default new SModel<Action, Reducer>({
         "key_usuario": { type: "text", fk: "usuario" },
         "fecha_on": { type: "timestamp", label: "Fecha de creacion" },
         "estado": { type: "integer" },
-        "nombre": { type: "text", editable: true, notNull: true },
-        "ci": { type: "text", editable: true, notNull: true },
-        "sucursal": { type: "text", editable: true, notNull: true },
-        "numero_cuenta": { type: "text", editable: true, notNull: true },
-        "banco": { type: "text", editable: true, notNull: true },
+        "ci": { type: "text", editable: true, notNull: true, label: "CI" },
+        "nombre": { type: "text", editable: true, notNull: true, label: "Nombre" },
+        "sucursal": { type: "text", editable: true, notNull: true, label: "Sucursal" },
+        "numero_cuenta": { type: "text", editable: true, notNull: true, label: "Numero de cuenta" },
+        "banco": { type: "text", editable: true, notNull: true, label: "Banco" },
         "key_restaurante": { type: "text", fk: "restaurante" },
 
 
