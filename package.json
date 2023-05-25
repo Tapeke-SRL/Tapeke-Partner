@@ -50,7 +50,7 @@
     "redux-thunk": "^2.3.0",
     "servisofts-component": "2.11.1",
     "servisofts-model": "1.0.1",
-    "servisofts-page": "file:../../servisofts-page/dist",
+    "servisofts-page": "1.0.8",
     "servisofts-rn-chat": "1.0.4",
     "servisofts-rn-geolocation": "1.0.1",
     "servisofts-rn-roles_permisos": "1.0.1",
