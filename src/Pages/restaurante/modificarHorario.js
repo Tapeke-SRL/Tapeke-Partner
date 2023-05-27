@@ -37,8 +37,7 @@ class index extends Component {
     }
     return <Container>
       <SHr height={32} />
-      <SText center fontSize={16} bold>¿Quieres modificar el horario de atención para esta fecha?</SText>
-      <SText>{this.fecha}</SText>
+      <SText center fontSize={16} bold>¿Quieres modificar el horario de atención para este día?</SText>
       <SHr height={32} />
       <SText>¿En qué horario atenderás?</SText>
       <SHr h={16} />
