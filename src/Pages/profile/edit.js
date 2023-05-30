@@ -60,7 +60,8 @@ class index extends DPA.edit {
             },
             key_usuario: ""
         }).then((resp) => {
-            this.presolve(this.pk)
+            SNavigation.goBack();
+            // this.presolve(this.pk)
         }).catch(e => {
             console.error(e);
         })

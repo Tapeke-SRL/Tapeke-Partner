@@ -60,7 +60,7 @@ class index extends Component {
                                         this.state.data = resp;
                                         console.log(resp)
                                         // this.state.region = resp;
-                                        this.map.getMap().animateToRegion({
+                                        this.mapa.getMap().animateToRegion({
                                             ...resp,
                                             latitudeDelta: 0.01,
                                             longitudeDelta: 0.01
@@ -82,7 +82,15 @@ class index extends Component {
                     <SIcon name={'LocationTapeke'} height={14} width={14} />
                 </SView>
                 <SView width={200} onPress={() => {
-                    this.map?.getMap().center();
+                    if(this.mapa){
+                        if(this.mapa?.map?.center){
+                            console.log(this.mapa.map.center());
+                        }
+
+                    }
+                    return;
+                    this.map.getMap().center();
+                    
                     // console.log("TODO: center map")
                 }}>
                     <SText fontSize={15}   bold>Utilizar mi ubicación actual</SText>
@@ -119,7 +127,7 @@ class index extends Component {
             // <SPage header={<AccentBar />} center disableScroll>
             <SPage  center disableScroll>
                 <GeolocationMapSelect
-                    ref={(map) => this.map = map}
+                    ref={(map) => this.mapa = map}
                     icon={<SIcon name="MarcadorMapa" width={30} height={30} />}
                     onChange={(evt) => {
                         this.setState({ data: evt })

@@ -154,7 +154,6 @@ class index extends Component {
     if (!dataPackVendidos) return <SView />;
     var cant = 0;
     dataPackVendidos.map(o => cant += parseFloat(o.cantidad ?? 0))
-    console.log(cant)
     return <>
       <SHr height={20} />
       <SText font={"Roboto"} center fontSize={24}  >{dataHorarioCercano.text.replace(/^\w/, (c) => c.toUpperCase())} Hrs.</SText>
