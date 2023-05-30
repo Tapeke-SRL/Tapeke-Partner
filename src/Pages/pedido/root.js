@@ -34,6 +34,11 @@ class root extends Component {
             SNavigation.reset("/");
             return null;
         }
+        if (this.data?.restaurante?.key != Model.restaurante.Action.getSelect()) {
+            SPopup.alert("Este pedido es de otro restaurante.")
+            SNavigation.reset("/")
+            return null;
+        }
         // console.log(JSON.stringify(this.data)+ " AQUI")
         // console.log("bbbbbbbbbbbbbbbbb")
 
@@ -265,6 +270,11 @@ class root extends Component {
                         </SView> :
                         <SButtom style={{ backgroundColor: STheme.color.primary, width: 300, fontSize: 40, borderRadius: 8, }}
                             onPress={() => {
+                                if (this.data?.restaurante?.key != Model.restaurante.Action.getSelect()) {
+                                    SPopup.alert("Este pedido es de otro restaurante.")
+                                    SNavigation.reset("/")
+                                    return;
+                                }
                                 var mensaje = "";
                                 if (this.data.state != "listo" && this.data.state != "esperando_conductor") {
                                     // switch (this.data.state) {

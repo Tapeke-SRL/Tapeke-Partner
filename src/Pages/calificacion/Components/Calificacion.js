@@ -34,7 +34,7 @@ class Calificacion extends React.Component {
                 <SText color={STheme.color.darkGray} fontSize={24}>ESTRELLAS</SText>
                 <SHr height={10} />
                 <SView col={"xs-10"} center style={{ borderWidth: 2, borderColor: STheme.color.primary, backgroundColor: STheme.color.white, borderRadius: 8 }}>
-                    <SText color={STheme.color.text} fontSize={32}>{parseFloat(data.star_media ?? 0).toFixed(0)}</SText>
+                    <SText color={STheme.color.text} fontSize={32}>{parseFloat(data.star_media ?? 0).toFixed(1)}</SText>
                 </SView>
             </SView>
             <SHr height={10} />
@@ -51,7 +51,7 @@ class Calificacion extends React.Component {
                 <SText color={STheme.color.darkGray} fontSize={24}>SERVICIO</SText>
                 <SHr height={10} />
                 <SView col={"xs-10"} center style={{ borderWidth: 2, borderColor: STheme.color.primary, backgroundColor: STheme.color.white, borderRadius: 8 }}>
-                    <SText color={STheme.color.text} fontSize={32}>{parseFloat(data.buen_servicio_media ?? 0).toFixed(0)}%</SText>
+                    <SText color={STheme.color.text} fontSize={32}>{(parseFloat(data.buen_servicio_media ?? 0) * parseFloat(data.cantidad ?? 0)).toFixed(0)}</SText>
                 </SView>
             </SView>
         </SView>)
@@ -66,7 +66,7 @@ class Calificacion extends React.Component {
                 <SText color={STheme.color.darkGray} fontSize={24}>CALIDAD</SText>
                 <SHr height={10} />
                 <SView col={"xs-10"} center style={{ borderWidth: 2, borderColor: STheme.color.primary, backgroundColor: STheme.color.white, borderRadius: 8 }}>
-                    <SText color={STheme.color.text} fontSize={32}>{parseFloat((data.buena_calidad_media ?? 0) * 100).toFixed(0)}%</SText>
+                    <SText color={STheme.color.text} fontSize={32}>{(parseFloat(data.buena_calidad_media ?? 0) * parseFloat(data.cantidad ?? 0)).toFixed(0)}</SText>
                 </SView>
             </SView>
         </SView>)
@@ -82,7 +82,7 @@ class Calificacion extends React.Component {
                 <SText color={STheme.color.darkGray} fontSize={24}>CANTIDAD</SText>
                 <SHr height={10} />
                 <SView col={"xs-10"} center style={{ borderWidth: 2, borderColor: STheme.color.primary, backgroundColor: STheme.color.white, borderRadius: 8 }}>
-                    <SText color={STheme.color.text} fontSize={32}>{parseFloat((data.buena_cantidad_media ?? 0) * 100).toFixed(0)}%</SText>
+                    <SText color={STheme.color.text} fontSize={32}>{parseFloat((data.buena_cantidad_media ?? 0) * parseFloat(data.cantidad ?? 0)).toFixed(0)}</SText>
                 </SView>
             </SView>
             {/* <SHr height={10} /> */}

@@ -118,6 +118,9 @@ class index extends Component {
             // Model.usuario.Action.CLEAR();
             // Model.usuario.Action.syncUserLog*
             // console.log
+            // Model.usuario.Action.CLEAR();
+            // Model.usuario.Action.syncUserLog()
+     
 
         }} header={<AccentBar />}>
             <SView col={"xs-12"} center>
