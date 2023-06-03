@@ -1,7 +1,8 @@
 // Import the functions you need from the SDKs you need
 //import messaging from '@react-native-firebase/messaging';
 //
-import { Alert } from 'react-native';
+import { PermissionsAndroid, Platform } from 'react-native';
+
 import messaging from '@react-native-firebase/messaging';
 import { Notifications } from 'react-native-notifications';
 import DeviceKey from './DeviceKey';
@@ -17,6 +18,9 @@ class Firebase {
         try {
 
             await sleep(500);
+            if (Platform.OS == "android") {
+                // PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+            }
             // await messaging().hasPermission();
             var authorizationStatus = await messaging().requestPermission({
                 sound: true,

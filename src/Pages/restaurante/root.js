@@ -160,7 +160,7 @@ class index extends Component {
       <SHr height={10} />
       <SView col={"xs-11"} row center height={25} backgroundColor={'transparent'}>
         {/* <SIcon name="Carga" width={270} /> */}
-        <CargaIcon width={270} porcent={(cant + 0.6) / (dataPack.cantidad_total)} />
+        {/* <CargaIcon width={270} porcent={(cant + 0.6) / (dataPack.cantidad_total)} /> */}
       </SView>
       <SHr height={10} />
       <SText font={"Roboto"} fontSize={16}>{dataHorarioCercano.extraData.text},  {new SDate(dataHorarioCercano.fecha, "yyyy-MM-dd").toString("dd de MONTH, yyyy")} </SText>
@@ -217,7 +217,7 @@ class index extends Component {
   }
   modificar_horario() {
     if (!this.loadData()) return null
-    console.log(this.horario_proximo)
+    // console.log(this.horario_proximo)
     if (new SDate().isAfter(this.horario_proximo.sdate)) return null;
     return <SView col={"xs-11"} center
       card row
@@ -302,10 +302,8 @@ class index extends Component {
           if (resolve) resolve();
         }}
       >
-
         <SHr height={20} />
         {this.render_content()}
-
       </SPage>
       <FloatButtomQR />
     </>
