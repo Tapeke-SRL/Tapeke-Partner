@@ -34,6 +34,7 @@ const App = (props) => {
                 store={store}
                 identificarse={(props) => {
                     var usuario = props.state.usuarioReducer.usuarioLog;
+                    console.log(DeviceKey.getKey());
                     return {
                         data: usuario ? usuario : {},
                         deviceKey: DeviceKey.getKey(),
