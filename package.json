@@ -1,6 +1,6 @@
 {
   "name": "tapeke_restaurante_app",
-  "version": "1.4.10",
+  "version": "1.4.11",
   "description": "tapeke_restaurante_app",
   "scripts": {
     "start": "react-native start",
@@ -48,7 +48,7 @@
     "react-redux": "7.2.9",
     "redux": "4.2.1",
     "redux-thunk": "2.4.2",
-    "servisofts-component": "2.11.3",
+    "servisofts-component": "2.11.9",
     "servisofts-model": "1.0.3",
     "servisofts-page": "1.0.8",
     "servisofts-rn-chat": "1.0.6",
