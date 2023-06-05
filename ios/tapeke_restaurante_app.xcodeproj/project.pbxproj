@@ -8,50 +8,54 @@
 
 /* Begin PBXBuildFile section */
 		022B01C0B896BBFAC1AF2B0B /* libPods-tapeke_restaurante_app.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EDC52F18DC375356A6AB604C /* libPods-tapeke_restaurante_app.a */; };
+		06B41B834C13443FB9CE6287 /* Oswald-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A468B3BE19FD4D2EB52C531A /* Oswald-SemiBold.ttf */; };
+		1079121C2DFD4CCB9D093F33 /* OpenSans-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8B83900FEE264C0F8491BBAA /* OpenSans-LightItalic.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		1EF2D9E25B044E3889F82DF1 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F437B8965BDC4A4683DC2338 /* Roboto-Regular.ttf */; };
+		33E5A34A08584B8AAF4A5ED8 /* OpenSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE68C08EA4FA48DB83DC3A31 /* OpenSans-SemiBold.ttf */; };
+		3E6F84BD6E6B446590802216 /* OpenSans-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 95F13831A91B4D44B81FFD82 /* OpenSans-BoldItalic.ttf */; };
+		3F1769310B1E4AE49962EF0E /* OpenSans-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A54180EA71624371BDF38225 /* OpenSans-MediumItalic.ttf */; };
+		41D107E4542C4F8A90672E9D /* OpenSans-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DB9ECF0B8659499BBB30FF41 /* OpenSans-SemiBoldItalic.ttf */; };
+		467A443AD8E944F3926A414A /* Oswald-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B0BA147A6E3C410A852234E2 /* Oswald-Bold.ttf */; };
 		499E4D94283CDF83009E17FC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 499E4D93283CDF83009E17FC /* GoogleService-Info.plist */; };
 		49DC7FE027AC04AC00B93FC3 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DC7FDF27AC04AC00B93FC3 /* File.swift */; };
+		51381F7DA6914488903431DD /* Oswald-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 12DFE22792324A05B8C13736 /* Oswald-Light.ttf */; };
+		57CA9B4D3C27435BA05D1B2F /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 92ECA8A39FA1464390B98193 /* OpenSans-Regular.ttf */; };
 		7E5D5F9597524594931580CB /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9D28B82D4C3D45AD80AC4A49 /* Roboto-Bold.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		94AE2E88F19F498D96D9BF7A /* OpenSans-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 210B7DFD79014C068AB805C6 /* OpenSans-ExtraBold.ttf */; };
+		986B30FBABD2407C83CADCC7 /* Oswald-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D7A0C1701878404DB216EEAE /* Oswald-ExtraLight.ttf */; };
 		98CDE9C9044740C5BCAE555F /* LondonBetween.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9D28B3250F2C49399713DE99 /* LondonBetween.ttf */; };
 		9E01A789D21340EB956E3057 /* Athelas.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FFD9EEA3C88247169E73E4F9 /* Athelas.ttf */; };
+		A0C90D1CC4E14EF4AB84FCCD /* OpenSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A41298ACE60141FDA37C928F /* OpenSans-Medium.ttf */; };
 		AE3B40AC316543CCB6FD7DDD /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2223D95E77744A9CA06FC85B /* Roboto-Light.ttf */; };
+		B8AADE22010F4D3EAD74301D /* OpenSans-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A36CB4889E1045399CC1348F /* OpenSans-ExtraBoldItalic.ttf */; };
+		BC6316FB6EE44B7BBF44A463 /* Oswald-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 41AEC652BC004BA3A455B8C9 /* Oswald-Regular.ttf */; };
 		CA6982875A9548C7AAC4FF17 /* LondonMM.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2AEEC81AC1334751914023F0 /* LondonMM.ttf */; };
 		D2D7B2DEE361444A923E6599 /* LondonTwo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7C6F04CF755A47D0A0253172 /* LondonTwo.ttf */; };
 		D3143BFF59CB45A7BE55224F /* hello_baby.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ECDA71A955BD4520A05570BA /* hello_baby.ttf */; };
 		DA05F8ECD40245C68CB5D395 /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AD046D6154394B2E973C28EA /* OpenSans-Bold.ttf */; };
-		3E6F84BD6E6B446590802216 /* OpenSans-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 95F13831A91B4D44B81FFD82 /* OpenSans-BoldItalic.ttf */; };
-		94AE2E88F19F498D96D9BF7A /* OpenSans-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 210B7DFD79014C068AB805C6 /* OpenSans-ExtraBold.ttf */; };
-		B8AADE22010F4D3EAD74301D /* OpenSans-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A36CB4889E1045399CC1348F /* OpenSans-ExtraBoldItalic.ttf */; };
-		FE55132D60B445898828381B /* OpenSans-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D8C65FE99A5D4AD79EE1D200 /* OpenSans-Italic.ttf */; };
 		DBFDA810C1AD44A8B72F02F1 /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE3B89AADE28477B8E061844 /* OpenSans-Light.ttf */; };
-		1079121C2DFD4CCB9D093F33 /* OpenSans-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8B83900FEE264C0F8491BBAA /* OpenSans-LightItalic.ttf */; };
-		A0C90D1CC4E14EF4AB84FCCD /* OpenSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A41298ACE60141FDA37C928F /* OpenSans-Medium.ttf */; };
-		3F1769310B1E4AE49962EF0E /* OpenSans-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A54180EA71624371BDF38225 /* OpenSans-MediumItalic.ttf */; };
-		57CA9B4D3C27435BA05D1B2F /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 92ECA8A39FA1464390B98193 /* OpenSans-Regular.ttf */; };
-		33E5A34A08584B8AAF4A5ED8 /* OpenSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE68C08EA4FA48DB83DC3A31 /* OpenSans-SemiBold.ttf */; };
-		41D107E4542C4F8A90672E9D /* OpenSans-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DB9ECF0B8659499BBB30FF41 /* OpenSans-SemiBoldItalic.ttf */; };
-		467A443AD8E944F3926A414A /* Oswald-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B0BA147A6E3C410A852234E2 /* Oswald-Bold.ttf */; };
-		986B30FBABD2407C83CADCC7 /* Oswald-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D7A0C1701878404DB216EEAE /* Oswald-ExtraLight.ttf */; };
-		51381F7DA6914488903431DD /* Oswald-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 12DFE22792324A05B8C13736 /* Oswald-Light.ttf */; };
 		EC4D8F5A888A4B4AA00F72D7 /* Oswald-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0CD6B358154D48C2B623D1EA /* Oswald-Medium.ttf */; };
-		BC6316FB6EE44B7BBF44A463 /* Oswald-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 41AEC652BC004BA3A455B8C9 /* Oswald-Regular.ttf */; };
-		06B41B834C13443FB9CE6287 /* Oswald-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A468B3BE19FD4D2EB52C531A /* Oswald-SemiBold.ttf */; };
+		FE55132D60B445898828381B /* OpenSans-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D8C65FE99A5D4AD79EE1D200 /* OpenSans-Italic.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
+		0CD6B358154D48C2B623D1EA /* Oswald-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Oswald-Medium.ttf"; path = "../node_modules/servisofts-component/font/Oswald-Medium.ttf"; sourceTree = "<group>"; };
+		12DFE22792324A05B8C13736 /* Oswald-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Oswald-Light.ttf"; path = "../node_modules/servisofts-component/font/Oswald-Light.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* tapeke_restaurante_app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = tapeke_restaurante_app.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = tapeke_restaurante_app/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = tapeke_restaurante_app/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = tapeke_restaurante_app/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = tapeke_restaurante_app/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = tapeke_restaurante_app/main.m; sourceTree = "<group>"; };
+		210B7DFD79014C068AB805C6 /* OpenSans-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-ExtraBold.ttf"; path = "../node_modules/servisofts-component/font/OpenSans-ExtraBold.ttf"; sourceTree = "<group>"; };
 		2223D95E77744A9CA06FC85B /* Roboto-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Light.ttf"; path = "../node_modules/servisofts-component/font/Roboto-Light.ttf"; sourceTree = "<group>"; };
 		2AEEC81AC1334751914023F0 /* LondonMM.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = LondonMM.ttf; path = "../node_modules/servisofts-component/font/LondonMM.ttf"; sourceTree = "<group>"; };
+		41AEC652BC004BA3A455B8C9 /* Oswald-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Oswald-Regular.ttf"; path = "../node_modules/servisofts-component/font/Oswald-Regular.ttf"; sourceTree = "<group>"; };
 		47E9728D4751929C7A41A2B1 /* Pods-tapeke_restaurante_app.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tapeke_restaurante_app.debug.xcconfig"; path = "Target Support Files/Pods-tapeke_restaurante_app/Pods-tapeke_restaurante_app.debug.xcconfig"; sourceTree = "<group>"; };
 		491625D3282A4AE100A9FAB5 /* tapeke_restaurante_app.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = tapeke_restaurante_app.entitlements; path = tapeke_restaurante_app/tapeke_restaurante_app.entitlements; sourceTree = "<group>"; };
 		499E4D93283CDF83009E17FC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -59,32 +63,28 @@
 		49DC7FDF27AC04AC00B93FC3 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		7C6F04CF755A47D0A0253172 /* LondonTwo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = LondonTwo.ttf; path = "../node_modules/servisofts-component/font/LondonTwo.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = tapeke_restaurante_app/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8B83900FEE264C0F8491BBAA /* OpenSans-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-LightItalic.ttf"; path = "../node_modules/servisofts-component/font/OpenSans-LightItalic.ttf"; sourceTree = "<group>"; };
+		92ECA8A39FA1464390B98193 /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Regular.ttf"; path = "../node_modules/servisofts-component/font/OpenSans-Regular.ttf"; sourceTree = "<group>"; };
+		95F13831A91B4D44B81FFD82 /* OpenSans-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-BoldItalic.ttf"; path = "../node_modules/servisofts-component/font/OpenSans-BoldItalic.ttf"; sourceTree = "<group>"; };
 		9D28B3250F2C49399713DE99 /* LondonBetween.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = LondonBetween.ttf; path = "../node_modules/servisofts-component/font/LondonBetween.ttf"; sourceTree = "<group>"; };
 		9D28B82D4C3D45AD80AC4A49 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Bold.ttf"; path = "../node_modules/servisofts-component/font/Roboto-Bold.ttf"; sourceTree = "<group>"; };
+		A36CB4889E1045399CC1348F /* OpenSans-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-ExtraBoldItalic.ttf"; path = "../node_modules/servisofts-component/font/OpenSans-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
+		A41298ACE60141FDA37C928F /* OpenSans-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Medium.ttf"; path = "../node_modules/servisofts-component/font/OpenSans-Medium.ttf"; sourceTree = "<group>"; };
+		A468B3BE19FD4D2EB52C531A /* Oswald-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Oswald-SemiBold.ttf"; path = "../node_modules/servisofts-component/font/Oswald-SemiBold.ttf"; sourceTree = "<group>"; };
+		A54180EA71624371BDF38225 /* OpenSans-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-MediumItalic.ttf"; path = "../node_modules/servisofts-component/font/OpenSans-MediumItalic.ttf"; sourceTree = "<group>"; };
+		AD046D6154394B2E973C28EA /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Bold.ttf"; path = "../node_modules/servisofts-component/font/OpenSans-Bold.ttf"; sourceTree = "<group>"; };
+		B0BA147A6E3C410A852234E2 /* Oswald-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Oswald-Bold.ttf"; path = "../node_modules/servisofts-component/font/Oswald-Bold.ttf"; sourceTree = "<group>"; };
+		CE3B89AADE28477B8E061844 /* OpenSans-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Light.ttf"; path = "../node_modules/servisofts-component/font/OpenSans-Light.ttf"; sourceTree = "<group>"; };
+		CE68C08EA4FA48DB83DC3A31 /* OpenSans-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-SemiBold.ttf"; path = "../node_modules/servisofts-component/font/OpenSans-SemiBold.ttf"; sourceTree = "<group>"; };
+		D7A0C1701878404DB216EEAE /* Oswald-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Oswald-ExtraLight.ttf"; path = "../node_modules/servisofts-component/font/Oswald-ExtraLight.ttf"; sourceTree = "<group>"; };
+		D8C65FE99A5D4AD79EE1D200 /* OpenSans-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Italic.ttf"; path = "../node_modules/servisofts-component/font/OpenSans-Italic.ttf"; sourceTree = "<group>"; };
+		DB9ECF0B8659499BBB30FF41 /* OpenSans-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-SemiBoldItalic.ttf"; path = "../node_modules/servisofts-component/font/OpenSans-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 		ECDA71A955BD4520A05570BA /* hello_baby.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = hello_baby.ttf; path = "../node_modules/servisofts-component/font/hello_baby.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		EDC52F18DC375356A6AB604C /* libPods-tapeke_restaurante_app.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tapeke_restaurante_app.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F32C5BC07A24E2BECB9B7C25 /* Pods-tapeke_restaurante_app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tapeke_restaurante_app.release.xcconfig"; path = "Target Support Files/Pods-tapeke_restaurante_app/Pods-tapeke_restaurante_app.release.xcconfig"; sourceTree = "<group>"; };
 		F437B8965BDC4A4683DC2338 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Regular.ttf"; path = "../node_modules/servisofts-component/font/Roboto-Regular.ttf"; sourceTree = "<group>"; };
 		FFD9EEA3C88247169E73E4F9 /* Athelas.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Athelas.ttf; path = "../node_modules/servisofts-component/font/Athelas.ttf"; sourceTree = "<group>"; };
-		AD046D6154394B2E973C28EA /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; name = "OpenSans-Bold.ttf"; path = "../node_modules/servisofts-component/font/OpenSans-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		95F13831A91B4D44B81FFD82 /* OpenSans-BoldItalic.ttf */ = {isa = PBXFileReference; name = "OpenSans-BoldItalic.ttf"; path = "../node_modules/servisofts-component/font/OpenSans-BoldItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		210B7DFD79014C068AB805C6 /* OpenSans-ExtraBold.ttf */ = {isa = PBXFileReference; name = "OpenSans-ExtraBold.ttf"; path = "../node_modules/servisofts-component/font/OpenSans-ExtraBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		A36CB4889E1045399CC1348F /* OpenSans-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; name = "OpenSans-ExtraBoldItalic.ttf"; path = "../node_modules/servisofts-component/font/OpenSans-ExtraBoldItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		D8C65FE99A5D4AD79EE1D200 /* OpenSans-Italic.ttf */ = {isa = PBXFileReference; name = "OpenSans-Italic.ttf"; path = "../node_modules/servisofts-component/font/OpenSans-Italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		CE3B89AADE28477B8E061844 /* OpenSans-Light.ttf */ = {isa = PBXFileReference; name = "OpenSans-Light.ttf"; path = "../node_modules/servisofts-component/font/OpenSans-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		8B83900FEE264C0F8491BBAA /* OpenSans-LightItalic.ttf */ = {isa = PBXFileReference; name = "OpenSans-LightItalic.ttf"; path = "../node_modules/servisofts-component/font/OpenSans-LightItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		A41298ACE60141FDA37C928F /* OpenSans-Medium.ttf */ = {isa = PBXFileReference; name = "OpenSans-Medium.ttf"; path = "../node_modules/servisofts-component/font/OpenSans-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		A54180EA71624371BDF38225 /* OpenSans-MediumItalic.ttf */ = {isa = PBXFileReference; name = "OpenSans-MediumItalic.ttf"; path = "../node_modules/servisofts-component/font/OpenSans-MediumItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		92ECA8A39FA1464390B98193 /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; name = "OpenSans-Regular.ttf"; path = "../node_modules/servisofts-component/font/OpenSans-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		CE68C08EA4FA48DB83DC3A31 /* OpenSans-SemiBold.ttf */ = {isa = PBXFileReference; name = "OpenSans-SemiBold.ttf"; path = "../node_modules/servisofts-component/font/OpenSans-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		DB9ECF0B8659499BBB30FF41 /* OpenSans-SemiBoldItalic.ttf */ = {isa = PBXFileReference; name = "OpenSans-SemiBoldItalic.ttf"; path = "../node_modules/servisofts-component/font/OpenSans-SemiBoldItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		B0BA147A6E3C410A852234E2 /* Oswald-Bold.ttf */ = {isa = PBXFileReference; name = "Oswald-Bold.ttf"; path = "../node_modules/servisofts-component/font/Oswald-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		D7A0C1701878404DB216EEAE /* Oswald-ExtraLight.ttf */ = {isa = PBXFileReference; name = "Oswald-ExtraLight.ttf"; path = "../node_modules/servisofts-component/font/Oswald-ExtraLight.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		12DFE22792324A05B8C13736 /* Oswald-Light.ttf */ = {isa = PBXFileReference; name = "Oswald-Light.ttf"; path = "../node_modules/servisofts-component/font/Oswald-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		0CD6B358154D48C2B623D1EA /* Oswald-Medium.ttf */ = {isa = PBXFileReference; name = "Oswald-Medium.ttf"; path = "../node_modules/servisofts-component/font/Oswald-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		41AEC652BC004BA3A455B8C9 /* Oswald-Regular.ttf */ = {isa = PBXFileReference; name = "Oswald-Regular.ttf"; path = "../node_modules/servisofts-component/font/Oswald-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		A468B3BE19FD4D2EB52C531A /* Oswald-SemiBold.ttf */ = {isa = PBXFileReference; name = "Oswald-SemiBold.ttf"; path = "../node_modules/servisofts-component/font/Oswald-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -454,7 +454,7 @@
 				CODE_SIGN_ENTITLEMENTS = tapeke_restaurante_app/tapeke_restaurante_app.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10411;
+				CURRENT_PROJECT_VERSION = 10412;
 				DEVELOPMENT_TEAM = L7U7L69RH8;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -465,7 +465,7 @@
 				);
 				INFOPLIST_FILE = tapeke_restaurante_app/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.4.11;
+				MARKETING_VERSION = 1.4.12;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -491,7 +491,7 @@
 				CODE_SIGN_ENTITLEMENTS = tapeke_restaurante_app/tapeke_restaurante_appRelease.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10411;
+				CURRENT_PROJECT_VERSION = 10412;
 				DEVELOPMENT_TEAM = L7U7L69RH8;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -501,7 +501,7 @@
 				);
 				INFOPLIST_FILE = tapeke_restaurante_app/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.4.11;
+				MARKETING_VERSION = 1.4.12;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

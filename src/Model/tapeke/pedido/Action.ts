@@ -9,8 +9,29 @@ export default class Action extends SAction {
     // return this.getAllActivos();
     // }
 
-    getVendidosData = ({ key_pack, fecha }) => {
-        var data = this.getAll();
+    getAllByHorarioRestaurante(extra?: { key_restaurante: any, fecha: any }) {
+        var reducer = this._getReducer();
+        if (reducer.key_restaurante != extra.key_restaurante || reducer.fecha != extra.fecha) {
+            reducer.data = null;
+            reducer.key_restaurante = extra.key_restaurante;
+            reducer.fecha = extra.fecha;
+        }
+        const data = reducer?.data;
+        if (!data) {
+            if (reducer.estado == "cargando") return null;
+            const petition = {
+                ...this.model.info,
+                type: "getAllByHorarioRestaurante",
+                estado: "cargando",
+                ...extra
+            }
+            SSocket.send(petition);
+            return null;
+        }
+        return data;
+    }
+    getVendidosData = ({ key_pack, fecha, key_restaurante }) => {
+        var data = this.getAllByHorarioRestaurante({ fecha: fecha, key_restaurante: key_restaurante });
         if (!data) return null;
         var arr = Object.values(data).filter((item: any) => item.key_pack == key_pack && item.fecha == fecha && (item.state != "pendiente_pago" && item.state != "timeout_pago"));
         var cantidad = 0;

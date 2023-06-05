@@ -160,7 +160,7 @@ class index extends Component {
       <SHr height={10} />
       <SView col={"xs-11"} row center height={25} backgroundColor={'transparent'}>
         {/* <SIcon name="Carga" width={270} /> */}
-        {/* <CargaIcon width={270} porcent={(cant + 0.6) / (dataPack.cantidad_total)} /> */}
+        <CargaIcon width={270} porcent={(cant + 0.09) / (dataPack.cantidad_total)} />
       </SView>
       <SHr height={10} />
       <SText font={"Roboto"} fontSize={16}>{dataHorarioCercano.extraData.text},  {new SDate(dataHorarioCercano.fecha, "yyyy-MM-dd").toString("dd de MONTH, yyyy")} </SText>
@@ -183,7 +183,7 @@ class index extends Component {
     if (!this.horario_proximo) return false;
     this.pack = Model.pack.Action.getByKeyHorario(this.horario_proximo.key);
     if (!this.pack) return null;
-    this.pedidos = Model.pedido.Action.getVendidosData({ fecha: this.horario_proximo.fecha, key_pack: this.pack.key });
+    this.pedidos = Model.pedido.Action.getVendidosData({ fecha: this.horario_proximo.fecha, key_pack: this.pack.key, key_restaurante: this.pk });
     if (!this.pedidos) return false;
     return true;
   }
@@ -303,6 +303,9 @@ class index extends Component {
         }}
       >
         <SHr height={20} />
+        {/* <SText onPress={() => {
+          SNavigation.navigate("/test")
+        }}>Test</SText> */}
         {this.render_content()}
       </SPage>
       <FloatButtomQR />

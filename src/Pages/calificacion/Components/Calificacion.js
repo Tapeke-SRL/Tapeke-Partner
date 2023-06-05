@@ -25,16 +25,18 @@ class Calificacion extends React.Component {
     }
 
     getEstrellas(data) {
-        return (<SView col={"xs-11"} height={180} style={{ borderWidth: 1, borderColor: STheme.color.lightGray, borderRadius: 8 }} row center backgroundColor={STheme.color.card} >
+        return (<SView col={"xs-11"} height={180} style={{ borderWidth: 1, borderColor: STheme.color.lightGray, borderRadius: 8 }} center backgroundColor={STheme.color.card} >
             <SHr height={10} />
-            <SView col={"xs-5"} center style={{ borderRightWidth: 1, borderColor: STheme.color.lightGray }}>
-                <SIcon name={"CalEstrella"} width={60} fill={STheme.color.primary} />
-            </SView>
-            <SView col={"xs-7"} center >
-                <SText color={STheme.color.darkGray} fontSize={24}>ESTRELLAS</SText>
-                <SHr height={10} />
-                <SView col={"xs-10"} center style={{ borderWidth: 2, borderColor: STheme.color.primary, backgroundColor: STheme.color.white, borderRadius: 8 }}>
-                    <SText color={STheme.color.text} fontSize={32}>{parseFloat(data.star_media ?? 0).toFixed(1)}</SText>
+            <SView row flex>
+                <SView col={"xs-5"} center height style={{ borderRightWidth: 1, borderColor: STheme.color.lightGray }}>
+                    <SIcon name={"CalEstrella"} width={60} height={60} fill={STheme.color.primary} />
+                </SView>
+                <SView flex center >
+                    <SText color={STheme.color.darkGray} fontSize={24}>ESTRELLAS</SText>
+                    <SHr height={10} />
+                    <SView col={"xs-10"} center style={{ borderWidth: 2, borderColor: STheme.color.primary, backgroundColor: STheme.color.white, borderRadius: 8 }}>
+                        <SText color={STheme.color.text} fontSize={32}>{parseFloat(data.star_media ?? 0).toFixed(1)}</SText>
+                    </SView>
                 </SView>
             </SView>
             <SHr height={10} />

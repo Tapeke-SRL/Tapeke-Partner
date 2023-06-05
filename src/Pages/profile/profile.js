@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { SHr, SNavigation, SPage, SText, SView, STheme, SImage, SLoad, SIcon, SPopup} from 'servisofts-component';
+import { SHr, SNavigation, SPage, SText, SView, STheme, SImage, SLoad, SIcon, SPopup } from 'servisofts-component';
 import Model from '../../Model';
 import SSocket from 'servisofts-socket';
 import { Parent } from './index';
@@ -17,6 +17,9 @@ class index extends Component {
         this.state = {};
     }
 
+    componentDidMount() {
+        Model.usuario.Action.syncUserLog();
+    }
     load_data() {
         // this.data = Model.direccion_usuario.Action.getAll();
         this.data = Model.usuario.Action.getUsuarioLog();
@@ -116,11 +119,12 @@ class index extends Component {
     render() {
         return (<SPage title={'Mi perfil'} onRefresh={(callback) => {
             // Model.usuario.Action.CLEAR();
+            Model.usuario.Action.syncUserLog();
             // Model.usuario.Action.syncUserLog*
             // console.log
             // Model.usuario.Action.CLEAR();
             // Model.usuario.Action.syncUserLog()
-     
+
 
         }} header={<AccentBar />}>
             <SView col={"xs-12"} center>
