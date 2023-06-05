@@ -20,7 +20,7 @@ const App = (props) => {
         <SComponentContainer
             // debug
             socket={SSocket}
-            assets={Assets}
+            assets={Assets} 
             inputs={Config.inputs}
             theme={{ themes: Config.theme, initialTheme: "default" }}
         >
