@@ -6,6 +6,7 @@ import Model from '../../Model';
 import PedidoState from './Components/PedidoState';
 import SSocket from 'servisofts-socket'
 import Popups from '../../Components/Popups';
+import AccentBar from '../../Components/AccentBar';
 
 
 class root extends Component {
@@ -39,18 +40,14 @@ class root extends Component {
             SNavigation.reset("/")
             return null;
         }
-        // console.log(JSON.stringify(this.data)+ " AQUI")
-        // console.log("bbbbbbbbbbbbbbbbb")
-
-        // this.data = Model.restaurante.Action.getByKey(this.pk);
-        // this.horario_proximo = Model.horario.Action.getByKeyRestauranteProximo(this.pk);
-
-        // if (!this.data) return false;
-        // if (!this.horario_proximo) return false;
-        // this.pack = Model.pack.Action.getByKeyHorario(this.horario_proximo.key);
-        // if (!this.pack) return null;
-        // this.pedidos = Model.pedido.Action.getVendidosData({ fecha: this.horario_proximo.fecha, key_pack: this.pack.key });
-        // if (!this.pedidos) return false;
+        this.horario_proximo = Model.horario.Action.getByKeyRestauranteProximo(this.data?.restaurante?.key);
+        if (!this.horario_proximo) return false;
+        // if (this.horario_proximo.fecha != this.data.fecha) {
+        //     SPopup.alert("Este pedido es de otra fecha.")
+        //     SNavigation.reset("/")
+        //     return null;
+        // }
+        
         return true;
     }
 
@@ -299,6 +296,12 @@ class root extends Component {
                                                 label: "No puede entregar porque seguimos buscando Driver para este pedido"
                                             })
                                             break;
+                                        case "pagado":
+                                            Popups.Alert.open({
+                                                title: "No se puede entregar el pedido.",
+                                                label: "No puede entregar porque aun no se encuentra listo o es para otro horario."
+                                            })
+                                            break;
                                         default:
                                             Popups.Alert.open({
                                                 title: "No se puede entregar el pedido.",
@@ -352,7 +355,8 @@ class root extends Component {
         // }
         return (<SPage onRefresh={() => {
             Model.pedido.Action.CLEAR();
-        }}>
+        }}
+            header={<AccentBar />}>
             {/* {SPopup.open({ key: "ubicacion", content: <PedidoState data={data} /> })} */}
             {/* <PedidoState data={data} />  */}
             {this.render_content()}

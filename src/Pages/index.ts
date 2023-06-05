@@ -19,6 +19,7 @@ import datos from './datos';
 import documento from './documento';
 import restaurante from './restaurante';
 import direccion from './direccion';
+import test from './test.js';
 
 import camara from './camara';
 import carga from './carga.js';
@@ -28,6 +29,7 @@ import restaurante_cuenta from './restaurante_cuenta';
 import inicioChat from './inicioChat';
 export default SPage.combinePages("/", {
     "": carga,
+    "test":test,
     "root": Root,
     "welcome": welcome,
     ...login,

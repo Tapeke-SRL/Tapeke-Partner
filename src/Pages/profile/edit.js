@@ -60,7 +60,9 @@ class index extends DPA.edit {
             },
             key_usuario: ""
         }).then((resp) => {
-            SNavigation.goBack();
+            Model.usuario.Action.syncUserLog().then((e) => {
+                SNavigation.goBack();
+            })
             // this.presolve(this.pk)
         }).catch(e => {
             console.error(e);

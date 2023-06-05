@@ -74,12 +74,13 @@ class root extends Component {
 
             let ganancia = (obj.cantidad * obj.precio) - obj.comision_restaurante;
             total += ganancia;
-            if (obj.delivery > 0) {
-                cantidad_delivery += 1;
-                total_delivery += ganancia;
+            if (parseInt(obj.delivery) > 0) {
+                cantidad_delivery += obj.cantidad;
+                total_delivery += (obj.cantidad * obj.precio);;
             } else {
-                cantidad_recoger += 1;
-                total_recoger += ganancia;
+                cantidad_recoger += obj.cantidad;
+                total_recoger += (obj.cantidad * obj.precio);;
+                console.log(ganancia)
             }
 
             if (obj.tipo_pago.find(a => a.type == "efectivo")) {
