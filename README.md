@@ -10,3 +10,6 @@ para habilitar los permisos nesecitamos ir a:
 https://console.cloud.google.com/
 
 Acceso rapido > Apis y servicios
+
+
+No subieron las actions
