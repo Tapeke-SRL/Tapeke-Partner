@@ -52,8 +52,7 @@ export default class PButtom extends Component<PButtom_props> {
             }} >
             {this.props.loading ? <SLoad /> : <SText {...this.props} color={this.props.outline ? bgColor : colorText} font={"Roboto-Bold"} >
                 {/* {this.props.children} */}
-                
-                </SText>}
+            </SText>}
         </SView>);
     }
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { SButtom, SHr, SLoad, SNavigation, SPage, SText, SView, SPopup, STheme, SImage, SMath, SIcon } from 'servisofts-component';
+import { SButtom, SHr, SLoad, SNavigation, SPage, SText, SView, SPopup, STheme, SImage, SMath, SIcon, SThread } from 'servisofts-component';
 import Container from '../../Components/Container';
 import Model from '../../Model';
 import PedidoState from './Components/PedidoState';
@@ -13,6 +13,7 @@ class root extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            loading: true,
         };
         this.pk = SNavigation.getParam("pk");
         // this.data = {};
@@ -20,7 +21,12 @@ class root extends Component {
     }
 
     componentDidMount() {
-        Model.pedido.Action.CLEAR();
+        // Model.pedido.Action.CLEAR();
+        Model.pedido.Action.getDetalle(this.pk, true);
+        new SThread(200, "pedido_detalle_thre", true).start(() => {
+            this.setState({ loading: false })
+
+        })
     }
 
     loadData() {
@@ -32,22 +38,16 @@ class root extends Component {
         }
         // if (!this.dataUsuario) return false; 
         if (!this.data.key) {
-            SNavigation.reset("/");
+            SPopup.alert("Aun no se que paso")
+            SNavigation.goBack("/");
             return null;
         }
         if (this.data?.restaurante?.key != Model.restaurante.Action.getSelect()) {
             SPopup.alert("Este pedido es de otro restaurante.")
-            SNavigation.reset("/")
+            SNavigation.goBack("/")
             return null;
         }
-        this.horario_proximo = Model.horario.Action.getByKeyRestauranteProximo(this.data?.restaurante?.key);
-        if (!this.horario_proximo) return false;
-        // if (this.horario_proximo.fecha != this.data.fecha) {
-        //     SPopup.alert("Este pedido es de otra fecha.")
-        //     SNavigation.reset("/")
-        //     return null;
-        // }
-        
+
         return true;
     }
 
@@ -123,7 +123,7 @@ class root extends Component {
 
     contenido(data) {
         // if (!this.loadData()) return <SLoad />
-        if (!data) return <SView />;
+        if (!data) return <SLoad />
         // if (!dataUsuario) return <SView />;
         this.data = data;
         return (
@@ -317,9 +317,8 @@ class root extends Component {
                                     // SPopup.alert(<PedidoState data={data} />);
                                 } else {
                                     Model.pedido.Action.entregar(this.pk, this.props).then(e => {
-                                        console.log(e)
                                         Model.pedido.Action.CLEAR();
-                                        SNavigation.reset("/");
+                                        SNavigation.goBack();
 
                                     }).catch(e => {
                                         Popups.Alert.open({
@@ -337,28 +336,19 @@ class root extends Component {
     }
 
     render_content() {
+        if (this.state.loading) return <SLoad />
         if (!this.loadData()) return <SLoad />
         return <Container>
-            {/* {this.getCabecera(this.data)}
-          {this.contenidoBody(this.horario_proximo, this.pack, this.pedidos)} */}
             {this.contenido(this.data)}
         </Container>
     }
 
 
     render() {
-        // var data = Model.pedido.Action.getDetalle(this.pk);
-        // if (!data) return <SLoad />;
-        // if (!data.key) {
-        //     SNavigation.reset("/");
-        //     return null;
-        // }
         return (<SPage onRefresh={() => {
             Model.pedido.Action.CLEAR();
         }}
             header={<AccentBar />}>
-            {/* {SPopup.open({ key: "ubicacion", content: <PedidoState data={data} /> })} */}
-            {/* <PedidoState data={data} />  */}
             {this.render_content()}
         </SPage>
         );

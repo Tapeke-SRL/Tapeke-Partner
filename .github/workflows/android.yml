@@ -1,7 +1,7 @@
 name: "CI/CD SERVISOFTS - ANDROID"
 on:
   push:
-    branches: ["dev"]
+    branches: ["main"]
 
 jobs:
   compile_android:

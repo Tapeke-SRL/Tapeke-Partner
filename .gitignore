@@ -112,3 +112,4 @@ yarn-error.log*
 
 
 # /src/LoginApi/config.ts 
+*.apk

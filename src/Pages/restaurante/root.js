@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { SLoad, SNavigation, SPage, SText, SView, STheme, SImage, SHr, SDate, SIcon, SPopup } from 'servisofts-component';
+import { SLoad, SNavigation, SPage, SText, SView, STheme, SImage, SHr, SDate, SIcon, SPopup, SThread } from 'servisofts-component';
 import Container from '../../Components/Container';
 import Model from '../../Model';
 import SSocket from 'servisofts-socket'
@@ -8,6 +8,7 @@ import FloatButtomQR from '../../Components/FloatButtomQR';
 import PBarraFooter from '../../Components/PBarraFooter';
 import TopBar from '../../Components/TopBar';
 import CargaIcon from './CargaIcon';
+import BarraCargando from '../../Components/BarraCargando';
 
 
 class index extends Component {
@@ -16,8 +17,30 @@ class index extends Component {
     this.state = {
     };
     this.pk = SNavigation.getParam("pk");
+    this.isRun = false;
+
   }
 
+  componentDidMount() {
+    this.isRun = true;
+    this.hilo();
+  }
+  componentWillUnmount() {
+    this.isRun = false;
+  }
+  hilo() {
+    if (!this.isRun) return;
+    new SThread(1000 * 60, "hilo_pedido", true).start(() => {
+      this.hilo();
+      Model.horario.Action.getByKeyRestauranteProximo(this.pk, true)
+      // if (this.horario_proximo) {
+      // if (new SDate().isAfter(new SDate(this.horario_proximo.fecha_fin, "yyyy-MM-dd hh:mm:ss.S"))) {
+      // Model.horario.Action.getByKeyRestauranteProximo(this.pk, true)
+      // }
+      // }
+
+    })
+  }
   getCabecera(data) {
     this.data = data;
     var usuario = Model.usuario.Action.getUsuarioLog();
@@ -75,8 +98,8 @@ class index extends Component {
     let arr = Object.values(dataPackVendidos).sort((a, b) => {
       let pesoA = 0;
       let pesoB = 0;
-      if (a.state == "pagado" || a.state == "listo" || a.state == "esperando_conductor" || a.state == "buscando_conductor" || a.state == "confimando_conductor") pesoA = 3;
-      if (b.state == "pagado" || b.state == "listo" || b.state == "esperando_conductor" || b.state == "buscando_conductor" || b.state == "confimando_conductor") pesoB = 3;
+      if (a.state == "pagado" || a.state == "listo" || a.state == "esperando_conductor" || a.state == "buscando_conductor" || a.state == "confirmando_conductor") pesoA = 3;
+      if (b.state == "pagado" || b.state == "listo" || b.state == "esperando_conductor" || b.state == "buscando_conductor" || b.state == "confirmando_conductor") pesoB = 3;
       if (a.state == "entregado" || a.state == "entregado_conductor" || a.state == "conductor_llego") pesoA = 2;
       if (b.state == "entregado" || b.state == "entregado_conductor" || b.state == "conductor_llego") pesoB = 2;
       if (a.state == "cancelado" || a.state == "no_recogido") pesoA = 1;
@@ -147,24 +170,30 @@ class index extends Component {
     var dataHorarioCercano = horarioProximo
     if (!dataHorarioCercano) return <SText color={STheme.color.danger}>No tine horarios registrados.</SText>
 
+    let fecha = new SDate(dataHorarioCercano.fecha, "yyyy-MM-dd");
+    let label = fecha.toString("DAY");
+    if (fecha.isCurDate()) {
+      label = "Hoy"
+    }
+    label = label + " " + dataHorarioCercano.hora_inicio + " - " + dataHorarioCercano.hora_fin
     //Pack
-    var dataPack = pack
-    if (!dataPack) return < SText color={STheme.color.danger} > No tiene horarios registrados.</SText >
+    // var dataPack = pack
+    // if (!dataPack) return < SText color={STheme.color.danger} > No tiene horarios registrados.</SText >
     var dataPackVendidos = pedido
     if (!dataPackVendidos) return <SView />;
     var cant = 0;
-    dataPackVendidos.map(o => cant += parseFloat(o.cantidad ?? 0))
+    dataPackVendidos.map(o => cant += parseFloat((o.state == "cancelado" || o.state == "no_recogido") ? 0 : (o.cantidad ?? 0)))
     return <>
       <SHr height={20} />
-      <SText font={"Roboto"} center fontSize={24}  >{dataHorarioCercano.text.replace(/^\w/, (c) => c.toUpperCase())} Hrs.</SText>
+      <SText font={"Roboto"} center fontSize={24}  >{label.replace(/^\w/, (c) => c.toUpperCase())} Hrs.</SText>
+      {/* <SHr height={10} /> */}
+      {/* <SView col={"xs-11"} row center height={25} backgroundColor={'transparent'}>
+        <SIcon name="Carga" width={270} />
+        <CargaIcon width={270} porcent={(cant + 0.09) / (dataHorarioCercano.cantidad)} />
+      </SView> */}
       <SHr height={10} />
-      <SView col={"xs-11"} row center height={25} backgroundColor={'transparent'}>
-        {/* <SIcon name="Carga" width={270} /> */}
-        <CargaIcon width={270} porcent={(cant + 0.09) / (dataPack.cantidad_total)} />
-      </SView>
-      <SHr height={10} />
-      <SText font={"Roboto"} fontSize={16}>{dataHorarioCercano.extraData.text},  {new SDate(dataHorarioCercano.fecha, "yyyy-MM-dd").toString("dd de MONTH, yyyy")} </SText>
-      <SText font={"Roboto"} style={{ fontWeight: "bold" }} fontSize={16}>( {cant} / {dataPack.cantidad_total} )</SText>
+      {/* <SText font={"Roboto"} fontSize={16}>{dataHorarioCercano.extraData.text},  {new SDate(dataHorarioCercano.fecha, "yyyy-MM-dd").toString("dd de MONTH, yyyy")} </SText> */}
+      <SText font={"Roboto"} style={{ fontWeight: "bold" }} fontSize={16}>( {cant} / {dataHorarioCercano.cantidad} )</SText>
       <SHr height={20} />
       <SView col={"xs-11"} style={{ borderBottomWidth: 2, borderColor: STheme.color.primary }}></SView>
       <SHr height={20} />
@@ -181,16 +210,17 @@ class index extends Component {
     this.horario_proximo = Model.horario.Action.getByKeyRestauranteProximo(this.pk);
     if (!this.data) return false;
     if (!this.horario_proximo) return false;
-    this.pack = Model.pack.Action.getByKeyHorario(this.horario_proximo.key);
-    if (!this.pack) return null;
-    this.pedidos = Model.pedido.Action.getVendidosData({ fecha: this.horario_proximo.fecha, key_pack: this.pack.key, key_restaurante: this.pk });
+    // this.pack = Model.pack.Action.getByKeyHorario(this.horario_proximo.key);
+    // if (!this.pack) return null;
+    this.pedidos = Model.pedido.Action.getVendidosData({ fecha: this.horario_proximo.fecha, key_pack: this.horario_proximo.key_pack, key_restaurante: this.pk });
     if (!this.pedidos) return false;
     return true;
   }
 
   aumentar_cantidad_pedidos() {
     if (!this.loadData()) return null
-    if (new SDate().isAfter(this.horario_proximo.sdate)) return null;
+    // if (new SDate().isAfter(this.horario_proximo.sdate)) return null;
+    if (new SDate().isAfter(new SDate(this.horario_proximo.fecha_fin, "yyyy-MM-dd hh:mm:ss.S"))) return null;
     return <SView col={"xs-11"} center
       card row
       height={57}
@@ -218,14 +248,14 @@ class index extends Component {
   modificar_horario() {
     if (!this.loadData()) return null
     // console.log(this.horario_proximo)
-    if (new SDate().isAfter(this.horario_proximo.sdate)) return null;
+    if (new SDate().isAfter(new SDate(this.horario_proximo.fecha_fin, "yyyy-MM-dd hh:mm:ss.S"))) return null;
     return <SView col={"xs-11"} center
       card row
       height={57}
       onPress={() => {
         SPopup.confirm({
           title: "¿Desea modificar el horario de entrega?",
-          message: "Todos los " + this.horario_proximo.sdate.toString("DAY") + " se atenderá en los horarios registrados, si se modifica el horario afecta a la planificación futura.",
+          message: "Todos los " + new SDate(this.horario_proximo.fecha_fin, "yyyy-MM-dd hh:mm:ss.S").toString("DAY") + " se atenderá en los horarios registrados, si se modifica el horario afecta a la planificación futura.",
           onPress: () => {
             SNavigation.navigate("/restaurante/modificarHorario", { pk: this.pk })
           }
@@ -248,6 +278,18 @@ class index extends Component {
       >
         <SIcon name='Iarrowd' height={25} />
       </SView>
+    </SView>
+  }
+
+  render_hora_extra() {
+    if (!this.loadData()) return null
+    if (!new SDate().isAfter(new SDate(this.horario_proximo.fecha_fin, "yyyy-MM-dd hh:mm:ss.S"))) return null;
+
+    return <SView col={"xs-12"} center>
+      <SText bold fontSize={18}>EN HORA EXTRA</SText>
+      <SHr />
+      {/* <SText fontSize={12}>Espera un tiempo para que puedan </SText> */}
+      <BarraCargando />
     </SView>
   }
   render_content() {
@@ -283,6 +325,7 @@ class index extends Component {
       {this.aumentar_cantidad_pedidos()}
       <SHr h={8} />
       {this.modificar_horario()}
+      {this.render_hora_extra()}
       <SHr h={8} />
       {this.contenidoBody(this.horario_proximo, this.pack, this.pedidos)}
     </Container>
