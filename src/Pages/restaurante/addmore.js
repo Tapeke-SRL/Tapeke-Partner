@@ -51,7 +51,8 @@ class index extends Component {
               key_usuario: Model.usuario.Action.getKey()
             }).then((resp) => {
               this.setState({ loading: false, error: "" });
-              Model.pack_extra.Action.CLEAR();
+              // Model.pack_extra.Action.CLEAR();
+              Model.horario.Action.CLEAR();
               SNavigation.goBack();
             }).catch(e => {
               this.setState({ loading: false, error: e.error });

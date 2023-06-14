@@ -20,6 +20,7 @@ class index extends Component {
 
   render_content() {
     let dow = new SDate(this.fecha, "yyyy-MM-dd").getDayOfWeek();
+    let duracion_minima = Model.enviroment.Action.getByKey("partner_duracion_minima_de_un_horario");
     return <Container>
       <SHr height={32} />
       <SText center fontSize={16} bold>¿Quieres crear un horario de atención para esta fecha?</SText>
@@ -33,7 +34,7 @@ class index extends Component {
       }}>
         <SInput label={"Hora de apertura"} col={"xs-5.5"} ref={ref => this._input_hi = ref} type='hour' required defaultValue={""} />
         <SInput label={"Hora de cierre"} col={"xs-5.5"} ref={ref => this._input_hf = ref} type='hour' required defaultValue={""} />
-        <SInput label={"Cantidad"} col={"xs-5.5"} ref={ref => this._input_cantidad = ref} type='number' required defaultValue={10} />
+        <SInput label={"Cantidad"} col={"xs-5.5"} ref={ref => this._input_cantidad = ref} type='number' required defaultValue={"0"} />
         <SInput label={"Precio"} col={"xs-5.5"} ref={ref => this._input_precio = ref} type='money' required defaultValue={parseFloat(15).toFixed(2)} />
       </SView>
       {/* </SView> */}
@@ -44,14 +45,18 @@ class index extends Component {
         let precio = this._input_precio.getValue();
         let hi = this._input_hi.getValue();
         let hf = this._input_hf.getValue();
-
+        if (!duracion_minima) {
+          SPopup.alert("Ocurrio un error de conexion, verifique su internet y recargue la ventana.");
+          return
+        }
         let dhi = new SDate(hi, "hh:mm");
         let dhf = new SDate(hf, "hh:mm");
         console.log(dhi.diffTime(dhf))
-        if (dhi.diffTime(dhf) < (1000 * 60 * 30)) {
-          SPopup.alert("La hora inicio debe ser mayor a la hora fin por minimo 30 minutos. ");
+        if (dhi.diffTime(dhf) < (1000 * parseFloat(duracion_minima.value))) {
+          SPopup.alert("La hora inicio debe ser mayor a la hora fin por minimo " + (parseFloat(duracion_minima.value) / 60).toFixed(0) + " minutos. ");
           return;
         }
+        this.setState({ loading: true })
         Model.horario.Action.registro({
           data: {
             dia: dow,
@@ -69,14 +74,17 @@ class index extends Component {
             },
             key_usuario: Model.usuario.Action.getKey()
           }).then((resp) => {
+            this.setState({ loading: false })
             console.log(resp)
             SNavigation.goBack();
           }).catch((e) => {
+            this.setState({ loading: false })
             SPopup.alert(e.error)
             console.error(e)
           })
 
         }).catch(e => {
+          this.setState({ loading: false })
           SPopup.alert(e.error)
           console.error(e);
 
@@ -108,8 +116,12 @@ class index extends Component {
   }
 
   render() {
-    return (<SPage title={''}>
-      <SView backgroundColor={"#96BE00"} height={20} col={"xs-12"}></SView>
+    return (<SPage title={''}
+      header={<SView backgroundColor={"#96BE00"} height={20} col={"xs-12"}></SView>}
+      onRefresh={(calback) => {
+        Model.enviroment.Action.CLEAR();
+        if (calback) calback()
+      }}>
       {this.render_content()}
     </SPage>
     );

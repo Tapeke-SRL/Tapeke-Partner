@@ -71,6 +71,7 @@ class index extends Component {
           },
           key_usuario: Model.usuario.Action.getKey(),
         }).then((resp) => {
+          Model.horario.Action.CLEAR();
           SNavigation.goBack();
           // Model.pack.Action.registro({
           //   data: {
