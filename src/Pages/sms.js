@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { TextInput } from 'react-native';
+import { TextInput, Linking } from 'react-native';
 import { connect } from "react-redux";
 import { SButtom, SDate, SHr, SIcon, SInput, SLoad, SNavigation, SPage, SPopup, SText, STheme, SThread, SView } from "servisofts-component";
 import PButtom from "../Components/PButtom";
@@ -36,7 +36,7 @@ class sms extends Component {
             // CALBACK
             if (this.params.callback) {
                 SNavigation.replace(this.params.callback, this.params)
-            }else{
+            } else {
                 SPopup.alert("Confirmado sin callback")
             }
         }).catch(err => {
@@ -114,6 +114,16 @@ class sms extends Component {
                             <SText center font='Roboto' fontSize={16} color={"#666666"}>{"¿No recibiste el código?"}</SText>
                             <SView width={8} />
                             {this.getVolverAEnviar()}
+                        </SView>
+                        <SHr height={20} />
+                        <SView row>
+                            {/* <SText center fontSize={16} color={"#666666"}>{"Contactate con nosotros."}</SText> */}
+                            <SView width={8} />
+                            <SText center fontSize={16} color={"#666666"} style={{
+                                textDecorationLine: "underline",
+                            }} onPress={() => {
+                                Linking.openURL("https://api.whatsapp.com/send?phone=59162241491")
+                            }}>{"Si nunca te llego el código contactanos."}</SText>
                         </SView>
                         <SHr height={50} />
 
