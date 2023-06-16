@@ -57,6 +57,8 @@ export default class SectionForm extends Component {
                                     SNavigation.reset("/");
                                 }
                             }).catch((e) => {
+                                console.error(e);
+                                console.error(e.stack);
                                 SPopup.alert("Error en los datos");
                             })
                         }

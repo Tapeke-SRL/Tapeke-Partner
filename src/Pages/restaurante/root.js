@@ -342,6 +342,7 @@ class index extends Component {
           Model.pack.Action.CLEAR();
           Model.pedido.Action.CLEAR();
           Model.pack_extra.Action.CLEAR();
+          Model.usuario.Action.CLEAR();
           if (resolve) resolve();
         }}
       >

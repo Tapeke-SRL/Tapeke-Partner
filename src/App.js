@@ -6,7 +6,6 @@ import Redux, { store } from './Redux';
 import Config from "./Config";
 import Assets from './Assets';
 import Pages from './Pages';
-import Validator from './Validator';
 import NavBar from './Components/NavBar';
 
 import Firebase from './Firebase';
@@ -34,7 +33,7 @@ const App = (props) => {
                 store={store}
                 identificarse={(props) => {
                     var usuario = props.state.usuarioReducer.usuarioLog;
-                    console.log(DeviceKey.getKey());
+                    // console.log(DeviceKey.getKey());
                     return {
                         data: usuario ? usuario : {},
                         deviceKey: DeviceKey.getKey(),
