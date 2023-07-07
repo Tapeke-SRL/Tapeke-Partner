@@ -31,7 +31,7 @@ class index extends Component {
                     }}>
                         <SView col={"xs-12"} row>
                             <SView flex />
-                            <SText fontSize={10}>{new SDate(fecha_on).toString("yyyy-MM-dd hh:mm")}</SText>
+                            <SText fontSize={10}>{new SDate(fecha_on, "yyyy-MM-ddThh:mm:ss").toString("yyyy-MM-dd hh:mm")}</SText>
                         </SView>
                         <SText bold>{title}</SText>
                         <SText fontSize={12}>{body}</SText>

@@ -106,9 +106,9 @@ class moto extends Component {
                     }}
                     inputs={{
                         [_placa.key]: { label: _placa.descripcion, placeholder: "Placa", type: _placa.tipo, isRequired: false, defaultValue: dto_placa?.descripcion},
-                        [_tipo_vehiculo.key]: { label: _tipo_vehiculo.descripcion, placeholder: "Tipo vehiculo", type: _tipo_vehiculo.tipo, isRequired: false, defaultValue: dto_tipo_vehiculo?.descripcion },
+                        [_tipo_vehiculo.key]: { label: "Tipo vehículo".descripcion, placeholder: "Tipo vehículo", type: _tipo_vehiculo.tipo, isRequired: false, defaultValue: dto_tipo_vehiculo?.descripcion },
                         [_soat.key]: { col: "xs-12",label: _soat.descripcion, placeholder: "SOAT", type: _soat.tipo, isRequired: false, defaultValue: dto_soat?.descripcion, filePath: filePath, },
-                        [_foto_del_vehiculo.key]: { col: "xs-12",label: _foto_del_vehiculo.descripcion, placeholder: "Foto del vehiculo", type: _foto_del_vehiculo.tipo, isRequired: false, defaultValue: dto_foto_del_vehiculo?.descripcion, filePath: filePath, },
+                        [_foto_del_vehiculo.key]: { col: "xs-12",label: "Foto vehículo".descripcion, placeholder: "Foto del vehiculo", type: _foto_del_vehiculo.tipo, isRequired: false, defaultValue: dto_foto_del_vehiculo?.descripcion, filePath: filePath, },
 
                       }}
                     onSubmitName={"SAVE"}

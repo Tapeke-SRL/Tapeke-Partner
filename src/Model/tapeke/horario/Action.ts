@@ -31,7 +31,11 @@ export default class Action extends SAction {
     }
 
     getByKeyRestauranteProximo = (key, force) => {
-        let { getByKeyRestauranteProximo, estado } = this._getReducer();
+        let { getByKeyRestauranteProximo, estado, key_restaurante_proximo } = this._getReducer();
+        if (key_restaurante_proximo != key) {
+            getByKeyRestauranteProximo = null;
+            this._getReducer().key_restaurante_proximo = key;
+        }
         if (getByKeyRestauranteProximo && !force) return getByKeyRestauranteProximo[0];
         if (estado == "cargando" && !force) return null;
         SSocket.send({
