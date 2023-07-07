@@ -1,4 +1,4 @@
-arguments=--init-script /Users/rickypazd/.vscode-server/data/User/globalStorage/redhat.java/1.18.0/config_mac/org.eclipse.osgi/50/0/.cp/gradle/init/init.gradle --init-script /Users/rickypazd/.vscode-server/data/User/globalStorage/redhat.java/1.18.0/config_mac/org.eclipse.osgi/50/0/.cp/gradle/protobuf/init.gradle
+arguments=--init-script /Users/rickypazd/.vscode-server/data/User/globalStorage/redhat.java/1.19.0/config_mac/org.eclipse.osgi/50/0/.cp/gradle/init/init.gradle --init-script /Users/rickypazd/.vscode-server/data/User/globalStorage/redhat.java/1.19.0/config_mac/org.eclipse.osgi/50/0/.cp/gradle/protobuf/init.gradle
 auto.sync=false
 build.scans.enabled=false
 connection.gradle.distribution=GRADLE_DISTRIBUTION(WRAPPER)
