@@ -22,7 +22,7 @@ class index extends Component {
 
     render_item(data) {
         let obj = data.restaurante ?? {};
-        
+
         return <SView col={"xs-12"} backgroundColor={STheme.color.card} row
             style={{
                 borderWidth: 2, borderColor: STheme.color.lightGray,
@@ -59,10 +59,11 @@ class index extends Component {
         Object.values(data).map(obj => {
             obj.restaurante = restaurantes[obj.key_restaurante];
         })
+        data = data.filter((a) => a.estado != 0 && a?.restaurante?.estado > 0);
 
-        if (Object.values(data).estado == "0") {
-            return SNavigation.replace("/welcome")
-        }
+        // if (Object.values(data).estado == "0") {
+        //     return SNavigation.replace("/welcome")
+        // }
 
 
         if (Object.values(data).length <= 0) {
@@ -90,7 +91,6 @@ class index extends Component {
         return <SList
             buscador
             data={data}
-            filter={a => a.estado != 0 && a?.restaurante?.estado > 0}
             render={this.render_item.bind(this)} />
     }
     render() {
