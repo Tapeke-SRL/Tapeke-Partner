@@ -56,17 +56,19 @@ class index extends Component {
         var data = Model.usuario_restaurante.Action.getAllBy({ key_usuario: Model.usuario.Action.getKey() })
         var restaurantes = Model.restaurante.Action.getAll();
         if (!data || !restaurantes) return <SLoad />
-        Object.values(data).map(obj => {
+
+        let arr = Object.values(data).map(obj => {
             obj.restaurante = restaurantes[obj.key_restaurante];
+            return obj
         })
-        data = data.filter((a) => a.estado != 0 && a?.restaurante?.estado > 0);
+        arr = arr.filter((a) => a.estado != 0 && a?.restaurante?.estado > 0);
 
         // if (Object.values(data).estado == "0") {
         //     return SNavigation.replace("/welcome")
         // }
 
 
-        if (Object.values(data).length <= 0) {
+        if (arr.length <= 0) {
             return <SView col={"xs-12"} center height={600}>
                 <SHr h={20} />
                 <SText fontSize={18} bold>No tienes restaurantes asignados.</SText>
@@ -90,7 +92,7 @@ class index extends Component {
 
         return <SList
             buscador
-            data={data}
+            data={arr}
             render={this.render_item.bind(this)} />
     }
     render() {
