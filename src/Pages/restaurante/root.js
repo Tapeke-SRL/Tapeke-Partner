@@ -206,10 +206,17 @@ class index extends Component {
 
 
   loadData() {
-    this.data = Model.restaurante.Action.getByKey(this.pk);
+    const arrRest = Model.restaurante.Action.getAll({
+      key_partner: Model.usuario.Action.getKey()
+    });
     this.horario_proximo = Model.horario.Action.getByKeyRestauranteProximo(this.pk);
-    if (!this.data) return false;
+    if (!arrRest) return false;
     if (!this.horario_proximo) return false;
+    this.data = arrRest[this.pk];
+    if (!this.data) {
+      SNavigation.replace("/");
+      Model.restaurante.Action.select("");
+    }
     // this.pack = Model.pack.Action.getByKeyHorario(this.horario_proximo.key);
     // if (!this.pack) return null;
     this.pedidos = Model.pedido.Action.getVendidosData({ fecha: this.horario_proximo.fecha, key_pack: this.horario_proximo.key_pack, key_restaurante: this.pk });
@@ -335,8 +342,9 @@ class index extends Component {
       <SPage title={'Pedidos próximos'}
         hidden
         header={<><TopBar type={"usuario"} /><SView backgroundColor={"#96BE00"} height={20} col={"xs-12"}></SView></>}
-        footer={<PBarraFooter url={"pedido"} />}
+        footer={(!this.data || this.data?.estado == 2 ? null : <PBarraFooter url={"pedido"} />)}
         onRefresh={(resolve) => {
+          this.data = null;
           Model.restaurante.Action.CLEAR();
           Model.horario.Action.CLEAR();
           Model.pack.Action.CLEAR();
@@ -352,7 +360,8 @@ class index extends Component {
         }}>Test</SText> */}
         {this.render_content()}
       </SPage>
-      <FloatButtomQR />
+      {(!this.data || this.data?.estado == 2 ? null : <FloatButtomQR />)}
+
     </>
     );
   }
