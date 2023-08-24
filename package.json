@@ -1,6 +1,6 @@
 {
   "name": "tapeke_restaurante_app",
-  "version": "1.4.20",
+  "version": "1.4.21",
   "description": "tapeke_restaurante_app",
   "scripts": {
     "start": "react-native start",
@@ -40,31 +40,35 @@
     "react-native-linear-gradient": "2.6.2",
     "react-native-maps": "0.27.1",
     "react-native-notifications": "4.2.4",
-    "react-native-reanimated": "2.17.0",
+    "react-native-reanimated": "2.13.0",
     "react-native-safe-area-context": "3.4.1",
-    "react-native-screens": "3.14.0",
+    "react-native-screens": "3.11.0",
     "react-native-svg": "12.5.1",
     "react-native-svg-transformer": "0.14.3",
     "react-native-web": "0.17.7",
     "react-redux": "7.2.9",
     "redux": "4.2.1",
     "redux-thunk": "2.4.2",
-    "servisofts-component": "2.11.11",
+    "servisofts-component": "2.11.14",
     "servisofts-model": "1.0.3",
     "servisofts-page": "1.0.8",
-    "servisofts-rn-chat": "1.0.6",
+    "servisofts-rn-chat": "1.0.8",
     "servisofts-rn-geolocation": "1.0.3",
     "servisofts-rn-roles_permisos": "1.0.4",
     "servisofts-rn-usuario": "1.0.13",
     "servisofts-socket": "3.0.5",
     "typescript": "4.9.5",
-    "xlsx": "0.18.5",
-    "xlsx-color": "0.14.30"
+    "xlsx": "^0.18.5",
+    "xlsx-color": "^0.14.30"
+  },
+  "resolutions": {
+    "react-error-overlay": "6.0.9"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
     "@babel/runtime": "^7.8.4",
     "metro-react-native-babel-preset": "^0.59.0",
+    "react-error-overlay": "^6.0.11",
     "react-scripts": "^4.0.1"
   },
   "browserslist": {

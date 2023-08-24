@@ -54,7 +54,9 @@ class index extends Component {
             return <SView />;
         }
         var data = Model.usuario_restaurante.Action.getAllBy({ key_usuario: Model.usuario.Action.getKey() })
-        var restaurantes = Model.restaurante.Action.getAll();
+        var restaurantes = Model.restaurante.Action.getAll({
+            key_partner: Model.usuario.Action.getKey()
+        });
         if (!data || !restaurantes) return <SLoad />
 
         let arr = Object.values(data).map(obj => {
@@ -73,7 +75,7 @@ class index extends Component {
                 <SHr h={20} />
                 <SText fontSize={18} bold>No tienes restaurantes asignados.</SText>
                 <SHr h={20} />
-                <SView col={"xs-12"} flex>
+                <SView col={"xs-12"} flex >
                     <SImage src={require("../Assets/img/logo_no_rest.png")} />
                 </SView>
                 <SHr h={20} />
