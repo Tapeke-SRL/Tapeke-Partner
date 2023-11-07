@@ -217,6 +217,8 @@ class index extends Component {
       SNavigation.replace("/");
       Model.restaurante.Action.select("");
     }
+
+    
     // this.pack = Model.pack.Action.getByKeyHorario(this.horario_proximo.key);
     // if (!this.pack) return null;
     this.pedidos = Model.pedido.Action.getVendidosData({ fecha: this.horario_proximo.fecha, key_pack: this.horario_proximo.key_pack, key_restaurante: this.pk });

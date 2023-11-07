@@ -82,7 +82,7 @@ class root extends Component {
                 total_recoger += (obj.cantidad * obj.precio);;
                 console.log(ganancia)
             }
-
+       
             if (obj.tipo_pago.find(a => a.type == "efectivo")) {
                 totalOk.efectivo += obj.precio * obj.cantidad;
                 totalOk.comision_efectivo += obj.comision_restaurante;
