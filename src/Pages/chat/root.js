@@ -93,14 +93,14 @@ class index extends Component {
     renderBack() {
         if (!this.state.layout) return null;
         var h = this.state.layout.width / 1.05
-        return <SView col={"xs-12"} width={h} height style={{
+        return <SView col={"xs-12"} width={h} style={{
             position: "absolute",
             top: 0,
             left: 10,
-            // zIndex: -1,
+            zIndex: -1,
             // opacity:"70%"
         }}>
-            <SIcon name={"Soporte"} />
+            <SIcon name={"Soporte"} height={252} />
         </SView>
     }
 
@@ -159,10 +159,10 @@ class index extends Component {
             this.setState({ layout: evt.nativeEvent.layout })
         }}>
             {this.renderBack()}
-            <SView center col={"xs-12"}>
+            <SView center>
                 <SHr height={45} />
                 {this.contenido()}
-                <SHr height={25} />
+                <SHr height={90} />
                 {this.formDatos()}
                 <SHr height={45} />
                 <SView col={"xs-12"} row>

@@ -34,8 +34,8 @@ android {
         applicationId "com.tapeke_restaurante_app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 10421
-        versionName "1.4.21"
+        versionCode 10422
+        versionName "1.4.22"
         missingDimensionStrategy 'react-native-camera', 'mlkit'
 
     }
