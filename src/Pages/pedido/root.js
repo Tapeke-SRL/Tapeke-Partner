@@ -284,7 +284,7 @@ class root extends Component {
                                     </SText>
                                     <SHr height={5} />
                                     <SText>
-                                        RS: {this.data?.factura?.razon_social ? this.data?.factura?.nit : 'El Usuario no puso Razón Social'}
+                                        RS: {this.data?.factura?.razon_social ? this.data?.factura?.razon_social : 'El Usuario no puso Razón Social'}
                                     </SText>
                                     <SHr height={5} />
                                     <SText>
@@ -443,7 +443,7 @@ class root extends Component {
                             </SText>
                         </SView>
                         <SView col={'xs-6'} style={{alignItems: 'flex-end'}}>
-                            <SText fontSize={15} font={'Roboto'}>
+                            <SText fontSize={15} font={'Roboto'} flex>
                                 {this.getTipoPago(this.data)}
                             </SText>
                         </SView>
@@ -458,7 +458,7 @@ class root extends Component {
                             </SText>
                         </SView>
                         <SView col={'xs-6'} style={{alignItems: 'flex-end'}}>
-                            <SText fontSize={15} font={'Roboto'}>
+                            <SText fontSize={15} font={'Roboto'} flex>
                                 Bs.{' '}
                                 {SMath.formatMoney(
                                     (this.data.pack?.precio ?? 0) *
@@ -496,7 +496,7 @@ class root extends Component {
                                 Bs.{' '}
                                 {SMath.formatMoney(
                                     (this.data.pack?.precio ?? 0) *
-                                        this.data.cantidad
+                                        this.data.cantidad  
                                 )}
                             </SText>
                         </SView>
