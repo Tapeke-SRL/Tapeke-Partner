@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import {
     SButtom,
     SHr,
@@ -37,7 +37,7 @@ class root extends Component {
         // Model.pedido.Action.CLEAR();
         Model.pedido.Action.getDetalle(this.pk, true);
         new SThread(200, 'pedido_detalle_thre', true).start(() => {
-            this.setState({ loading: false });
+            this.setState({loading: false});
         });
     }
 
@@ -84,7 +84,7 @@ class root extends Component {
             <SView
                 col={'xs-12'}
                 center
-                style={{ backgroundColor: STheme.color.white }}
+                style={{backgroundColor: STheme.color.white}}
             >
                 <SView col={'xs-11'} row center>
                     <SView col={'xs-12'}>
@@ -92,7 +92,7 @@ class root extends Component {
                         <SText
                             fontSize={18}
                             font={'Roboto'}
-                            style={{ fontWeight: 'bold' }}
+                            style={{fontWeight: 'bold'}}
                             color={STheme.color.darkGray}
                         >
                             Conductor
@@ -106,7 +106,7 @@ class root extends Component {
                                 row
                                 center
                                 backgroundColor={STheme.color.primary}
-                                style={{ borderRadius: 4, overflow: 'hidden' }}
+                                style={{borderRadius: 4, overflow: 'hidden'}}
                             >
                                 <SHr height={20} />
                                 <SView col={'xs-11'} row center>
@@ -153,7 +153,7 @@ class root extends Component {
                                                 font={'Roboto'}
                                                 color={STheme.color.text}
                                                 fontSize={16}
-                                                style={{ fontWeight: 'bold' }}
+                                                style={{fontWeight: 'bold'}}
                                             >
                                                 {this.dataConductor?.Nombres +
                                                     ' ' +
@@ -172,7 +172,7 @@ class root extends Component {
                                                 color={STheme.color.darkGray}
                                                 fontSize={16}
                                                 font={'Roboto'}
-                                                style={{ fontWeight: 'bold' }}
+                                                style={{fontWeight: 'bold'}}
                                             >
                                                 Telf:{' '}
                                                 {this.dataConductor?.Telefono}{' '}
@@ -212,16 +212,19 @@ class root extends Component {
                 <SView
                     col={'xs-12'}
                     center
-                    style={{ backgroundColor: STheme.color.white }}
-                ><SView col={'xs-11'} row center>
+                    style={{backgroundColor: STheme.color.white}}
+                >
+                    <SView col={'xs-11'} row center>
                         <SView col={'xs-12'}>
                             <SHr height={15} />
                             <SText
                                 fontSize={18}
                                 font={'Roboto'}
-                                style={{ fontWeight: 'bold' }}
+                                style={{fontWeight: 'bold'}}
                                 color={STheme.color.darkGray}
-                            >Cliente</SText>
+                            >
+                                Cliente
+                            </SText>
                             <SHr height={15} />
                         </SView>
                         <SView col={'xs-12'} row>
@@ -230,7 +233,7 @@ class root extends Component {
                                 width={70}
                                 backgroundColor={STheme.color.card}
                                 height={70}
-                                style={{ borderRadius: 8, overflow: 'hidden' }}
+                                style={{borderRadius: 8, overflow: 'hidden'}}
                             >
                                 <SImage
                                     src={`${SSocket.api.root}usuario/${this.data.key_usuario}`}
@@ -249,20 +252,44 @@ class root extends Component {
                                             font={'Roboto'}
                                             color={STheme.color.text}
                                             fontSize={16}
-                                            style={{ fontWeight: 'bold' }}
-                                        >{this.dataUsuario?.Nombres + ' ' + this.dataUsuario?.Apellidos}</SText>
+                                            style={{fontWeight: 'bold'}}
+                                        >
+                                            {this.dataUsuario?.Nombres +
+                                                ' ' +
+                                                this.dataUsuario?.Apellidos}
+                                        </SText>
                                     </SView>
                                     <SHr height={10} />
                                     <SView
                                         col={'xs-12'}
-                                        style={{ justifyContent: 'flex-start' }}
-                                    ><SText
-                                        color={STheme.color.darkGray}
-                                        fontSize={16}
-                                        font={'Roboto'}
-                                        style={{ fontWeight: 'bold' }}
-                                    >Telf: {this.dataUsuario?.Telefono}</SText>
+                                        style={{justifyContent: 'flex-start'}}
+                                    >
+                                        <SText
+                                            color={STheme.color.darkGray}
+                                            fontSize={16}
+                                            font={'Roboto'}
+                                            style={{fontWeight: 'bold'}}
+                                        >
+                                            Telf: {this.dataUsuario?.Telefono}
+                                        </SText>
                                     </SView>
+                                    <SHr height={20} />
+                                    <SText
+                                        fontSize={14}
+                                        font={'Roboto'}
+                                        style={{fontWeight: 'bold'}}
+                                        // color={STheme.color.darkGray}
+                                    >
+                                        Datos de Facturación:
+                                    </SText>
+                                    <SHr height={5} />
+                                    <SText>
+                                        RS: {this.data?.factura?.razon_social ? this.data?.factura?.razon_social : 'El Usuario no puso Razón Social'}
+                                    </SText>
+                                    <SHr height={5} />
+                                    <SText>
+                                        NIT: {this.data?.factura?.nit ? this.data?.factura?.nit : `El Usuario no puso NIT`}
+                                    </SText>
                                 </SView>
                                 <SHr height={5} />
                             </SView>
@@ -275,7 +302,7 @@ class root extends Component {
                     col={'xs-12'}
                     center
                     row
-                    style={{ backgroundColor: STheme.color.white }}
+                    style={{backgroundColor: STheme.color.white}}
                 >
                     <SView col={'xs-11'} row center>
                         <SView col={'xs-12'}>
@@ -283,7 +310,7 @@ class root extends Component {
                             <SText
                                 fontSize={18}
                                 font={'Roboto'}
-                                style={{ fontWeight: 'bold' }}
+                                style={{fontWeight: 'bold'}}
                                 color={STheme.color.darkGray}
                             >
                                 Detalle del pedido
@@ -296,7 +323,7 @@ class root extends Component {
                                 height={84}
                                 center
                                 backgroundColor={STheme.color.card}
-                                style={{ borderRadius: 8, overflow: 'hidden' }}
+                                style={{borderRadius: 8, overflow: 'hidden'}}
                             >
                                 <SImage
                                     src={`${SSocket.api.root}restaurante/${this.data.restaurante.key}`}
@@ -322,7 +349,7 @@ class root extends Component {
                                     <SHr height={15} />
                                     <SView
                                         col={'xs-6'}
-                                        style={{ justifyContent: 'flex-start' }}
+                                        style={{justifyContent: 'flex-start'}}
                                     >
                                         <SText
                                             fontSize={14}
@@ -390,7 +417,7 @@ class root extends Component {
                     col={'xs-12'}
                     row
                     center
-                    style={{ backgroundColor: STheme.color.white }}
+                    style={{backgroundColor: STheme.color.white}}
                 >
                     <SView col={'xs-11'} row center>
                         <SView col={'xs-12'}>
@@ -398,7 +425,7 @@ class root extends Component {
                             <SText
                                 fontSize={18}
                                 font={'Roboto'}
-                                style={{ fontWeight: 'bold' }}
+                                style={{fontWeight: 'bold'}}
                                 color={STheme.color.darkGray}
                             >
                                 Detalle de Compra
@@ -408,34 +435,34 @@ class root extends Component {
                         <SHr height={15} />
                         <SView col={'xs-6'}>
                             <SText
-                                style={{ textAlign: 'justify' }}
+                                style={{textAlign: 'justify'}}
                                 fontSize={15}
                                 font={'Roboto'}
                             >
                                 Método de pago
                             </SText>
                         </SView>
-                        <SView col={'xs-6'} style={{ alignItems: 'flex-end' }}>
-                            <SText fontSize={15} font={'Roboto'}>
+                        <SView col={'xs-6'} style={{alignItems: 'flex-end'}}>
+                            <SText fontSize={15} font={'Roboto'} flex>
                                 {this.getTipoPago(this.data)}
                             </SText>
                         </SView>
                         <SHr height={10} />
                         <SView col={'xs-6'}>
                             <SText
-                                style={{ textAlign: 'justify' }}
+                                style={{textAlign: 'justify'}}
                                 fontSize={15}
                                 font={'Roboto'}
                             >
                                 Total
                             </SText>
                         </SView>
-                        <SView col={'xs-6'} style={{ alignItems: 'flex-end' }}>
-                            <SText fontSize={15} font={'Roboto'}>
+                        <SView col={'xs-6'} style={{alignItems: 'flex-end'}}>
+                            <SText fontSize={15} font={'Roboto'} flex>
                                 Bs.{' '}
                                 {SMath.formatMoney(
                                     (this.data.pack?.precio ?? 0) *
-                                    this.data.cantidad
+                                        this.data.cantidad
                                 )}
                             </SText>
                         </SView>
@@ -460,16 +487,16 @@ class root extends Component {
                                 Total:
                             </SText>
                         </SView>
-                        <SView col={'xs-6'} style={{ alignItems: 'flex-end' }}>
+                        <SView col={'xs-6'} style={{alignItems: 'flex-end'}}>
                             <SText
                                 fontSize={15}
                                 font={'Roboto'}
-                                style={{ fontWeight: 'bold' }}
+                                style={{fontWeight: 'bold'}}
                             >
                                 Bs.{' '}
                                 {SMath.formatMoney(
                                     (this.data.pack?.precio ?? 0) *
-                                    this.data.cantidad
+                                        this.data.cantidad  
                                 )}
                             </SText>
                         </SView>
@@ -482,16 +509,17 @@ class root extends Component {
                 <SView
                     col={'xs-11'}
                     center
-                    style={{ backgroundColor: STheme.color.white }}
+                    style={{backgroundColor: STheme.color.white}}
                 >
                     <SHr height={40} />
-                    {(this.data.state == 'en_camino' ||
-                        this.data.state == 'entregado' ||
-                        this.data.state == 'no_recogido') ? (<SView
+                    {this.data.state == 'en_camino' ||
+                    this.data.state == 'entregado' ||
+                    this.data.state == 'no_recogido' ? (
+                        <SView
                             col={'xs-11'}
                             center
                             backgroundColor={'#96BE00'}
-                            style={{ borderRadius: 4, overflow: 'hidden' }}
+                            style={{borderRadius: 4, overflow: 'hidden'}}
                         >
                             <SHr height={20} />
                             <SView col={'xs-11'}>
@@ -589,7 +617,7 @@ class root extends Component {
                                 }
                             }}
                         >
-                            <SText color={"#fff"}>ENTREGAR</SText>
+                            <SText color={'#fff'}>ENTREGAR</SText>
                         </SButtom>
                     )}
                     <SHr height={40} />
@@ -611,11 +639,13 @@ class root extends Component {
                     Model.pedido.Action.CLEAR();
                 }}
                 header={<AccentBar />}
-            >{this.render_content()}</SPage>
+            >
+                {this.render_content()}
+            </SPage>
         );
     }
 }
 const initStates = state => {
-    return { state };
+    return {state};
 };
 export default connect(initStates)(root);

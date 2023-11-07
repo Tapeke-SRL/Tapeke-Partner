@@ -20,6 +20,7 @@ import documento from './documento';
 import restaurante from './restaurante';
 import direccion from './direccion';
 import test from './test.js';
+import version_required from './version_required';
 
 import camara from './camara';
 import carga from './carga.js';
@@ -35,6 +36,7 @@ export default SPage.combinePages("/", {
     ...login,
     "sms": sms,
     "notification": notification,
+    version_required,
     "condiciones": condiciones,
     "inicioChat": inicioChat,
     notificaciones,
