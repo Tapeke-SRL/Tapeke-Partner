@@ -1,12 +1,13 @@
 import React from 'react';
 import { Platform } from 'react-native'
-import { SComponentContainer, SNavigation } from 'servisofts-component';
+import { SComponentContainer, SNavigation, SText, STheme } from 'servisofts-component';
 import SSocket, { setProps } from 'servisofts-socket';
 import Redux, { store } from './Redux';
 import Config from "./Config";
 import Assets from './Assets';
 import Pages from './Pages';
 import NavBar from './Components/NavBar';
+import packageInfo from "../package.json"
 
 import Firebase from './Firebase';
 import DeviceKey from './Firebase/DeviceKey';
@@ -47,6 +48,7 @@ const App = (props) => {
                 }}
             />
             <NavBar />
+            <SText style={{ position: "absolute", bottom: 2, right: 2, zIndex: 0, }} disabled fontSize={10} color={STheme.color.lightGray}>v{packageInfo.version}</SText>
         </SComponentContainer>
     </Redux>
 }
