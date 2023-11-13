@@ -1,6 +1,6 @@
 {
   "name": "tapeke_restaurante_app",
-  "version": "1.4.24",
+  "version": "1.4.25",
   "description": "tapeke_restaurante_app",
   "scripts": {
     "start": "react-native start",

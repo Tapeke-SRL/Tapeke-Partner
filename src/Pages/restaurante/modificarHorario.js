@@ -53,6 +53,14 @@ class index extends Component {
         let hi = this._input_hi.getValue();
         let hf = this._input_hf.getValue();
 
+        if (hi.length != 5) {
+          SPopup.alert("La hora inicio debe ser el formato 24:00");
+          return;
+        }
+        if (hf.length != 5) {
+          SPopup.alert("La hora fin debe ser el formato 24:00");
+          return;
+        }
         let dhi = new SDate(hi, "hh:mm");
         let dhf = new SDate(hf, "hh:mm");
         console.log(dhi.diffTime(dhf))
@@ -66,6 +74,7 @@ class index extends Component {
         Model.horario.Action.editar({
           data: {
             ...this.horario_proximo,
+            estado: 1,
             hora_inicio: hi,
             hora_fin: hf,
           },
@@ -87,7 +96,7 @@ class index extends Component {
 
         }).catch(e => {
           console.error(e);
-          SPopup.alert(e.error)
+          SPopup.alert("Error de servidor. " + e?.error)
 
         })
         // this.setState({ loading: true, error: "" });

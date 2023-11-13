@@ -38,12 +38,17 @@ export default class Action extends SAction {
         }
         if (getByKeyRestauranteProximo && !force) return getByKeyRestauranteProximo[0];
         if (estado == "cargando" && !force) return null;
-        SSocket.send({
+        SSocket.sendHttpAsync(SSocket.api.root + "api", {
             ...this.model.info,
             type: "getByKeyRestauranteProximo",
             key_restaurante: key,
             estado: "cargando"
+        }).then(e => {
+            this._dispatch(e);
         })
+        // SSocket.send({
+
+        // })
         return null;
     }
     // getByKeyRestauranteProximo = (key) => {
