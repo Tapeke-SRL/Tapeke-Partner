@@ -52,7 +52,7 @@ class historialDetalle extends Component {
         if (!this.state.dataPedidos) return <SLoad type='skeleton' col={"xs-12"} height={50} />
         return <SList
             data={this.state.dataPedidos}
-            order={[{ key: "fecha_on", order: "desc", peso: 1, }]}
+            order={[{ key: "fecha", order: "desc", peso: 1, }]}
             limit={10}
             render={(obj) => {
                 return <Pedido_item data={obj} />
@@ -146,9 +146,19 @@ class historialDetalle extends Component {
                 <SView col={"xs-12"} >
                     <SText bold fontSize={20} >Historial de pedidos</SText>
                 </SView>
-
+                <SView col={"xs-10"} backgroundColor={STheme.color.primary} center
+                    height={30}
+                    style={{
+                        borderRadius: 8
+                    }}
+                    onPress={() => {
+                        SNavigation.navigate("/ganancia/tablaPedido", { conciliado: true, key_conciliacion_restaurante: this.pk });
+                    }}
+                >
+                    <SText fontSize={12} color={STheme.color.white} bold>Ver tabla historial pedidos</SText>
+                </SView>
                 <SHr height={10} />
-                {this.getLista()}
+                    {this.getLista()}
                 <SHr height={30} />
             </Container>
         </SPage>

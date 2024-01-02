@@ -290,6 +290,19 @@ class root extends Component {
                                     <SText>
                                         NIT: {this.data?.factura?.nit ? this.data?.factura?.nit : `El Usuario no puso NIT`}
                                     </SText>
+                                    <SHr height={20} />
+                                    <SText
+                                        fontSize={14}
+                                        font={'Roboto'}
+                                        style={{fontWeight: 'bold'}}
+                                        // color={STheme.color.darkGray}
+                                    >
+                                        Nota del cliente:
+                                    </SText>
+                                    <SHr height={10} />
+                                    <SText>
+                                        {this.data?.nota_cliente ? this.data?.nota_cliente : `El Usuario no puso nota al pedido`}
+                                    </SText>
                                 </SView>
                                 <SHr height={5} />
                             </SView>

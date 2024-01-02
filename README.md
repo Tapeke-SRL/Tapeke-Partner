@@ -11,3 +11,5 @@ https://console.cloud.google.com/
 
 Acceso rapido > Apis y servicios
 
+
+  "servisofts-component": "2.11.14",

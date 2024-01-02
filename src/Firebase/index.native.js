@@ -6,6 +6,7 @@ import { PermissionsAndroid, Platform } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import { Notifications } from 'react-native-notifications';
 import DeviceKey from './DeviceKey';
+import { SNotification } from 'servisofts-component';
 
 const sleep = ms => {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -47,10 +48,19 @@ class Firebase {
             });
             const unsubscribe = messaging().onMessage(async remoteMessage => {
                 console.log('Message received. ', remoteMessage);
-                Notifications.postLocalNotification({
-                    title: remoteMessage.notification.title,
-                    body: remoteMessage.notification.body,
-                });
+                // Notifications.postLocalNotification({
+                //     title: remoteMessage.notification.title,
+                //     body: remoteMessage.notification.body,
+                // });
+                SNotification.send({
+                    title: remoteMessage?.notification?.title,
+                    body: remoteMessage?.notification?.body,
+                    image: Platform.select({
+                        "android": remoteMessage?.notification?.android?.imageUrl,
+                        "ios": remoteMessage?.data?.fcm_options?.image,
+                        "default": remoteMessage?.data?.fcm_options?.image,
+                    })
+                })
                 // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
             });
         } catch (e) {

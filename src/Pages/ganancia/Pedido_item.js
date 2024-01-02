@@ -9,7 +9,7 @@ class Pedido_item extends Component {
     }
 
     render() {
-        const { state, precio, fecha_on, comision_restaurante, cantidad, key_pedido, horario, delivery, tipo_pago } = this.props.data;
+        const { state, precio, fecha, fecha_on, comision_restaurante, cantidad, key_pedido, horario, delivery, tipo_pago } = this.props.data;
         let tipo_pago_str = "Online";
         const diasSemana = ['LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB', 'DOM'];
         if (tipo_pago) {
@@ -25,33 +25,33 @@ class Pedido_item extends Component {
                 center
                 style={{ borderRightColor: "#DADADA", borderRightWidth: 2 }}
             >
-                <SText fontSize={17} color={STheme.color.gray} >
-                    {diasSemana[new SDate(fecha_on).getDayOfWeek()]}
+                <SText fontSize={11} color={STheme.color.gray} >
+                    {diasSemana[new SDate(fecha).getDayOfWeek()]}
                 </SText>
-                <SText fontSize={14} color={STheme.color.gray}>
-                    {new SDate(fecha_on).toString("dd/MM")}
+                <SText fontSize={11} color={STheme.color.gray}>
+                    {fecha}
                 </SText>
-                <SText fontSize={10.5} color={STheme.color.gray}>
-                    {new SDate(fecha_on).toString("hh:mm:ss")}
-                </SText>
+                {/* <SText fontSize={10.5} color={STheme.color.gray}> */}
+                    {/* {new SDate(fecha).toString("hh:mm:ss")} */}
+                {/* </SText> */}
             </SView>
             <SView col={"xs-3.5"} center
                 height
                 style={{ borderRightColor: "#DADADA", borderRightWidth: 2 }}
             >
                 <SText bold fontSize={11} color={STheme.color.primary}>PRECIO</SText>
-                <SText fontSize={16} bold>{"Bs."} {SMath.formatMoney(precio * cantidad)}</SText>
+                <SText fontSize={12} bold>{"Bs."} {SMath.formatMoney(precio * cantidad)}</SText>
             </SView>
             <SView col={"xs-3.5"} center
                 height
                 style={{ borderRightColor: "#DADADA", borderRightWidth: 2 }}
             >
                 <SText bold fontSize={11} color={STheme.color.primary}>COMISIÓN</SText>
-                <SText bold fontSize={16} color={STheme.color.danger}> - Bs. {SMath.formatMoney(comision_restaurante ?? 0)}</SText>
+                <SText bold fontSize={12} color={STheme.color.danger}> - Bs. {SMath.formatMoney(comision_restaurante ?? 0)}</SText>
             </SView>
             <SView col={"xs-2.8"} style={{ alignItems: "flex-end" }} height center>
                 <SIcon name={(delivery > 0 ? "Idelivery" : "Irecoger")} width={30} fill={STheme.color.lightGray} />
-                <SText bold fontSize={10.5} color="#96BE00"
+                <SText bold fontSize={10} color="#96BE00"
                     style={{
                         textTransform: "uppercase"
                     }}
