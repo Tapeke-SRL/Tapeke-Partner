@@ -8,7 +8,7 @@ import Model from "../..";
 export default class Action extends SAction {
 
     getAll(extra?: { key_partner }) {
-        console.log("Entro al get all,")
+        // console.log("Entro al get all,")
         const key_partner = Model.usuario.Action.getKey() ?? extra?.key_partner;
         if (!key_partner) return null;
         return super.getAll({
