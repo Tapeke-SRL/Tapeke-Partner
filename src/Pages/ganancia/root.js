@@ -10,8 +10,8 @@ class root extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            ultima_conciliacion:{},
-            data:{}
+            ultima_conciliacion: {},
+            data: {}
         };
 
     }
@@ -43,10 +43,10 @@ class root extends Component {
 
         //NOSE PORQUE VALIDABA ESTO AQUÍ SI NO LO USA, HACÌA QUE TODO EL BLOQUE SE QUEDE EN CARGANDO
         // if (!this.state?.ultima_conciliacion) return <SLoad type='skeleton' col={"xs-12"} height={50} /> 
-        
+
         return <SList
             data={this.state.data}
-            order={[{ key: "fecha_on", order: "desc", peso: 1, }]}
+            order={[{ key: "fecha", order: "desc", peso: 1, }]}
             limit={10}
             render={(obj) => {
                 return <Pedido_item data={obj} />
@@ -82,7 +82,7 @@ class root extends Component {
                 total_recoger += (obj.cantidad * obj.precio);;
                 console.log(ganancia)
             }
-       
+
             if (obj.tipo_pago.find(a => a.type == "efectivo")) {
                 totalOk.efectivo += obj.precio * obj.cantidad;
                 totalOk.comision_efectivo += obj.comision_restaurante;
@@ -104,7 +104,7 @@ class root extends Component {
                 <SHr height={10} />
                 {/* <SText color={'#FFCCA2'} fontSize={16} bold>DD MM - {new SDate().toString("dd")} {mesActual[new SDate().getMonth()]} </SText> */}
                 <SView col={"xs-12"} center>
-                    <SText color={'#FFCCA2'} center fontSize={18} bold>{(this.state?.ultima_conciliacion?.fecha_cierre) ? "Última conciliación realizada: " + new SDate(this.state?.ultima_conciliacion?.fecha_cierre).toString("yyyy-MM-dd") : "<Conciliación no realizada>"} </SText>
+                    <SText color={'#FFCCA2'} center fontSize={14} bold>{(this.state?.ultima_conciliacion?.fecha_cierre) ? "Última conciliación realizada: " + new SDate(this.state?.ultima_conciliacion?.fecha_cierre).toString("yyyy-MM-dd") : "<Conciliación no realizada>"} </SText>
                 </SView>
                 <SHr />
                 <SView flex height={2} />
@@ -296,9 +296,22 @@ class root extends Component {
                 <SHr />
                 {this.getHeader()}
                 <SHr height={25} />
-                <SView col={"xs-12"} >
+                <SView col={"xs-12"} row >
                     <SText bold fontSize={20} >Historial de Pedidos</SText>
                 </SView>
+
+                <SHr height={10} />
+                <SView col={"xs-10"} backgroundColor={STheme.color.primary} center
+                        height={30}
+                        style={{
+                            borderRadius: 8
+                        }}
+                        onPress={() => {
+                            SNavigation.navigate("/ganancia/tablaPedido", { conciliado: false });
+                        }}
+                    >
+                        <SText fontSize={12} color={STheme.color.white} bold>Ver tabla historial pedidos</SText>
+                    </SView>
                 <SHr height={10} />
                 {this.getLista()}
                 <SHr height={30} />
