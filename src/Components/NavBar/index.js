@@ -4,10 +4,10 @@ import { SView, SImage, SNavigation, STheme, SIcon, SText, SScrollView2 } from '
 import { connect } from 'react-redux';
 import SSocket from 'servisofts-socket';
 import Model from '../../Model';
-// import CerrarSession from '../../Pages/Usuario/Page/Perfil/CerrarSession';
 const packageJson = require('../../../package.json');
 
 class NavBar extends React.Component {
+
 	static INSTACE = null;
 	static open() {
 		NavBar.INSTACE.fadeIn();
@@ -47,13 +47,13 @@ class NavBar extends React.Component {
 		});
 	}
 
-	item({ url, label, icon, onPress }) {
+	item({ url, params, label, icon, onPress }) {
 		return <SView col={"xs-11"} height={60} border={'transparent'} row onPress={() => {
 			if (onPress) {
 				onPress();
 			}
 			if (url) {
-				SNavigation.navigate(url);
+				SNavigation.navigate(url, params);
 			}
 			this.fadeOut();
 		}}  >
@@ -134,29 +134,38 @@ class NavBar extends React.Component {
 				<SView col={"xs-12"} center>
 
 
-					{this.item({ url: "/", label: "Inicio",icon: 'mInicio' })}
-					{/* {this.item({ url: "/zona", label: "Zonas" })} */}
-					{this.item({ url: "/ganancia", label: "Ganancias" ,icon: 'mGanancias'})}
+					{this.item({ url: "/", label: "Inicio", icon: 'mInicio' })}
+
+					{this.item({
+						url: "/restaurante/producto", params: { key_restaurante: Model.restaurante.Action.getSelect() }, label: "Productos", icon: 'menu',
+					})}
+
+					{this.item({ url: "/ganancia", label: "Ganancias", icon: 'mGanancias' })}
+
 					{this.item({
 						label: "Mis restaurantes", onPress: () => {
 							SNavigation.replace("/root")
 						},
-						icon: 'mRestaurante'
+						icon: 'iconoRestaurante'
 					})}
+
 					{this.item({ label: "Notificaciones", url: "/notificaciones", icon: 'mNotification' })}
-					{this.item({ url: "/soporte", label: "Soporte",icon: 'mSoporte' })}
-					{this.item({ url: "/restaurante_cuenta", label: "Cuentas bancarias",icon: 'Icuenta' })}
-					
-					{/* {this.item({ url: "/documento", label: "Documento Usuario" })} */}
-					{/* {this.item({ url: "/documento/moto", label: "Documento Moto" })} */}
+
+					{this.item({ url: "/soporte", label: "Soporte", icon: 'mSoporte' })}
+
+					{this.item({ url: "/restaurante_cuenta", label: "Cuentas bancarias", icon: 'Icuenta' })}
+
 					{this.item({
 						label: "Cerrar sesión", onPress: () => {
-							// Model.Action.
 							Model.restaurante.Action.select("")
 							Model.usuario.Action.unlogin();
 						},
 						icon: 'mSession'
 					})}
+
+					{/* {this.item({ url: "/zona", label: "Zonas" })} */}
+					{/* {this.item({ url: "/documento", label: "Documento Usuario" })} */}
+					{/* {this.item({ url: "/documento/moto", label: "Documento Moto" })} */}
 
 
 					<SView col={"xs-9.5 md-5.8 xl-3.8"} center style={{ bottom: 0, }}>
@@ -176,6 +185,7 @@ class NavBar extends React.Component {
 
 	render() {
 		NavBar.INSTACE = this;
+
 		if (!this.state.isOpen) return null;
 		return (
 			<SView style={{

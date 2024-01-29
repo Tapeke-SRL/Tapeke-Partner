@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import {
     SButtom,
     SHr,
@@ -14,6 +14,7 @@ import {
     SMath,
     SIcon,
     SThread,
+    SList
 } from 'servisofts-component';
 import Container from '../../Components/Container';
 import Model from '../../Model';
@@ -37,7 +38,7 @@ class root extends Component {
         // Model.pedido.Action.CLEAR();
         Model.pedido.Action.getDetalle(this.pk, true);
         new SThread(200, 'pedido_detalle_thre', true).start(() => {
-            this.setState({loading: false});
+            this.setState({ loading: false });
         });
     }
 
@@ -63,7 +64,6 @@ class root extends Component {
             SNavigation.goBack('/');
             return null;
         }
-
         return true;
     }
 
@@ -73,6 +73,7 @@ class root extends Component {
         }
         return <SText>Recoger del lugar</SText>;
     }
+
     getConductor() {
         if (this.data.delivery > 0 && !this.data.key_conductor) {
             return <SText>Conductor no asignado</SText>;
@@ -84,7 +85,7 @@ class root extends Component {
             <SView
                 col={'xs-12'}
                 center
-                style={{backgroundColor: STheme.color.white}}
+                style={{ backgroundColor: STheme.color.white }}
             >
                 <SView col={'xs-11'} row center>
                     <SView col={'xs-12'}>
@@ -92,7 +93,7 @@ class root extends Component {
                         <SText
                             fontSize={18}
                             font={'Roboto'}
-                            style={{fontWeight: 'bold'}}
+                            style={{ fontWeight: 'bold' }}
                             color={STheme.color.darkGray}
                         >
                             Conductor
@@ -106,7 +107,7 @@ class root extends Component {
                                 row
                                 center
                                 backgroundColor={STheme.color.primary}
-                                style={{borderRadius: 4, overflow: 'hidden'}}
+                                style={{ borderRadius: 4, overflow: 'hidden' }}
                             >
                                 <SHr height={20} />
                                 <SView col={'xs-11'} row center>
@@ -153,7 +154,7 @@ class root extends Component {
                                                 font={'Roboto'}
                                                 color={STheme.color.text}
                                                 fontSize={16}
-                                                style={{fontWeight: 'bold'}}
+                                                style={{ fontWeight: 'bold' }}
                                             >
                                                 {this.dataConductor?.Nombres +
                                                     ' ' +
@@ -172,7 +173,7 @@ class root extends Component {
                                                 color={STheme.color.darkGray}
                                                 fontSize={16}
                                                 font={'Roboto'}
-                                                style={{fontWeight: 'bold'}}
+                                                style={{ fontWeight: 'bold' }}
                                             >
                                                 Telf:{' '}
                                                 {this.dataConductor?.Telefono}{' '}
@@ -201,6 +202,394 @@ class root extends Component {
         return tipo;
     }
 
+    detalleTapeke() {
+        return <>
+            <SText
+                fontSize={15}
+                font={'Roboto'}
+                style={{ fontWeight: 'bold' }}
+            >
+                Detalle del Tapeke:
+            </SText>
+            <SHr height={8} />
+
+            <SView col={'xs-12'} row center>
+                <SView
+                    width={80}
+                    height={80}
+                    center
+                    backgroundColor={STheme.color.card}
+                    style={{ borderRadius: 8, overflow: 'hidden' }}
+                >
+                    <SImage
+                        src={require(`../../Assets/img/BOLSA-TAPEKE-MENU-APP 1.png`)}
+                        style={{
+                            width: '100%',
+                            position: 'relative',
+                            resizeMode: 'cover',
+                        }}
+                    />
+                </SView>
+
+
+                <SView flex center row>
+                    <SView col={'xs-1'}></SView>
+                    <SView col={'xs-11'} row>
+                        <SView col={'xs-12'}>
+                            <SText
+                                color={STheme.color.text}
+                                fontSize={12}
+                                bold
+                            >
+                                {this.data.restaurante?.nombre}
+                            </SText>
+                        </SView>
+                        <SHr height={15} />
+                        <SView
+                            col={'xs-6'}
+                            style={{ justifyContent: 'flex-start' }}
+                        >
+                            <SText
+                                fontSize={14}
+                                font={'Roboto'}
+                                color={STheme.color.primary}
+                                bold
+                            >
+                                {' '}
+                                Precio
+                            </SText>
+                            <SHr height={5} />
+                            <SText
+                                fontSize={20}
+                                font={'Roboto'}
+                                bold
+                            >
+                                Bs. {this.data.pack?.precio ?? 0}{' '}
+                            </SText>
+                        </SView>
+                        <SView col={'xs-6'} center row>
+                            <SView col={'xs-12'} center>
+                                <SText
+                                    fontSize={14}
+                                    font={'Roboto'}
+                                    color={STheme.color.primary}
+                                    bold
+                                >
+                                    Cantidad
+                                </SText>
+                            </SView>
+                            <SHr height={5} />
+                            <SView col={'xs-12'} center>
+                                <SView
+                                    col={'xs-6'}
+                                    center
+                                    style={{
+                                        height: 40,
+                                        backgroundColor:
+                                            STheme.color.card,
+                                        borderRadius: 6,
+                                    }}
+                                >
+                                    <SText
+                                        fontSize={14}
+                                        font={'Roboto'}
+                                    >
+                                        {' '}
+                                        {this.data.cantidad ??
+                                            0}{' '}
+                                    </SText>
+                                </SView>
+                            </SView>
+                        </SView>
+                    </SView>
+                </SView>
+            </SView>
+        </>
+    }
+
+    calcularTotalProducto() {
+        let totalProducto = 0;
+        if (!!this.data?.pedido_producto) {
+            Object.values(this.data?.pedido_producto).map((o) => totalProducto += o?.precio * o?.cantidad);
+        }
+        return totalProducto;
+    }
+
+    detalleProducto() {
+        if (!!this.data?.pedido_producto) {
+            return <>
+                <SView padding={10}>
+                    <SText
+                        fontSize={15}
+                        font={'Roboto'}
+                        style={{ fontWeight: 'bold' }}
+                        center
+                    >
+                        Detalle del producto:
+                    </SText>
+                    <SHr height={8} />
+
+                    <SList
+                        data={this.data?.pedido_producto}
+                        render={(pedido_producto) => {
+                            return <>
+                                {/* <SView row card padding={5} margin={5}>
+                                    <SView flex>
+                                        <SText>Descripción: {pedido_producto?.descripcion}</SText>
+                                        <SText>Cantidad: {pedido_producto?.cantidad}</SText>
+                                        <SText>Precio: {pedido_producto?.precio}</SText>
+                                        <SText>Total: {pedido_producto?.precio * pedido_producto?.cantidad}</SText>
+                                    </SView>
+
+                                    
+                                </SView> */}
+
+                                <SView col={'xs-12'} row center>
+                                    <SView
+                                        width={80}
+                                        height={80}
+                                        center
+                                        backgroundColor={STheme.color.card}
+                                        style={{ borderRadius: 8, overflow: 'hidden' }}
+                                        mariginleft={10}
+                                    >
+                                        <SImage src={Model.producto._get_image_download_path(SSocket.api, pedido_producto?.key_producto)} />
+                                    </SView>
+
+                                    <SView flex center row>
+                                        <SView col={'xs-1'}></SView>
+                                        <SView col={'xs-11'} row>
+                                            <SView col={'xs-12'}>
+                                                <SText
+                                                    color={STheme.color.text}
+                                                    fontSize={12}
+                                                    bold
+                                                >
+                                                    {pedido_producto?.descripcion}
+                                                </SText>
+                                            </SView>
+                                            <SHr height={15} />
+                                            <SView
+                                                col={'xs-6'}
+                                                style={{ justifyContent: 'flex-start' }}
+                                            >
+                                                <SText
+                                                    fontSize={14}
+                                                    font={'Roboto'}
+                                                    color={STheme.color.primary}
+                                                    bold
+                                                >
+                                                    {' '}
+                                                    Precio
+                                                </SText>
+                                                <SHr height={5} />
+                                                <SText
+                                                    fontSize={20}
+                                                    font={'Roboto'}
+                                                    bold
+                                                >
+                                                    Bs. {pedido_producto?.precio ?? 0}{' '}
+                                                </SText>
+                                            </SView>
+                                            <SView col={'xs-6'} center row>
+                                                <SView col={'xs-12'} center>
+                                                    <SText
+                                                        fontSize={14}
+                                                        font={'Roboto'}
+                                                        color={STheme.color.primary}
+                                                        bold
+                                                    >
+                                                        Cantidad
+                                                    </SText>
+                                                </SView>
+                                                <SHr height={5} />
+                                                <SView col={'xs-12'} center>
+                                                    <SView
+                                                        col={'xs-6'}
+                                                        center
+                                                        style={{
+                                                            height: 40,
+                                                            backgroundColor:
+                                                                STheme.color.card,
+                                                            borderRadius: 6,
+                                                        }}
+                                                    >
+                                                        <SText
+                                                            fontSize={14}
+                                                            font={'Roboto'}
+                                                        >
+                                                            {' '}
+                                                            {pedido_producto?.cantidad ??
+                                                                0}{' '}
+                                                        </SText>
+                                                    </SView>
+                                                </SView>
+                                            </SView>
+                                        </SView>
+                                    </SView>
+                                </SView>
+                            </>
+                        }}
+                    />
+
+                    <SHr h={15} />
+                    {/* {this.label({ label: "Total productos", value: "Bs. " + SMath.formatMoney(this.calcularTotalProducto()) })} */}
+
+                </SView >
+
+            </>
+
+        }
+    }
+
+    detallePedido() {
+        return <>
+            <SView
+                col={'xs-12'}
+                center
+                row
+                style={{ backgroundColor: STheme.color.white }}
+            >
+                <SView col={'xs-11'} row center>
+                    <SView col={'xs-12'}>
+                        <SHr height={15} />
+                        <SText
+                            fontSize={18}
+                            font={'Roboto'}
+                            style={{ fontWeight: 'bold' }}
+                            color={STheme.color.darkGray}
+                        >
+                            Detalle del pedido
+                        </SText>
+                        <SHr height={15} />
+                    </SView>
+
+                    {this.detalleTapeke()}
+
+                    <SHr height={18} />
+                    {this.detalleProducto()}
+                </SView>
+            </SView>
+        </>
+    }
+
+    detalleCompra() {
+        let totalProducto = this.calcularTotalProducto();
+        return <>
+            <SView
+                col={'xs-12'}
+                row
+                center
+                style={{ backgroundColor: STheme.color.white }}
+            >
+                <SView col={'xs-11'} row center>
+                    <SView col={'xs-12'}>
+                        <SHr height={15} />
+                        <SText
+                            fontSize={18}
+                            font={'Roboto'}
+                            style={{ fontWeight: 'bold' }}
+                            color={STheme.color.darkGray}
+                        >
+                            Detalle de Compra
+                        </SText>
+                        <SHr height={15} />
+                    </SView>
+                    <SHr height={15} />
+                    <SView col={'xs-6'}>
+                        <SText
+                            style={{ textAlign: 'justify' }}
+                            fontSize={15}
+                            font={'Roboto'}
+                        >
+                            Método de pago
+                        </SText>
+                    </SView>
+                    <SView col={'xs-6'} style={{ alignItems: 'flex-end' }}>
+                        <SText fontSize={15} font={'Roboto'} flex>
+                            {this.getTipoPago(this.data)}
+                        </SText>
+                    </SView>
+                    <SHr height={10} />
+
+                    <SView col={'xs-6'}>
+                        <SText
+                            style={{ textAlign: 'justify' }}
+                            fontSize={15}
+                            font={'Roboto'}
+                        >
+                            Total Tapekes
+                        </SText>
+                    </SView>
+                    <SView col={'xs-6'} style={{ alignItems: 'flex-end' }}>
+                        <SText fontSize={15} font={'Roboto'} flex>
+                            Bs.{' '}
+                            {SMath.formatMoney(
+                                (this.data.pack?.precio ?? 0) *
+                                this.data.cantidad
+                            )}
+                        </SText>
+                    </SView>
+
+                    <SHr height={10} />
+                    <SView col={'xs-6'}>
+                        <SText
+                            style={{ textAlign: 'justify' }}
+                            fontSize={15}
+                            font={'Roboto'}
+                        >
+                            Total Productos
+                        </SText>
+                    </SView>
+                    <SView col={'xs-6'} style={{ alignItems: 'flex-end' }}>
+                        <SText fontSize={15} font={'Roboto'} flex>
+                            Bs.{' '}
+                            {SMath.formatMoney(
+                                totalProducto
+                            )}
+                        </SText>
+                    </SView>
+
+                    <SHr height={10} />
+                    <SView
+                        col={'xs-12'}
+                        style={{
+                            borderBottomWidth: 1,
+                            borderColor: STheme.color.lightGray,
+                        }}
+                    ></SView>
+                    <SHr height={10} />
+                    <SView col={'xs-6'}>
+                        <SText
+                            style={{
+                                textAlign: 'justify',
+                                fontWeight: 'bold',
+                            }}
+                            fontSize={15}
+                            font={'Roboto'}
+                        >
+                            Total:
+                        </SText>
+                    </SView>
+                    <SView col={'xs-6'} style={{ alignItems: 'flex-end' }}>
+                        <SText
+                            fontSize={15}
+                            font={'Roboto'}
+                            style={{ fontWeight: 'bold' }}
+                        >
+                            Bs.{' '}
+                            {SMath.formatMoney(
+                                (this.data.pack?.precio ?? 0) *
+                                this.data.cantidad + totalProducto
+                            )}
+                        </SText>
+                    </SView>
+                    <SHr height={15} />
+                </SView>
+            </SView>
+        </>
+    }
+
     contenido(data) {
         // if (!this.loadData()) return <SLoad />
         if (!data) return <SLoad />;
@@ -212,7 +601,7 @@ class root extends Component {
                 <SView
                     col={'xs-12'}
                     center
-                    style={{backgroundColor: STheme.color.white}}
+                    style={{ backgroundColor: STheme.color.white }}
                 >
                     <SView col={'xs-11'} row center>
                         <SView col={'xs-12'}>
@@ -220,7 +609,7 @@ class root extends Component {
                             <SText
                                 fontSize={18}
                                 font={'Roboto'}
-                                style={{fontWeight: 'bold'}}
+                                style={{ fontWeight: 'bold' }}
                                 color={STheme.color.darkGray}
                             >
                                 Cliente
@@ -233,7 +622,7 @@ class root extends Component {
                                 width={70}
                                 backgroundColor={STheme.color.card}
                                 height={70}
-                                style={{borderRadius: 8, overflow: 'hidden'}}
+                                style={{ borderRadius: 8, overflow: 'hidden' }}
                             >
                                 <SImage
                                     src={`${SSocket.api.root}usuario/${this.data.key_usuario}`}
@@ -252,7 +641,7 @@ class root extends Component {
                                             font={'Roboto'}
                                             color={STheme.color.text}
                                             fontSize={16}
-                                            style={{fontWeight: 'bold'}}
+                                            style={{ fontWeight: 'bold' }}
                                         >
                                             {this.dataUsuario?.Nombres +
                                                 ' ' +
@@ -262,13 +651,13 @@ class root extends Component {
                                     <SHr height={10} />
                                     <SView
                                         col={'xs-12'}
-                                        style={{justifyContent: 'flex-start'}}
+                                        style={{ justifyContent: 'flex-start' }}
                                     >
                                         <SText
                                             color={STheme.color.darkGray}
                                             fontSize={16}
                                             font={'Roboto'}
-                                            style={{fontWeight: 'bold'}}
+                                            style={{ fontWeight: 'bold' }}
                                         >
                                             Telf: {this.dataUsuario?.Telefono}
                                         </SText>
@@ -277,8 +666,8 @@ class root extends Component {
                                     <SText
                                         fontSize={14}
                                         font={'Roboto'}
-                                        style={{fontWeight: 'bold'}}
-                                        // color={STheme.color.darkGray}
+                                        style={{ fontWeight: 'bold' }}
+                                    // color={STheme.color.darkGray}
                                     >
                                         Datos de Facturación:
                                     </SText>
@@ -294,8 +683,8 @@ class root extends Component {
                                     <SText
                                         fontSize={14}
                                         font={'Roboto'}
-                                        style={{fontWeight: 'bold'}}
-                                        // color={STheme.color.darkGray}
+                                        style={{ fontWeight: 'bold' }}
+                                    // color={STheme.color.darkGray}
                                     >
                                         Nota del cliente:
                                     </SText>
@@ -310,229 +699,34 @@ class root extends Component {
                     </SView>
                     <SHr height={18} />
                 </SView>
+
                 <SHr height={18} />
-                <SView
-                    col={'xs-12'}
-                    center
-                    row
-                    style={{backgroundColor: STheme.color.white}}
-                >
-                    <SView col={'xs-11'} row center>
-                        <SView col={'xs-12'}>
-                            <SHr height={15} />
-                            <SText
-                                fontSize={18}
-                                font={'Roboto'}
-                                style={{fontWeight: 'bold'}}
-                                color={STheme.color.darkGray}
-                            >
-                                Detalle del pedido
-                            </SText>
-                            <SHr height={15} />
-                        </SView>
-                        <SView col={'xs-12'} row center>
-                            <SView
-                                width={84}
-                                height={84}
-                                center
-                                backgroundColor={STheme.color.card}
-                                style={{borderRadius: 8, overflow: 'hidden'}}
-                            >
-                                <SImage
-                                    src={`${SSocket.api.root}restaurante/${this.data.restaurante.key}`}
-                                    style={{
-                                        width: '100%',
-                                        position: 'relative',
-                                        resizeMode: 'cover',
-                                    }}
-                                />
-                            </SView>
-                            <SView flex center row>
-                                <SView col={'xs-1'}></SView>
-                                <SView col={'xs-11'} row>
-                                    <SView col={'xs-12'}>
-                                        <SText
-                                            color={STheme.color.text}
-                                            fontSize={14}
-                                            bold
-                                        >
-                                            {this.data.restaurante?.nombre}
-                                        </SText>
-                                    </SView>
-                                    <SHr height={15} />
-                                    <SView
-                                        col={'xs-6'}
-                                        style={{justifyContent: 'flex-start'}}
-                                    >
-                                        <SText
-                                            fontSize={14}
-                                            font={'Roboto'}
-                                            color={STheme.color.primary}
-                                            bold
-                                        >
-                                            {' '}
-                                            Precio
-                                        </SText>
-                                        <SHr height={5} />
-                                        <SText
-                                            fontSize={20}
-                                            font={'Roboto'}
-                                            bold
-                                        >
-                                            Bs. {this.data.pack?.precio ?? 0}{' '}
-                                        </SText>
-                                    </SView>
-                                    <SView col={'xs-6'} center row>
-                                        <SView col={'xs-12'} center>
-                                            <SText
-                                                fontSize={14}
-                                                font={'Roboto'}
-                                                color={STheme.color.primary}
-                                                bold
-                                            >
-                                                Cantidad
-                                            </SText>
-                                        </SView>
-                                        <SHr height={5} />
-                                        <SView col={'xs-12'} center>
-                                            <SView
-                                                col={'xs-6'}
-                                                center
-                                                style={{
-                                                    height: 40,
-                                                    backgroundColor:
-                                                        STheme.color.card,
-                                                    borderRadius: 6,
-                                                }}
-                                            >
-                                                <SText
-                                                    fontSize={14}
-                                                    font={'Roboto'}
-                                                >
-                                                    {' '}
-                                                    {this.data.cantidad ??
-                                                        0}{' '}
-                                                </SText>
-                                            </SView>
-                                        </SView>
-                                    </SView>
-                                </SView>
-                                <SHr height={5} />
-                            </SView>
-                        </SView>
-                        <SHr height={18} />
-                    </SView>
-                </SView>
+                {this.detallePedido()}
+
                 <SHr height={18} />
                 {this.getTipoEntrega()}
+
                 <SHr height={18} />
-                <SView
-                    col={'xs-12'}
-                    row
-                    center
-                    style={{backgroundColor: STheme.color.white}}
-                >
-                    <SView col={'xs-11'} row center>
-                        <SView col={'xs-12'}>
-                            <SHr height={15} />
-                            <SText
-                                fontSize={18}
-                                font={'Roboto'}
-                                style={{fontWeight: 'bold'}}
-                                color={STheme.color.darkGray}
-                            >
-                                Detalle de Compra
-                            </SText>
-                            <SHr height={15} />
-                        </SView>
-                        <SHr height={15} />
-                        <SView col={'xs-6'}>
-                            <SText
-                                style={{textAlign: 'justify'}}
-                                fontSize={15}
-                                font={'Roboto'}
-                            >
-                                Método de pago
-                            </SText>
-                        </SView>
-                        <SView col={'xs-6'} style={{alignItems: 'flex-end'}}>
-                            <SText fontSize={15} font={'Roboto'} flex>
-                                {this.getTipoPago(this.data)}
-                            </SText>
-                        </SView>
-                        <SHr height={10} />
-                        <SView col={'xs-6'}>
-                            <SText
-                                style={{textAlign: 'justify'}}
-                                fontSize={15}
-                                font={'Roboto'}
-                            >
-                                Total
-                            </SText>
-                        </SView>
-                        <SView col={'xs-6'} style={{alignItems: 'flex-end'}}>
-                            <SText fontSize={15} font={'Roboto'} flex>
-                                Bs.{' '}
-                                {SMath.formatMoney(
-                                    (this.data.pack?.precio ?? 0) *
-                                        this.data.cantidad
-                                )}
-                            </SText>
-                        </SView>
-                        <SHr height={10} />
-                        <SView
-                            col={'xs-12'}
-                            style={{
-                                borderBottomWidth: 1,
-                                borderColor: STheme.color.lightGray,
-                            }}
-                        ></SView>
-                        <SHr height={10} />
-                        <SView col={'xs-6'}>
-                            <SText
-                                style={{
-                                    textAlign: 'justify',
-                                    fontWeight: 'bold',
-                                }}
-                                fontSize={15}
-                                font={'Roboto'}
-                            >
-                                Total:
-                            </SText>
-                        </SView>
-                        <SView col={'xs-6'} style={{alignItems: 'flex-end'}}>
-                            <SText
-                                fontSize={15}
-                                font={'Roboto'}
-                                style={{fontWeight: 'bold'}}
-                            >
-                                Bs.{' '}
-                                {SMath.formatMoney(
-                                    (this.data.pack?.precio ?? 0) *
-                                        this.data.cantidad  
-                                )}
-                            </SText>
-                        </SView>
-                        <SHr height={15} />
-                    </SView>
-                </SView>
+                {this.detalleCompra()}
+
                 <SHr height={18} />
                 {this.getConductor()}
+
                 <SHr height={18} />
                 <SView
                     col={'xs-11'}
                     center
-                    style={{backgroundColor: STheme.color.white}}
+                    style={{ backgroundColor: STheme.color.white }}
                 >
                     <SHr height={40} />
                     {this.data.state == 'en_camino' ||
-                    this.data.state == 'entregado' ||
-                    this.data.state == 'no_recogido' ? (
+                        this.data.state == 'entregado' ||
+                        this.data.state == 'no_recogido' ? (
                         <SView
                             col={'xs-11'}
                             center
                             backgroundColor={'#96BE00'}
-                            style={{borderRadius: 4, overflow: 'hidden'}}
+                            style={{ borderRadius: 4, overflow: 'hidden' }}
                         >
                             <SHr height={20} />
                             <SView col={'xs-11'}>
@@ -564,21 +758,6 @@ class root extends Component {
                                     this.data.state != 'listo' &&
                                     this.data.state != 'esperando_conductor'
                                 ) {
-                                    // switch (this.data.state) {
-                                    //     case "pendiente_pago":
-                                    //         mensaje = "Su pedido está pendiente de pago";
-                                    //         break;
-                                    //     case "pago_en_proceso":
-                                    //         mensaje = "Su pedido está en procceso de pago";
-                                    //         break;
-                                    //     case "pagado":
-                                    //         mensaje = "Su pedido está pagado";
-                                    //         break;
-                                    //     case "timeout_pago": //TODO: duda en el mesaje
-                                    //         mensaje = "Su pedido está en espera de pago";
-                                    //         break;
-                                    // }
-                                    // mensaje += " pero aún no está listo.";
                                     switch (this.data.state) {
                                         case 'buscando_conductor':
                                             Popups.Alert.open({
@@ -607,11 +786,6 @@ class root extends Component {
                                             });
                                             break;
                                     }
-                                    // Popups.Alert.open({
-                                    //     title: "No se puede entregar el pedido.",
-                                    //     label: "No puedes entregar el pedido cuando se encuentra en estado " + this.data.state
-                                    // })
-                                    // SPopup.alert(<PedidoState data={data} />);
                                 } else {
                                     Model.pedido.Action.entregar(
                                         this.pk,
@@ -659,6 +833,6 @@ class root extends Component {
     }
 }
 const initStates = state => {
-    return {state};
+    return { state };
 };
 export default connect(initStates)(root);

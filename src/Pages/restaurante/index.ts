@@ -6,6 +6,9 @@ import modificarHorario from './modificarHorario';
 import crearhorario from './crearhorario'
 import registro from "./registro"
 import edit from './edit';
+import producto from './producto';
+import categoria_producto from './categoria_producto';
+
 export const Parent = {
     name: "restaurante",
     path: `/restaurante`,
@@ -16,5 +19,7 @@ export default SPage.combinePages(Parent.name, {
     "modificarHorario": modificarHorario,
     crearhorario,
     "registro": registro,
-    edit
+    edit,
+    ...producto,
+    ...categoria_producto
 });
