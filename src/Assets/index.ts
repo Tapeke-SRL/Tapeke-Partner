@@ -46,6 +46,9 @@ import Calificacion from "./svg/calificacion";
 
 import Message, { ReactComponent as MessageW } from './svg/message.svg';
 
+import menu, { ReactComponent as menuW } from './svg/menu.svg';
+import iconoRestaurante, { ReactComponent as iconoRestauranteW } from './svg/iconoRestaurante.svg';
+
 
 
 
@@ -93,6 +96,9 @@ const Assets: SAssets = {
         "LocationTapeke": { Native: LocationTapeke, Web: LocationTapekeW },
 
         "Message": { Native: Message, Web: MessageW },
+
+        "menu": { Native: menu, Web: menuW },
+        "iconoRestaurante": { Native: iconoRestaurante, Web: iconoRestauranteW },
 
 
 
