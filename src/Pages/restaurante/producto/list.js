@@ -150,7 +150,8 @@ class index extends DPA.list {
 
         this.deletePermiso = true;
         this.editPermiso = true;
-
+        // console.log("asd",dataProducto)
+        // return <SText>Aqui deberian ir los productos</SText>
         return <>
             <SList
                 data={dataProducto}
@@ -166,13 +167,13 @@ class index extends DPA.list {
                     return true;
                 }}
                 render={(producto) => {
-                    if (Object.values(producto).length <= 0) return null;
+                    // return <SText>Un producto</SText>
+                    // if (Object.values(producto).length <= 0) return null;
                     return <>
                         <SView flex card style={{
                             padding: 15,
                             borderRadius: 10,
                         }} >
-
                             <SView>
                                 <SView flex row
                                     style={{
@@ -197,27 +198,24 @@ class index extends DPA.list {
                                         <SText margin={5} fontSize={12}>Precio: {SMath.formatMoney(producto?.precio) + " Bs."}</SText>
                                     </SView>
                                 </SView>
-
                                 <SView flex row
                                     style={{
                                         justifyContent: "space-evenly"
                                     }}
                                 >
-                                    <SView center style={{ marginRight: "10px" }}>
+                                    <SView center>
                                         <SView>
                                             <SText>Mayor de Edad: {JSON.parse(producto?.mayor_edad) == true ? "SI" : "NO"}</SText>
                                             <SText>Ley Seca: {JSON.parse(producto?.ley_seca) == true ? "SI" : "NO"}</SText>
-
                                             <SView margin={2} row>
                                                 <SText fontSize={15} flex>Habilitado:</SText>
                                                 <SSwitch key={producto.key} size={20} loading={this.state.loading} onChange={this.handleChange_habilitado.bind(this, producto)} value={!!producto.habilitado} />
                                             </SView>
                                         </SView>
                                     </SView>
-
                                     <SView center>
                                         <SView row>
-                                            <SView style={{ marginRight: "10px" }} onPress={() => this.onEdit(producto)}>
+                                            <SView style={{ marginRight: 10 }} onPress={() => this.onEdit(producto)}>
                                                 {this.editPermiso ? <SIcon name={"Edit"} height={30} width={30}></SIcon> : <SView />}
                                             </SView>
 
@@ -240,7 +238,6 @@ class index extends DPA.list {
                                         </SView>
                                     </SView>
                                 </SView>
-
                             </SView>
                         </SView>
                     </>
@@ -261,6 +258,7 @@ class index extends DPA.list {
         this.dataCategoria = this.$getDataCategoriaProducto();
 
         if (!this.dataProducto && !this.dataCategoria) return <SLoad />
+        // return <SText>Hola soy ricky</SText>
         return <>
             <SHr height={10} />
             <SView col={"xs-12"}>
