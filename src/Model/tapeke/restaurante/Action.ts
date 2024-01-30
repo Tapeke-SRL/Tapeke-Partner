@@ -36,9 +36,11 @@ export default class Action extends SAction {
         SStorage.setItem("rest_select", key);
         this._getReducer().rest_select = key;
     }
+
     getSelect() {
         return this._getReducer().rest_select;
     }
+    
     // getAllRecursive() {
     //     var horarios = this.getAll();
     //     var packs = Model.pack.Action.getAllRecursive();

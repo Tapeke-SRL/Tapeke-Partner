@@ -15,6 +15,12 @@ import usuario_restaurante from "./usuario_restaurante"
 import calificacion from "./calificacion"
 import pack_extra from "./pack_extra"
 import enviroment from "./enviroment"
+import pedido_producto from "./pedido_producto"
+import producto from "./producto"
+import sub_producto from "./sub_producto"
+import sub_producto_detalle from "./sub_producto_detalle"
+import categoria_producto from "./categoria_producto"
+
 export default {
     zona,
     restaurante,
@@ -32,5 +38,10 @@ export default {
     usuario_app,
     usuario_restaurante,
     calificacion,
-    enviroment
+    enviroment,
+    pedido_producto,
+    producto,
+    sub_producto,
+    sub_producto_detalle,
+    categoria_producto,
 }
