@@ -1,3 +1,4 @@
+import React, { Component } from 'react';
 import DPA, { connect } from 'servisofts-page';
 import { Parent } from "."
 import Model from '../../../Model';
@@ -15,8 +16,14 @@ class index extends DPA.list {
     }
 
     componentDidMount() {
-        Parent.model.Action.CLEAR()
-        Model.categoria_producto.Action.CLEAR()
+        if (!Model.restaurante.Action.getSelect()) {
+            SNavigation.goBack();
+            return;
+        }
+        // this.$getData();
+
+        // Parent.model.Action.CLEAR()
+        // Model.categoria_producto.Action.CLEAR()
     }
 
     $allowNew() {

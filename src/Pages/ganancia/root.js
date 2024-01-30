@@ -23,6 +23,7 @@ class root extends Component {
         }
         this.getDatos();
     }
+
     getDatos() {
         this.setState({ data: null })
         this.setState({ ultima_conciliacion: null })
@@ -40,7 +41,6 @@ class root extends Component {
 
     getLista() {
         if (!this.state.data) return <SLoad type='skeleton' col={"xs-12"} height={50} />
-
         //NOSE PORQUE VALIDABA ESTO AQUÍ SI NO LO USA, HACÌA QUE TODO EL BLOQUE SE QUEDE EN CARGANDO
         // if (!this.state?.ultima_conciliacion) return <SLoad type='skeleton' col={"xs-12"} height={50} /> 
 
@@ -302,16 +302,16 @@ class root extends Component {
 
                 <SHr height={10} />
                 <SView col={"xs-10"} backgroundColor={STheme.color.primary} center
-                        height={30}
-                        style={{
-                            borderRadius: 8
-                        }}
-                        onPress={() => {
-                            SNavigation.navigate("/ganancia/tablaPedido", { conciliado: false });
-                        }}
-                    >
-                        <SText fontSize={12} color={STheme.color.white} bold>Ver tabla historial pedidos</SText>
-                    </SView>
+                    height={30}
+                    style={{
+                        borderRadius: 8
+                    }}
+                    onPress={() => {
+                        SNavigation.navigate("/ganancia/tablaPedido", { conciliado: false });
+                    }}
+                >
+                    <SText fontSize={12} color={STheme.color.white} bold>Ver tabla historial pedidos</SText>
+                </SView>
                 <SHr height={10} />
                 {this.getLista()}
                 <SHr height={30} />

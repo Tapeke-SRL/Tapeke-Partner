@@ -222,7 +222,7 @@ class root extends Component {
                     style={{ borderRadius: 8, overflow: 'hidden' }}
                 >
                     <SImage
-                        src={require(`../../Assets/img/BOLSA-TAPEKE-MENU-APP 1.png`)}
+                        src={require(`../../Assets/img/BOLSA-TAPEKE-MENU-APP.png`)}
                         style={{
                             width: '100%',
                             position: 'relative',
@@ -230,7 +230,6 @@ class root extends Component {
                         }}
                     />
                 </SView>
-
 
                 <SView flex center row>
                     <SView col={'xs-1'}></SView>
@@ -318,14 +317,14 @@ class root extends Component {
     detalleProducto() {
         if (!!this.data?.pedido_producto) {
             return <>
-                <SView padding={10}>
+                <SView col={'xs-12'}>
                     <SText
                         fontSize={15}
                         font={'Roboto'}
                         style={{ fontWeight: 'bold' }}
                         center
                     >
-                        Detalle del producto:
+                        Detalle del Producto:
                     </SText>
                     <SHr height={8} />
 
@@ -333,17 +332,6 @@ class root extends Component {
                         data={this.data?.pedido_producto}
                         render={(pedido_producto) => {
                             return <>
-                                {/* <SView row card padding={5} margin={5}>
-                                    <SView flex>
-                                        <SText>Descripción: {pedido_producto?.descripcion}</SText>
-                                        <SText>Cantidad: {pedido_producto?.cantidad}</SText>
-                                        <SText>Precio: {pedido_producto?.precio}</SText>
-                                        <SText>Total: {pedido_producto?.precio * pedido_producto?.cantidad}</SText>
-                                    </SView>
-
-                                    
-                                </SView> */}
-
                                 <SView col={'xs-12'} row center>
                                     <SView
                                         width={80}
@@ -351,7 +339,6 @@ class root extends Component {
                                         center
                                         backgroundColor={STheme.color.card}
                                         style={{ borderRadius: 8, overflow: 'hidden' }}
-                                        mariginleft={10}
                                     >
                                         <SImage src={Model.producto._get_image_download_path(SSocket.api, pedido_producto?.key_producto)} />
                                     </SView>
@@ -433,12 +420,8 @@ class root extends Component {
                     />
 
                     <SHr h={15} />
-                    {/* {this.label({ label: "Total productos", value: "Bs. " + SMath.formatMoney(this.calcularTotalProducto()) })} */}
-
-                </SView >
-
+                </SView>
             </>
-
         }
     }
 
