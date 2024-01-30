@@ -1,3 +1,4 @@
+import React from 'react';
 import DPA, { connect } from 'servisofts-page';
 import { Parent } from "."
 import Model from '../../../Model';
@@ -81,7 +82,7 @@ class index extends DPA.list {
                     </SView>
 
                     <SView row>
-                        <SView style={{ marginRight: "5px" }} onPress={() => this.onEdit(obj)}>
+                        <SView style={{ marginRight: 5 }} onPress={() => this.onEdit(obj)}>
                             {this.editPermiso ? <SIcon name={"Edit"} height={30} width={30}></SIcon> : <SView />}
                         </SView>
 

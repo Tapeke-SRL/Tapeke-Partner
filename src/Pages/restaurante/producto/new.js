@@ -28,6 +28,7 @@ class index extends DPA.new {
         inp["ley_seca"].type = "select"
         inp["ley_seca"].options = [{ key: "", content: "SELECCIONAR" }, { key: "true", content: "SI" }, { key: "false", content: "NO" }]
 
+        inp["key_categoria_producto"].editable = false;
         inp["key_categoria_producto"].onPress = (val) => {
             SNavigation.navigate("/restaurante/categoria_producto/list", {
                 key_restaurante: this.$params.key_restaurante, onSelect: (val) => {

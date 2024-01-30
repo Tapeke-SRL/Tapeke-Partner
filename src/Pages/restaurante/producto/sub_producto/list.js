@@ -1,3 +1,4 @@
+import React from 'react';
 import DPA, { connect } from 'servisofts-page';
 import { Parent } from "."
 import Model from '../../../../Model';
@@ -133,42 +134,36 @@ class index extends DPA.list {
                         SNavigation.navigate(Parent.path + "/sub_producto_detalle/new", { key_sub_producto: key_sub_producto })
                     }
                 >+ Crear</SButtom>
-
                 <SList
                     data={this.subProductoDetalle}
                     space={0}
                     order={[{ key: "nombre", order: "desc", peso: 1 }]}
+                    filter={obj => (obj.key_sub_producto == key_sub_producto && obj.estado != 0)}
                     render={(obj) => {
-                        if (obj.key_sub_producto == key_sub_producto && obj.estado != 0) {
-                            return <>
-                                <SView card row flex
-                                    style={{
-                                        margin: 5,
-                                        padding: 5,
-                                        justifyContent: "space-between",
-                                    }}
-                                >
-                                    <SView>
-                                        <SText padding={3}>Nombre: {obj.nombre}</SText>
-                                        <SText padding={3}>Descripción:</SText>
-                                        <SText padding={3} width={150}>{obj.descripcion}</SText>
-                                        <SText padding={3}>Precio: {obj.precio}</SText>
-                                    </SView>
-
-                                    <SView row center>
-                                        <SView style={{ marginRight: "10px" }} onPress={() => this.onEditSubProductoDetalle(obj.key)}>
-                                            {this.editPermisoDetalleSubProducto ? <SIcon name={"Edit"} height={30} width={30}></SIcon> : <SView />}
-                                        </SView>
-
-                                        <SView onPress={() => this.onDeleteSubProductoDetalle(obj)}>
-                                            {this.deletePermisoDetalleSubProducto ? <SIcon name={"Delete"} height={30} width={30}></SIcon> : <SView />}
-                                        </SView>
-                                    </SView>
-
+                        return <>
+                            <SView card row flex
+                                style={{
+                                    margin: 5,
+                                    padding: 5,
+                                    justifyContent: "space-between",
+                                }}
+                            >
+                                <SView>
+                                    <SText padding={3}>Nombre: {obj.nombre}</SText>
+                                    <SText padding={3}>Descripción:</SText>
+                                    <SText padding={3} width={150}>{obj.descripcion}</SText>
+                                    <SText padding={3}>Precio: {obj.precio}</SText>
                                 </SView>
-
-                            </>
-                        }
+                                <SView row center>
+                                    <SView style={{ marginRight: 10 }} onPress={() => this.onEditSubProductoDetalle(obj.key)}>
+                                        {this.editPermisoDetalleSubProducto ? <SIcon name={"Edit"} height={30} width={30}></SIcon> : <SView />}
+                                    </SView>
+                                    <SView onPress={() => this.onDeleteSubProductoDetalle(obj)}>
+                                        {this.deletePermisoDetalleSubProducto ? <SIcon name={"Delete"} height={30} width={30}></SIcon> : <SView />}
+                                    </SView>
+                                </SView>
+                            </SView>
+                        </>
                     }}
                 />
             </SView >
@@ -177,7 +172,6 @@ class index extends DPA.list {
 
     $item(obj) {
         let habilitado = obj.estado == -1 ? false : true;
-
         return <>
             <SView card
                 style={{
@@ -214,8 +208,6 @@ class index extends DPA.list {
                         <SSwitch center key={this.state.key_zona} size={20} loading={this.state.loading} onChange={this.handleChange_habilitado.bind(this, obj)} value={!!habilitado} />
                     </SView>
                 </SView>
-
-
                 {this.cardSubProductoDetalle(obj.key)}
             </SView>
         </>
