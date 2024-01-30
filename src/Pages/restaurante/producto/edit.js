@@ -12,7 +12,7 @@ class index extends DPA.edit {
         });
     }
     $allowAccess() {
-        // return Model.usuarioPage.Action.getPermiso({ url: Parent.path, permiso: "edit" })/
+        // return Model.usuarioPage.Action.getPermiso({ url: Parent.path, permiso: "edit" }) 
         return true;
     }
 
@@ -43,7 +43,6 @@ class index extends DPA.edit {
 
         return inp;
     }
-
 
     $onSubmit(data) {
         if (data.precio <= 0) {
