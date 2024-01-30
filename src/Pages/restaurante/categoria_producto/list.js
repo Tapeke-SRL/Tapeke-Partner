@@ -2,7 +2,7 @@ import React from 'react';
 import DPA, { connect } from 'servisofts-page';
 import { Parent } from "."
 import Model from '../../../Model';
-import { SNavigation, SText, SView, SIcon,SPopup } from 'servisofts-component';
+import { SNavigation, SText, SView, SIcon, SPopup } from 'servisofts-component';
 
 class index extends DPA.list {
     constructor(props) {
@@ -11,22 +11,20 @@ class index extends DPA.list {
             limit: 10,
             params: ["key_restaurante"],
             excludes: ["key", "estado", "key_usuario"],
+            onRefresh: () => {
+                Parent.model.Action.CLEAR()
+                this.deletePermiso = Model.usuarioPage.Action.getPermiso({ url: Parent.path, permiso: "delete" });
+                this.editPermiso = Model.usuarioPage.Action.getPermiso({ url: Parent.path, permiso: "edit" });
+            }
         });
-
-        // this.deletePermiso = Model.usuarioPage.Action.getPermiso({ url: Parent.path, permiso: "delete" });
-        // this.editPermiso = Model.usuarioPage.Action.getPermiso({ url: Parent.path, permiso: "edit" });
-
-        this.deletePermiso = true;
-        this.editPermiso = true;
     }
 
     $allowNew() {
-        // return Model.usuarioPage.Action.getPermiso({ url: Parent.path, permiso: "new" });
-        return true;
+        return Model.usuarioPage.Action.getPermiso({ url: Parent.path, permiso: "new" });
     }
 
     $allowAccess() {
-        // return Model.usuarioPage.Action.getPermiso({ url: Parent.path, permiso: "view" });
+        // return Model.usuarioPage.Action.getPermiso({ url: Parent.path, permiso: "ver" });
         return true
     }
 
@@ -43,7 +41,7 @@ class index extends DPA.list {
     }
 
     onEdit(obj) {
-        SNavigation.navigate(Parent.path + "/edit", { pk: obj.key})
+        SNavigation.navigate(Parent.path + "/edit", { pk: obj.key })
     }
 
     onDelete(obj) {

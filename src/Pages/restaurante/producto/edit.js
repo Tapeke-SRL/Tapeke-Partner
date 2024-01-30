@@ -33,6 +33,8 @@ class index extends DPA.edit {
         inp["ley_seca"].options = [{ key: "", content: "SELECCIONAR" }, { key: "true", content: "SI" }, { key: "false", content: "NO" }]
         inp["ley_seca"].defaultValue = inp["ley_seca"].defaultValue + ""
 
+        inp["key_categoria_producto"].editable = false;
+        inp["key_categoria_producto"].defaultValue = inp["key_categoria_producto"].defaultValue + "";
         inp["key_categoria_producto"].onPress = (val) => {
             SNavigation.navigate("/restaurante/categoria_producto/list", {
                 key_restaurante: this.$params.key_restaurante, onSelect: (val) => {
@@ -41,6 +43,7 @@ class index extends DPA.edit {
             })
         }
 
+        inp["key_categoria_producto"].value = this.state.categoria_producto?.key;
         return inp;
     }
 
@@ -49,6 +52,11 @@ class index extends DPA.edit {
             SPopup.alert("El producto no puede tener un precio menor o igual a 0")
             return;
         }
+
+        if (!!this.state?.categoria_producto?.key) {
+            data.key_categoria_producto = this.state.categoria_producto.key;
+        };
+
         Parent.model.Action.editar({
             data: {
                 ...this.data,

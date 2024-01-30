@@ -21,6 +21,8 @@ class index extends DPA.edit {
 
     $inputs() {
         var inp = super.$inputs();
+        inp["cantidad_seleccion"].type = "number"
+        inp["cantidad_seleccion"].defaultValue = inp["cantidad_seleccion"].defaultValue + ""
         return inp;
     }
 

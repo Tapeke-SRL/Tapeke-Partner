@@ -12,6 +12,9 @@ class index extends DPA.list {
             limit: 10,
             params: ["key_restaurante"],
             excludes: ["key", "estado", "key_usuario"],
+            onRefresh: () => {
+                Parent.model.Action.CLEAR()
+            }
         });
     }
 
@@ -20,10 +23,9 @@ class index extends DPA.list {
             SNavigation.goBack();
             return;
         }
-        // this.$getData();
 
-        // Parent.model.Action.CLEAR()
-        // Model.categoria_producto.Action.CLEAR()
+        Parent.model.Action.CLEAR()
+        Model.categoria_producto.Action.CLEAR()
     }
 
     $allowNew() {
@@ -60,7 +62,7 @@ class index extends DPA.list {
 
     listCategoria() {
         return <>
-            <SView padding={10}
+            <SView padding={7}
                 onPress={() => {
                     SNavigation.navigate("/restaurante/categoria_producto/list", { key_restaurante: this.$params.key_restaurante })
                 }}
@@ -207,8 +209,8 @@ class index extends DPA.list {
                                         <SView>
                                             <SText>Mayor de Edad: {JSON.parse(producto?.mayor_edad) == true ? "SI" : "NO"}</SText>
                                             <SText>Ley Seca: {JSON.parse(producto?.ley_seca) == true ? "SI" : "NO"}</SText>
-                                            <SView margin={2} row>
-                                                <SText fontSize={15} flex>Habilitado:</SText>
+                                            <SView row>
+                                                <SText fontSize={14} flex>Habilitado:</SText>
                                                 <SSwitch key={producto.key} size={20} loading={this.state.loading} onChange={this.handleChange_habilitado.bind(this, producto)} value={!!producto.habilitado} />
                                             </SView>
                                         </SView>

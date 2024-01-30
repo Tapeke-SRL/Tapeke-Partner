@@ -11,6 +11,9 @@ class index extends DPA.list {
             limit: 10,
             params: ["key_producto"],
             excludes: ["key", "estado", "key_usuario"],
+            onRefresh: () => {
+                Parent.model.Action.CLEAR()
+            }
         });
 
         // this.editPermisoSubProducto = Model.usuarioPage.Action.getPermiso({ url: Parent.path, permiso: "edit" });
