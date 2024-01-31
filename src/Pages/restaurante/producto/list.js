@@ -209,9 +209,15 @@ class index extends DPA.list {
                                         <SView>
                                             <SText>Mayor de Edad: {JSON.parse(producto?.mayor_edad) == true ? "SI" : "NO"}</SText>
                                             <SText>Ley Seca: {JSON.parse(producto?.ley_seca) == true ? "SI" : "NO"}</SText>
-                                            <SView row>
-                                                <SText fontSize={14} flex>Habilitado:</SText>
-                                                <SSwitch key={producto.key} size={20} loading={this.state.loading} onChange={this.handleChange_habilitado.bind(this, producto)} value={!!producto.habilitado} />
+                                            <SHr height={5} />
+                                            <SView>
+                                                <SText fontSize={14} flex center>Habilitado</SText>
+                                                <SHr height={5} />
+                                                <SView row>
+                                                    <SText fontSize={14} flex style={{color: STheme.color.danger}}>OFF</SText>
+                                                    <SSwitch key={producto.key} size={20} loading={this.state.loading} onChange={this.handleChange_habilitado.bind(this, producto)} value={!!producto.habilitado} />
+                                                    <SText fontSize={14} flex style={{color: STheme.color.success}}>ON</SText>
+                                                </SView>
                                             </SView>
                                         </SView>
                                     </SView>
@@ -220,14 +226,11 @@ class index extends DPA.list {
                                             <SView style={{ marginRight: 10 }} onPress={() => this.onEdit(producto)}>
                                                 {this.editPermiso ? <SIcon name={"Edit"} height={30} width={30}></SIcon> : <SView />}
                                             </SView>
-
                                             <SView onPress={() => this.onDelete(producto)}>
                                                 {this.deletePermiso ? <SIcon name={"Delete"} height={30} width={30}></SIcon> : <SView />}
                                             </SView>
                                         </SView>
-
                                         <SHr height={20} />
-
                                         <SView
                                             style={{
                                                 backgroundColor: STheme.color.primary,
