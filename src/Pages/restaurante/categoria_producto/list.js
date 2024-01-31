@@ -37,7 +37,7 @@ class index extends DPA.list {
     }
 
     $order() {
-        return [{ key: "fecha_on", order: "desc", type: "date" }];
+        return [{ key: "index", order: "desc", type: "integer" }];
     }
 
     onEdit(obj) {

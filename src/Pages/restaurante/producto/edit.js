@@ -17,11 +17,27 @@ class index extends DPA.edit {
     }
 
     $getData() {
-        return Parent.model.Action.getByKey(this.pk);
+        var data = Parent.model.Action.getByKey(this.pk);
+        if (!data) return null;
+
+        let cp = Model.categoria_producto.Action.getByKey(data.key_categoria_producto);
+
+        if (!!cp && !this.state.categoria_producto	) {
+            this.setState({ categoria_producto: cp })
+        }
+
+        return data;
+    }
+
+    getNameCategory(key_categoria_producto) {
+        let cpn = Model.categoria_producto.Action.getByKey(key_categoria_producto)
+        return cpn?.nombre;
     }
 
     $inputs() {
         var inp = super.$inputs();
+        inp["image_profile"].label = "Inserte su Imagen del Producto:"
+
         inp["precio"].type = "money"
         inp["precio"].defaultValue = parseFloat(inp["precio"].defaultValue ?? 0).toFixed(2);
 
@@ -34,7 +50,9 @@ class index extends DPA.edit {
         inp["ley_seca"].defaultValue = inp["ley_seca"].defaultValue + ""
 
         inp["key_categoria_producto"].editable = false;
-        inp["key_categoria_producto"].defaultValue = inp["key_categoria_producto"].defaultValue + "";
+
+        inp["key_categoria_producto"].value = this.state?.categoria_producto?.nombre;
+
         inp["key_categoria_producto"].onPress = (val) => {
             SNavigation.navigate("/restaurante/categoria_producto/list", {
                 key_restaurante: this.$params.key_restaurante, onSelect: (val) => {
@@ -43,7 +61,6 @@ class index extends DPA.edit {
             })
         }
 
-        inp["key_categoria_producto"].value = this.state.categoria_producto?.key;
         return inp;
     }
 
@@ -53,9 +70,15 @@ class index extends DPA.edit {
             return;
         }
 
+
         if (!!this.state?.categoria_producto?.key) {
             data.key_categoria_producto = this.state.categoria_producto.key;
         };
+
+        if (data.ley_seca == "true" && data.mayor_edad == "false") {
+            SPopup.alert("No puede seleccionar ley seca si el producto no es para mayor de edad.");
+            return;
+        }
 
         Parent.model.Action.editar({
             data: {

@@ -22,14 +22,17 @@ class index extends DPA.new {
         var inp = super.$inputs();
         inp["precio"].type = "money"
 
+        inp["image_profile"].label = "Inserte la Imagen del Producto:"
+
         inp["mayor_edad"].type = "select"
+        inp["mayor_edad"].defaultValue = "Añadir si cree conveniente"
         inp["mayor_edad"].options = [{ key: "", content: "SELECCIONAR" }, { key: "true", content: "SI" }, { key: "false", content: "NO" }]
 
         inp["ley_seca"].type = "select"
+        inp["ley_seca"].defaultValue = "Añadir si cree conveniente"
         inp["ley_seca"].options = [{ key: "", content: "SELECCIONAR" }, { key: "true", content: "SI" }, { key: "false", content: "NO" }]
 
         inp["key_categoria_producto"].editable = false;
-        inp["key_categoria_producto"].required = true;
         inp["key_categoria_producto"].onPress = (val) => {
             SNavigation.navigate("/restaurante/categoria_producto/list", {
                 key_restaurante: this.$params.key_restaurante, onSelect: (val) => {
@@ -45,11 +48,21 @@ class index extends DPA.new {
 
     $onSubmit(data) {
         data.habilitado = false;
+        let defaulSelect = "Añadir si cree conveniente";
 
         if (data.precio <= 0) {
             SPopup.alert("El producto no puede tener un precio menor o igual a 0")
             return;
         }
+
+        if (data.ley_seca == "true" && (data.mayor_edad == "false" || data.mayor_edad == defaulSelect)) {
+            SPopup.alert("No puede seleccionar ley seca si el producto no es para mayor de edad.");
+            return;
+        }
+
+        if (data.mayor_edad == defaulSelect) { data.mayor_edad = "false" };
+
+        if (data.ley_seca == defaulSelect) { data.ley_seca = "false" };
 
         if (!this.state.categoria_producto.key) return null;
         data.key_categoria_producto = this.state.categoria_producto.key;
