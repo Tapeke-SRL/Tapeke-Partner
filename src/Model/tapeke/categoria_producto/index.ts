@@ -13,8 +13,8 @@ export default new SModel<Action, Reducer>({
         "estado": { type: "integer" },
         
         "key_restaurante": { type: "text", fk: "restaurante", editable: false },
+        "index": { type: "integer", editable: true, notNull: false, label: "Index" },
         "nombre": { type: "text", editable: true, notNull: false, label: "Nombre" },
-        "index": { type: "integer", editable: true, notNull: false, label: "Peso" },
     },
     Action,
     Reducer,

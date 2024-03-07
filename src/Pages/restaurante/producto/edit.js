@@ -29,11 +29,6 @@ class index extends DPA.edit {
         return data;
     }
 
-    getNameCategory(key_categoria_producto) {
-        let cpn = Model.categoria_producto.Action.getByKey(key_categoria_producto)
-        return cpn?.nombre;
-    }
-
     $inputs() {
         var inp = super.$inputs();
         inp["image_profile"].label = "Inserte su Imagen del Producto:"

@@ -192,6 +192,7 @@ class index extends DPA.list {
                                             marginLeft: 20
                                         }}
                                     >
+                                        <SText margin={5} fontSize={12}>Index: {producto?.index}</SText>
                                         <SText margin={5} fontSize={12}>Nombre: {producto?.nombre}</SText>
                                         <SText margin={5} fontSize={12}>Descripción:</SText>
                                         <SView width={120}>
@@ -263,21 +264,20 @@ class index extends DPA.list {
         this.dataCategoria = this.$getDataCategoriaProducto();
 
         if (!this.dataProducto && !this.dataCategoria) return <SLoad />
-        // return <SText>Hola soy ricky</SText>
         return <>
             <SHr height={10} />
             <SView col={"xs-12"}>
                 <SList
                     data={this.dataCategoria}
                     filter={this.$filter.bind(this)}
-                    order={[{ key: "index", order: "desc" }]}
+                    order={[{ key: "index", order: "asc" }]}
                     render={(categoria) => {
                         if (Object.values(categoria).length <= 0) return null;
 
                         return <>
                             <SView row>
                                 <SText flex fontSize={20}>{categoria.nombre}</SText>
-                                <SText fontSize={15} center>Peso: {categoria.index}</SText>
+                                <SText fontSize={15} center>Index: {categoria.index}</SText>
                             </SView>
                             <SHr height={10} />
                             {this.viewProductoCategoria(categoria.key, this.dataProducto)}

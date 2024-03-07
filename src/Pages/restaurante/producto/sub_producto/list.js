@@ -51,7 +51,7 @@ class index extends DPA.list {
 
 
     $order() {
-        return [{ key: "fecha_on", order: "desc", type: "date" }];
+        return [{ key: "index", order: "asc", type: "integer" }];
     }
 
     handleChange_habilitado(obj, habilitado) {
@@ -140,7 +140,7 @@ class index extends DPA.list {
                 <SList
                     data={this.subProductoDetalle}
                     space={0}
-                    order={[{ key: "nombre", order: "desc", peso: 1 }]}
+                    order={[{ key: "index", order: "asc", peso: 1 }]}
                     filter={obj => (obj.key_sub_producto == key_sub_producto && obj.estado != 0)}
                     render={(obj) => {
                         return <>
@@ -152,6 +152,7 @@ class index extends DPA.list {
                                 }}
                             >
                                 <SView>
+                                    <SText padding={3}>Index: {obj.index ? obj.index : "No hay index"}</SText>
                                     <SText padding={3}>Nombre: {obj.nombre}</SText>
                                     <SText padding={3}>Descripción:</SText>
                                     <SText padding={3} width={150}>{obj.descripcion}</SText>
@@ -189,6 +190,7 @@ class index extends DPA.list {
                     }}
                 >
                     <SView col={"xs-8"}>
+                        <SText padding={3}>Index: {obj.index ? obj.index : "No hay index"}</SText>
                         <SText padding={5}>Nombre:</SText>
                         <SText padding={5}>{obj.nombre}</SText>
                         <SText padding={3}>Descripción:</SText>

@@ -144,7 +144,7 @@ class historialDetalle extends Component {
                 </SView>
                 <SHr height={20} />
                 <SView col={"xs-12"} >
-                    <SText bold fontSize={20} >Historial de pedidos</SText>
+                    <SText bold fontSize={20}>Historial de pedidos</SText>
                 </SView>
                 <SView col={"xs-10"} backgroundColor={STheme.color.primary} center
                     height={30}

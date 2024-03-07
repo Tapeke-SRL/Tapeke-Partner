@@ -12,6 +12,8 @@ export default new SModel<Action, Reducer>({
         "fecha_on": { type: "timestamp", label: "Fecha de creación" },
         "estado": { type: "integer" },
 
+
+        "index": { type: "text", editable: true, notNull: true, label: "index" },
         "nombre": { type: "text", editable: true, notNull: true, label: "Nombre del producto" },
         "descripcion": { type: "text", editable: true, notNull: false, label: "Descripción del producto" },
         "precio": { type: "double", editable: true, notNull: true, label: "Precio" },
