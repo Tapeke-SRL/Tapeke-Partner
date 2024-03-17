@@ -26,6 +26,14 @@ class tablaPedido extends Component {
     this.getDatos();
   }
 
+  tipoDePago(tipo_pago) {
+    if (tipo_pago && tipo_pago?.length > 0) {
+      return !!Object.values(tipo_pago).find(o => o.type == "efectivo") ? "Efectivo" : `Online - ${tipo_pago[0].type}`;
+    } else {
+      return "El pago con QR nunca se pago";
+    }
+  }
+
   getDatos() {
     let component;
     let type;
@@ -44,17 +52,13 @@ class tablaPedido extends Component {
       key_restaurante: Model.restaurante.Action.getSelect(),
       key_conciliacion_restaurante: this.params.key_conciliacion_restaurante
     }).then(resp => {
-
-      // resp.data.forEach(pedido => {
-      //   pedido.total_tapekes = pedido.cantidad * parseFloat(pedido.precio);
-      //   pedido.comision_restaurate_venta = pedido.total_tapekes - pedido.comision_restaurante;
-      // });
-
-      this.setState( { data: resp.data })
+      this.setState({ data: resp.data })
     }).catch(e => {
       console.error(e)
     })
   }
+
+
 
   renderTable() {
     let users = Model.usuario.Action.getAll()
@@ -69,13 +73,13 @@ class tablaPedido extends Component {
           { key: "state", label: "Estado", width: 80 },
           { key: "key_usuario", label: "Usuario", width: 200, render: a => a ? users[a].Nombres + " " + users[a].Apellidos : "No se pillo el usuario" },
           { key: "key_conductor", label: "Driver", width: 200, render: a => a ? users[a].Nombres + " " + users[a].Apellidos : "Recoger del lugar" },
-
+          
           { key: "cantidad", label: "Cantidad Tapekes", width: 110 },
           { key: "precio", label: "Precio Unitario Tapekes", width: 150, render: a => "Bs. " + SMath.formatMoney(a, 2) },
-          {key: "-total_tapekes", label: "Total Tapekes", width: 150, render: a => "Bs. " + SMath.formatMoney((a.cantidad *  a.precio), 2) },
-          {key: "-total_menos_comision", label: "Total Tapekes - Comisión", width: 150, render: a => "Bs. " + SMath.formatMoney((a.cantidad *  a.precio) - a.comision_restaurante, 2) },
+          { key: "-total_tapekes", label: "Total Tapekes", width: 150, render: a => "Bs. " + SMath.formatMoney((a.cantidad * a.precio), 2) },
+          { key: "-total_menos_comision", label: "Total Tapekes - Comisión", width: 150, render: a => "Bs. " + SMath.formatMoney((a.cantidad * a.precio) - a.comision_restaurante, 2) },
           { key: "comision_restaurante", label: "Comisión Tapeke por venta", width: 160, render: a => "Bs. " + SMath.formatMoney(a, 2) },
-
+          { key: "tipo_pago", label: "Comisión Tapeke por venta", width: 160, render: a =>this.tipoDePago(a) },
         ]
       }
       data={this.state.data} />

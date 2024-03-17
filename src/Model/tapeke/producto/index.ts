@@ -12,13 +12,23 @@ export default new SModel<Action, Reducer>({
         "fecha_on": { type: "timestamp", label: "Fecha de creación" },
         "estado": { type: "integer" },
 
-        "nombre": { type: "text", editable: true, notNull: true, label: "Nombre del producto" },
-        "descripcion": { type: "text", editable: true, notNull: false, label: "Descripción del producto" },
+        "nombre": { type: "text", editable: true, notNull: true, label: "Nombre" },
+        "descripcion": { type: "text", editable: true, notNull: false, label: "Descripción" },
         "precio": { type: "double", editable: true, notNull: true, label: "Precio" },
         "habilitado": { type: "boolean", notNull: true, label: "Habilitado" },
-        "mayor_edad": { type: "boolean", editable: true, notNull: false, label: "Mayor de edad (Opcional)" },
-        "ley_seca": { type: "boolean", editable: true, notNull: false, label: "Ley Seca (Opcional)" },
-        "key_categoria_producto": { type: "text", fk: "categoria_producto", editable: true, notNull: true, label: "Categoria Producto" },
+        "mayor_edad": { type: "boolean", editable: true, notNull: true, label: "Mayor de edad" },
+        "ley_seca": { type: "boolean", editable: true, notNull: true, label: "Ley Seca" },
+        "key_categoria_producto": { type: "text", fk: "categoria_producto", editable: true, label: "Categoria Producto" },
+        "index": { type: "integer", editable: true, notNull: true, label: "Index" },
+
+        "descuento_monto": { type: "double", label: "Descuento Monto" },
+        "descuento_porcentaje": { type: "double", label: "Descuento Porcentaje" },
+
+        // "label_oferta": { type: "text", editable: true, label: "Label Ofertanga" },
+
+        "limite_compra": { type: "integer", editable: true, label: "Limite de compra" },
+
+        "fecha_habilitacion_automatica": { type: "date", label: "Limite de compra" },
     },
     image: {
         api: "root",

@@ -11,5 +11,19 @@ export default class Reducer extends SReducer {
         return initState;
     }
 
+    enable_tapeke(state: any, action: any): void {
+        if(action.estado == "exito"){
+            if(action.key_restaurante){
+                state.data[action.key_restaurante].tapeke_deshabilitado = false;   
+            }
+        }
+    }
+    disable_tapeke(state: any, action: any): void {
+        if(action.estado == "exito"){
+            if(action.key_restaurante){
+                state.data[action.key_restaurante].tapeke_deshabilitado = true;   
+            }
+        }
+    }
 
 }

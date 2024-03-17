@@ -51,7 +51,7 @@ class index extends DPA.list {
 
 
     $order() {
-        return [{ key: "fecha_on", order: "desc", type: "date" }];
+        return [{ key: "index", order: "asc", type: "integer" }];
     }
 
     handleChange_habilitado(obj, habilitado) {
@@ -67,6 +67,27 @@ class index extends DPA.list {
         }
 
         Model.sub_producto.Action.editar({
+            data: {
+                ...obj,
+                estado: obj.estado
+            },
+            key_usuario: Model.usuario.Action.getKey()
+        })
+    }
+
+    handleChange_sub_producto_detalle_habilitado(obj) {
+        // if (!this.editPermiso) {
+        //     SPopup.alert("No tienes permisos para esta acción.")
+        //     return;
+        // }
+
+        if (obj.estado == 1) {
+            obj.estado = -1;
+        } else {
+            obj.estado = 1;
+        }
+
+        Model.sub_producto_detalle.Action.editar({
             data: {
                 ...obj,
                 estado: obj.estado
@@ -126,47 +147,57 @@ class index extends DPA.list {
     }
 
     cardSubProductoDetalle(key_sub_producto) {
+        let sizeButtons = 30;
         return <>
             <SView>
                 <SHr height={5} />
                 <SHr height={1} color={STheme.color.secondary} />
                 <SText center fontSize={15}>Sub Producto Detalles</SText>
                 <SHr height={1} color={STheme.color.secondary} />
-                <SButtom
+                <SView style={{ color: STheme.color.text, margin: 5 }}
                     onPress={() =>
                         SNavigation.navigate(Parent.path + "/sub_producto_detalle/new", { key_sub_producto: key_sub_producto })
                     }
-                >+ Crear</SButtom>
+                ><SText>+ Crear</SText></SView>
                 <SList
                     data={this.subProductoDetalle}
                     space={0}
-                    order={[{ key: "nombre", order: "desc", peso: 1 }]}
+                    order={[{ key: "index", order: "asc", peso: 1 }]}
                     filter={obj => (obj.key_sub_producto == key_sub_producto && obj.estado != 0)}
                     render={(obj) => {
+                        let habilitado = obj.estado == -1 ? false : true;
                         return <>
-                            <SView card row flex
-                                style={{
-                                    margin: 5,
-                                    padding: 5,
-                                    justifyContent: "space-between",
-                                }}
-                            >
-                                <SView>
-                                    <SText padding={3}>Nombre: {obj.nombre}</SText>
-                                    <SText padding={3}>Descripción:</SText>
-                                    <SText padding={3} width={150}>{obj.descripcion}</SText>
-                                    <SText padding={3}>Precio: {obj.precio}</SText>
+                        <SView card row flex
+                            style={{
+                                margin: 5,
+                                padding: 5,
+                                justifyContent: "space-between",
+                            }}
+                        >
+                            <SView flex>
+                                <SText padding={3}>Index: {obj.index}</SText>
+                                <SText padding={3} width={150}>Nombre: {obj.nombre}</SText>
+                                <SText padding={3}>Descripción:</SText>
+                                <SText padding={3} width={150}>{!!obj.descripcion ? obj.descripcion : "No hay Descripción"}</SText>
+                                <SText padding={3}>Precio: {!!obj.precio ? obj.precio : "No hay precio"}</SText>
+                            </SView>
+
+                            <SView row center>
+
+                                <SSwitch center key={this.state.key_zona} size={20} loading={this.state.loading} onChange={this.handleChange_sub_producto_detalle_habilitado.bind(this, obj)} value={!!habilitado} />
+
+                                <SView style={{ marginRight: 10, marginLeft: 10,width:sizeButtons, height:sizeButtons}} onPress={() => this.onEditSubProductoDetalle(obj.key)}>
+                                    {this.editPermisoDetalleSubProducto ? <SIcon name={"Edit"} height={28} width={28}></SIcon> : <SView />}
                                 </SView>
-                                <SView row center>
-                                    <SView style={{ marginRight: 10 }} onPress={() => this.onEditSubProductoDetalle(obj.key)}>
-                                        {this.editPermisoDetalleSubProducto ? <SIcon name={"Edit"} height={30} width={30}></SIcon> : <SView />}
-                                    </SView>
-                                    <SView onPress={() => this.onDeleteSubProductoDetalle(obj)}>
-                                        {this.deletePermisoDetalleSubProducto ? <SIcon name={"Delete"} height={30} width={30}></SIcon> : <SView />}
-                                    </SView>
+
+                                <SView style={{width:sizeButtons, height:sizeButtons}} onPress={() => this.onDeleteSubProductoDetalle(obj)}>
+                                    {this.deletePermisoDetalleSubProducto ? <SIcon name={"Delete"} height={28} width={28}></SIcon> : <SView />}
                                 </SView>
                             </SView>
-                        </>
+
+                        </SView>
+
+                    </>
                     }}
                 />
             </SView >
@@ -189,11 +220,13 @@ class index extends DPA.list {
                     }}
                 >
                     <SView col={"xs-8"}>
-                        <SText padding={5}>Nombre:</SText>
-                        <SText padding={5}>{obj.nombre}</SText>
+                        <SText padding={3}>Index: {obj.index ? obj.index : "No hay index"}</SText>
+                        <SText padding={3}>Nombre:</SText>
+                        <SText color={STheme.color.primary} padding={3}>{obj.nombre}</SText>
                         <SText padding={3}>Descripción:</SText>
-                        <SText padding={3} width={200}>{obj.descripcion}</SText>
-                        <SText padding={3}>Cantidad de Selección: {obj.cantidad_seleccion}</SText>
+                        <SText padding={3} color={STheme.color.primary} width={220}>{!!obj.descripcion ? obj.descripcion : "No hay descripción"}</SText>
+                        <SText padding={3}>Cantidad de Selección Maxima: {!!obj.cantidad_seleccion ? obj.cantidad_seleccion : "No hay de selección máximo"}</SText>
+                        <SText padding={3}>Cantidad de Selección Minima: {!!obj.cantidad_seleccion_minima ? obj.cantidad_seleccion_minima : "No hay mínimo de selección"}</SText>
                     </SView>
 
                     <SView col={"xs-4"} center>

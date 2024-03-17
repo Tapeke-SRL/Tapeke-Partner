@@ -44,6 +44,7 @@ export default class Action extends SAction {
             key_restaurante: key,
             estado: "cargando"
         }).then(e => {
+            console.log(e)
             this._dispatch(e);
         })
         // SSocket.send({

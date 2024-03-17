@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { SLoad, SNavigation, SPage, SText, SView, STheme, SImage, SHr, SDate, SIcon, SPopup, SThread } from 'servisofts-component';
+import { SLoad, SNavigation, SPage, SText, SView, STheme, SImage, SHr, SDate, SIcon, SPopup, SThread, SSwitch } from 'servisofts-component';
 import Container from '../../Components/Container';
 import Model from '../../Model';
 import SSocket from 'servisofts-socket'
@@ -38,13 +38,40 @@ class index extends Component {
       // Model.horario.Action.getByKeyRestauranteProximo(this.pk, true)
       // }
       // }
-
     })
   }
+
+  habilitacion_tapeke() {
+    SPopup.confirm({
+      title: `¿Seguro que desea ${this.data?.tapeke_deshabilitado ? "habilitar" : "deshabilitar"} los Tapekes?`,
+      message: `${this.data?.tapeke_deshabilitado ? "" : "Si deshabilita los Tapekes, no podrá vender más Tapekes hasta que los habilite nuevamente"}, IMPORTANTE: todas las acciones están siendo registradas.`,
+      onPress: () => {
+        let type;
+        if (this.data?.tapeke_deshabilitado) {
+          type = "enable_tapeke"
+        } else {
+          type = "disable_tapeke"
+        }
+
+        SSocket.sendPromise({
+          component: "restaurante",
+          type: type,
+          key_usuario: Model.usuario.Action.getKey(),
+          key_restaurante: this.pk
+        }).then((e) => {
+          Model.restaurante.Action._dispatch(e);
+          console.log(e)
+        })
+      }
+    })
+  }
+
   getCabecera(data) {
     this.data = data;
     var usuario = Model.usuario.Action.getUsuarioLog();
+
     if (!usuario) return <SView />;
+    console.log("data", data)
     return (
       <SView col={"xs-12"} row backgroundColor={STheme.color.card} center>
         {/* <SHr height={18} /> */}
@@ -75,12 +102,16 @@ class index extends Component {
                 </SView>
                 <SHr height={5} />
               </SView>
-
             </SView>
             <SView width={40} height={40} style={{ position: "absolute", top: 8, right: 8, padding: 4 }} center onPress={() => {
               SNavigation.navigate("/restaurante/edit", { pk: this.pk })
             }}>
               <SIcon name={"Ajustes"} width={20} />
+            </SView>
+            <SHr h={10} />
+            <SView row>
+              <SText fontSize={14} color={STheme.color.darkGray} >No vender Tapekes:  {this.data.tapeke_deshabilitado} </SText>
+              <SSwitch center size={20} loading={this.state.loading} onChange={this.habilitacion_tapeke.bind(this)} value={!!this.data?.tapeke_deshabilitado} />
             </SView>
           </SView>
           <SHr height={18} />
@@ -90,7 +121,7 @@ class index extends Component {
     )
   }
 
-  getContent(dataPackVendidos) {
+  cardPedido(dataPackVendidos) {
     // var dataHorarioCercano = dataPackVendidos
     if (Object.keys(dataPackVendidos).length === 0) return <SView center col><SText>NO HAY PEDIDOS</SText></SView>
     // if (!dataPackVendidos) return null;
@@ -106,21 +137,17 @@ class index extends Component {
       if (b.state == "cancelado" || b.state == "no_recogido") pesoB = 1;
       return pesoB - pesoA
     })
+
     return arr.map((obj, index) => {
       var montoTotal = obj.cantidad * obj.precio;
-      //datos UserInfo
       var dataUsuario = Model.usuario.Action.getByKey(obj.key_usuario);
-      // if (!dataUsuario) return <SView />;
 
       let entregado = obj.state == "entregado" || obj.state == "entregado_conductor" || obj.state == "conductor_llego";
       let error = obj.state == "cancelado" || obj.state == "no_recogido";
+
       return <>
         <SView col={"xs-12"} style={{ borderWidth: 1, borderColor: STheme.color.lightGray, borderRadius: 8 }} row center backgroundColor={STheme.color.card}
           onPress={() => { SNavigation.navigate("/pedido", { pk: obj.key }); }}
-        //   onPress={() => {
-        //     //SPopup.open({ key: "ubicacion", content: this.popupOpcionDistancia() });
-        //     //SPopup.alert();
-        // }}
         >
           <SHr height={10} />
           <SView col={"xs-11"} row center>
@@ -160,7 +187,6 @@ class index extends Component {
         </SView>
         <SHr height={10} />
       </>
-
     })
   }
 
@@ -198,7 +224,7 @@ class index extends Component {
       <SView col={"xs-11"} style={{ borderBottomWidth: 2, borderColor: STheme.color.primary }}></SView>
       <SHr height={20} />
       <SView col={"xs-11"} row    >
-        {this.getContent(dataPackVendidos)}
+        {this.cardPedido(dataPackVendidos)}
       </SView>
     </>
   }
@@ -209,6 +235,7 @@ class index extends Component {
     const arrRest = Model.restaurante.Action.getAll({
       key_partner: Model.usuario.Action.getKey()
     });
+
     this.horario_proximo = Model.horario.Action.getByKeyRestauranteProximo(this.pk);
     if (!arrRest) return false;
     if (!this.horario_proximo) return false;
@@ -218,7 +245,7 @@ class index extends Component {
       Model.restaurante.Action.select("");
     }
 
-    
+
     // this.pack = Model.pack.Action.getByKeyHorario(this.horario_proximo.key);
     // if (!this.pack) return null;
     this.pedidos = Model.pedido.Action.getVendidosData({ fecha: this.horario_proximo.fecha, key_pack: this.horario_proximo.key_pack, key_restaurante: this.pk });
@@ -234,7 +261,11 @@ class index extends Component {
       card row
       height={57}
       onPress={() => {
-        SNavigation.navigate("/restaurante/addmore", { pk: this.pk });
+        if (!this.data?.tapeke_deshabilitado) {
+          SNavigation.navigate("/restaurante/addmore", { pk: this.pk });
+        } else {
+          SPopup.alert("No puedes aumentar la cantidad de Tapekes, ya que tienes los tapekes deshabilitados.")
+        }
       }}
       style={{
         borderRadius: 8

@@ -2,7 +2,7 @@ import React from 'react';
 import DPA, { connect } from 'servisofts-page';
 import { Parent } from "."
 import Model from '../../../Model';
-import { SNavigation, SText, SView, SIcon, SPopup } from 'servisofts-component';
+import { SNavigation, SText, SView, SIcon, SPopup, STheme } from 'servisofts-component';
 
 class index extends DPA.list {
     constructor(props) {
@@ -13,10 +13,11 @@ class index extends DPA.list {
             excludes: ["key", "estado", "key_usuario"],
             onRefresh: () => {
                 Parent.model.Action.CLEAR()
-                this.deletePermiso = Model.usuarioPage.Action.getPermiso({ url: Parent.path, permiso: "delete" });
-                this.editPermiso = Model.usuarioPage.Action.getPermiso({ url: Parent.path, permiso: "edit" });
             }
         });
+
+        this.deletePermiso = Model.usuarioPage.Action.getPermiso({ url: Parent.path, permiso: "delete" });
+        this.editPermiso = Model.usuarioPage.Action.getPermiso({ url: Parent.path, permiso: "edit" });
     }
 
     $allowNew() {
@@ -37,7 +38,7 @@ class index extends DPA.list {
     }
 
     $order() {
-        return [{ key: "index", order: "desc", type: "integer" }];
+        return [{ key: "index", order: "asc", type: "integer" }];
     }
 
     onEdit(obj) {
@@ -66,6 +67,12 @@ class index extends DPA.list {
     }
 
     $item(obj) {
+        let global = false;
+        if (this.$params.key_restaurante) {
+            global = !!obj.key_restaurante
+        } else {
+            global = !obj.key_restaurante
+        }
         return <>
             <SView card flex onPress={this.$onSelect.bind(this, obj)}>
                 <SView row padding={10}
@@ -75,19 +82,18 @@ class index extends DPA.list {
                     }}
                 >
                     <SView flex>
+                        {!global?<SText color={STheme.color.primary}>Categoria Global</SText>: null}
+                        <SText>Index: {obj.index}</SText>
                         <SText>Nombre: {obj.nombre}</SText>
-                        <SText>Peso: {obj.index}</SText>
                     </SView>
-
-                    <SView row>
-                        <SView style={{ marginRight: 5 }} onPress={() => this.onEdit(obj)}>
+                    {global ? <SView row>
+                        <SView style={{ marginRight:5 }} onPress={() => this.onEdit(obj)}>
                             {this.editPermiso ? <SIcon name={"Edit"} height={30} width={30}></SIcon> : <SView />}
                         </SView>
-
                         <SView onPress={() => this.onDelete(obj)}>
                             {this.deletePermiso ? <SIcon name={"Delete"} height={30} width={30}></SIcon> : <SView />}
                         </SView>
-                    </SView>
+                    </SView> : null}
                 </SView>
             </SView>
         </>

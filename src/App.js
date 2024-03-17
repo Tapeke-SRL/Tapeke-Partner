@@ -31,6 +31,9 @@ const App = (props) => {
                         title: 'Tapeke Partner', pages: Pages,
                         // validator: Validator
                     }}
+                    linking={{ 
+                        prefixes: ['https://tapeke.com', 'tapeke://'],
+                    }}
                 />
                 <SSocket
                     store={store}
