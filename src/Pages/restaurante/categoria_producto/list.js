@@ -86,12 +86,10 @@ class index extends DPA.list {
                         <SText>Index: {obj.index}</SText>
                         <SText>Nombre: {obj.nombre}</SText>
                     </SView>
-
                     {global ? <SView row>
-                        <SView style={{ marginRight: "5px" }} onPress={() => this.onEdit(obj)}>
+                        <SView style={{ marginRight:5 }} onPress={() => this.onEdit(obj)}>
                             {this.editPermiso ? <SIcon name={"Edit"} height={30} width={30}></SIcon> : <SView />}
                         </SView>
-
                         <SView onPress={() => this.onDelete(obj)}>
                             {this.deletePermiso ? <SIcon name={"Delete"} height={30} width={30}></SIcon> : <SView />}
                         </SView>

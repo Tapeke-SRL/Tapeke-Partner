@@ -320,6 +320,7 @@ class root extends Component {
             totalTapeke: 0,
             totalProducto: 0,
             totalSubProducto: 0,
+            totalDescuentoProducto: 0,
             total: 0,
         }
 
@@ -340,7 +341,13 @@ class root extends Component {
             });
         }
 
-        totales.total = totales.totalTapeke + totales.totalProducto + totales.totalSubProducto;
+        if (!!this.data?.descuentos) {
+            Object.values(this.data?.descuentos).map((desc) => {
+                totales.totalDescuentoProducto += desc?.total_descuento_producto;
+            });
+        }
+
+        totales.total = (totales.totalTapeke + totales.totalProducto + totales.totalSubProducto - (totales.totalDescuentoProducto));
 
         return totales;
     }
@@ -482,7 +489,7 @@ class root extends Component {
                                 </SView>
                                 <SHr h={10} />
                                 <SView>
-                                    {pedido_producto?.sub_productos.length > 0 ? <>
+                                    {pedido_producto?.sub_productos?.length > 0 ? <>
                                         <SHr h={1} color={STheme.color.primary} />
                                         <SText center color={STheme.color.primary}>Detalle Sub Producto</SText>
                                         <SHr h={1} color={STheme.color.primary} />
@@ -620,6 +627,25 @@ class root extends Component {
                             Bs.{' '}
                             {SMath.formatMoney(
                                 total.totalSubProducto
+                            )}
+                        </SText>
+                    </SView>
+
+                    <SHr height={10} />
+                    <SView col={'xs-6'}>
+                        <SText
+                            style={{ textAlign: 'justify' }}
+                            fontSize={15}
+                            font={'Roboto'}
+                        >
+                            Total Descuentos
+                        </SText>
+                    </SView>
+                    <SView col={'xs-6'} style={{ alignItems: 'flex-end' }}>
+                        <SText color={STheme.color.danger} fontSize={15} font={'Roboto'} flex>
+                            - Bs. 
+                            {SMath.formatMoney(
+                                total.totalDescuentoProducto
                             )}
                         </SText>
                     </SView>
