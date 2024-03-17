@@ -93,7 +93,7 @@ class index extends Component {
                 <SView col={"xs-11"} row >
                   <SView col={"xs-12"} >
                     <SText font={"Roboto"} color={STheme.color.text} fontSize={16} style={{ fontWeight: "bold" }}  >{this.data.nombre + " "}</SText>
-                  </SView>  
+                  </SView>
                   <SHr height={10} />
                   <SView col={"xs-12"} style={{ justifyContent: 'flex-start', }}>
                     <SText color={STheme.color.darkGray} fontSize={14} font={"Roboto"}>Telf: {this.data.telefono}</SText>
@@ -121,7 +121,7 @@ class index extends Component {
     )
   }
 
-  getContent(dataPackVendidos) {
+  cardPedido(dataPackVendidos) {
     // var dataHorarioCercano = dataPackVendidos
     if (Object.keys(dataPackVendidos).length === 0) return <SView center col><SText>NO HAY PEDIDOS</SText></SView>
     // if (!dataPackVendidos) return null;
@@ -137,21 +137,17 @@ class index extends Component {
       if (b.state == "cancelado" || b.state == "no_recogido") pesoB = 1;
       return pesoB - pesoA
     })
+
     return arr.map((obj, index) => {
       var montoTotal = obj.cantidad * obj.precio;
-      //datos UserInfo
       var dataUsuario = Model.usuario.Action.getByKey(obj.key_usuario);
-      // if (!dataUsuario) return <SView />;
 
       let entregado = obj.state == "entregado" || obj.state == "entregado_conductor" || obj.state == "conductor_llego";
       let error = obj.state == "cancelado" || obj.state == "no_recogido";
+
       return <>
         <SView col={"xs-12"} style={{ borderWidth: 1, borderColor: STheme.color.lightGray, borderRadius: 8 }} row center backgroundColor={STheme.color.card}
           onPress={() => { SNavigation.navigate("/pedido", { pk: obj.key }); }}
-        //   onPress={() => {
-        //     //SPopup.open({ key: "ubicacion", content: this.popupOpcionDistancia() });
-        //     //SPopup.alert();
-        // }}
         >
           <SHr height={10} />
           <SView col={"xs-11"} row center>
@@ -191,7 +187,6 @@ class index extends Component {
         </SView>
         <SHr height={10} />
       </>
-
     })
   }
 
@@ -229,7 +224,7 @@ class index extends Component {
       <SView col={"xs-11"} style={{ borderBottomWidth: 2, borderColor: STheme.color.primary }}></SView>
       <SHr height={20} />
       <SView col={"xs-11"} row    >
-        {this.getContent(dataPackVendidos)}
+        {this.cardPedido(dataPackVendidos)}
       </SView>
     </>
   }

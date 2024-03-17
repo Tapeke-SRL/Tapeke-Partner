@@ -33,7 +33,11 @@ export default class Action extends SAction {
     getVendidosData = ({ key_pack, fecha, key_restaurante }) => {
         var data = this.getAllByHorarioRestaurante({ fecha: fecha, key_restaurante: key_restaurante });
         if (!data) return null;
-        var arr = Object.values(data).filter((item: any) => item.key_pack == key_pack && item.fecha == fecha && (item.state != "pendiente_pago" && item.state != "timeout_pago"));
+        var arr = Object.values(data).filter((item: any) => 
+        item.key_pack == key_pack 
+        && item.fecha == fecha 
+        && (item.state != "pago_en_proceso" && item.state != "pendiente_pago" && item.state != "timeout_pago")
+        );
         var cantidad = 0;
         arr.map((item: any) => cantidad += item.cantidad);
         return arr;

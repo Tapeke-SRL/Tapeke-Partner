@@ -306,21 +306,15 @@ class root extends Component {
         </>
     }
 
-    // calcularTotalProducto() {
-    //     let totalProducto = 0;
-    //     if (!!this.data?.pedido_producto) {
-    //         Object.values(this.data?.pedido_producto).map((o) => totalProducto += o?.precio * o?.cantidad);
-    //     }
-    //     return totalProducto;
-    // }
-
     calcularTotales() {
         if (!this.data) return;
         let totales = {
             totalTapeke: 0,
             totalProducto: 0,
             totalSubProducto: 0,
+
             totalDescuentoProducto: 0,
+            totalDescuentoItem: 0,
             total: 0,
         }
 
@@ -328,7 +322,13 @@ class root extends Component {
 
         if (!!this.data?.pedido_producto) {
             Object.values(this.data?.pedido_producto).map((prod) => {
-                totales.totalProducto += (prod?.precio * prod?.cantidad);
+                if (prod.precio_sin_descuento) {
+                    totales.totalProducto += (prod.cantidad * prod.precio_sin_descuento);
+                    totales.totalDescuentoItem += (prod.precio_sin_descuento - prod.precio) * prod.cantidad;
+                } else {
+                    totales.totalProducto += (prod.cantidad * prod.precio);
+                }
+
                 if (prod.sub_productos) {
                     Object.values(prod.sub_productos).map((sub) => {
                         if (sub.sub_producto_detalle) {
@@ -347,12 +347,13 @@ class root extends Component {
             });
         }
 
+        totales.totalDescuentoProducto += totales.totalDescuentoItem;
         totales.total = (totales.totalTapeke + totales.totalProducto + totales.totalSubProducto - (totales.totalDescuentoProducto));
 
         return totales;
     }
 
-    calcularTotalSubProducto(){
+    calcularTotalSubProducto() {
 
     }
 
@@ -387,6 +388,41 @@ class root extends Component {
             })
         }
 
+        const productoConDescuento = (pedido_producto) => {
+            let itemDescuento = pedido_producto?.precio_sin_descuento - pedido_producto?.precio ?? 0;
+            if (pedido_producto.precio_sin_descuento) {
+                return <>
+                    <SText
+                        fontSize={14}
+                        font={'Roboto'}
+                        color={STheme.color.primary}
+                        bold
+                    >
+                        {' '}
+                        Precio
+                    </SText>
+                    <SHr height={5} />
+                    <SText
+                        fontSize={20}
+                        font={'Roboto'}
+                        bold
+                    >
+                        Bs. {pedido_producto?.precio_sin_descuento ?? 0}{' '}
+                    </SText>
+                    {itemDescuento > 0 ?
+                        <SText
+                            fontSize={12}
+                            font={'Roboto'}
+                            color={STheme.color.danger}
+                            bold
+                        >
+                            - {itemDescuento} Bs. Descuento
+                        </SText> : null
+                    }
+                </>
+            }
+        }
+
         if (!!this.data?.pedido_producto) {
             return <>
                 <SView col={'xs-12'} >
@@ -404,7 +440,7 @@ class root extends Component {
                         data={this.data?.pedido_producto}
                         render={(pedido_producto) => {
                             return <>
-                                <SView col={'xs-12'} row center card>
+                                <SView col={'xs-12'} height={130} row center card>
                                     <SView
                                         width={80}
                                         height={80}
@@ -432,23 +468,7 @@ class root extends Component {
                                                 col={'xs-6'}
                                                 style={{ justifyContent: 'flex-start' }}
                                             >
-                                                <SText
-                                                    fontSize={14}
-                                                    font={'Roboto'}
-                                                    color={STheme.color.primary}
-                                                    bold
-                                                >
-                                                    {' '}
-                                                    Precio
-                                                </SText>
-                                                <SHr height={5} />
-                                                <SText
-                                                    fontSize={20}
-                                                    font={'Roboto'}
-                                                    bold
-                                                >
-                                                    Bs. {pedido_producto?.precio ?? 0}{' '}
-                                                </SText>
+                                                {productoConDescuento(pedido_producto)}
                                             </SView>
                                             <SView col={'xs-6'} center row>
                                                 <SView col={'xs-12'} center>
@@ -566,7 +586,7 @@ class root extends Component {
                             font={'Roboto'}
                         >
                             Método de pago
-                        </SText>    
+                        </SText>
                     </SView>
                     <SView col={'xs-6'} style={{ alignItems: 'flex-end' }}>
                         <SText fontSize={15} font={'Roboto'} flex>
@@ -643,7 +663,7 @@ class root extends Component {
                     </SView>
                     <SView col={'xs-6'} style={{ alignItems: 'flex-end' }}>
                         <SText color={STheme.color.danger} fontSize={15} font={'Roboto'} flex>
-                            - Bs. 
+                            - Bs.
                             {SMath.formatMoney(
                                 total.totalDescuentoProducto
                             )}
