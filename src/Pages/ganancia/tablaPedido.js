@@ -79,7 +79,7 @@ class tablaPedido extends Component {
           { key: "-total_tapekes", label: "Total Tapekes", width: 150, render: a => "Bs. " + SMath.formatMoney((a.cantidad * a.precio), 2) },
           { key: "-total_menos_comision", label: "Total Tapekes - Comisión", width: 150, render: a => "Bs. " + SMath.formatMoney((a.cantidad * a.precio) - a.comision_restaurante, 2) },
           { key: "comision_restaurante", label: "Comisión Tapeke por venta", width: 160, render: a => "Bs. " + SMath.formatMoney(a, 2) },
-          { key: "tipo_pago", label: "Comisión Tapeke por venta", width: 160, render: a =>this.tipoDePago(a) },
+          { key: "tipo_pago", label: "Tipo de Pago", width: 160, render: a =>this.tipoDePago(a) },
         ]
       }
       data={this.state.data} />
