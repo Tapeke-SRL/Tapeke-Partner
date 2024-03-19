@@ -22,6 +22,10 @@ import PedidoState from './Components/PedidoState';
 import SSocket from 'servisofts-socket';
 import Popups from '../../Components/Popups';
 import AccentBar from '../../Components/AccentBar';
+import { Platform } from 'react-native';
+import Html2Canvas from 'html2canvas';
+import jspdf from 'jspdf';
+import { Parent } from '.';
 
 class root extends Component {
     constructor(props) {
@@ -353,8 +357,29 @@ class root extends Component {
         return totales;
     }
 
-    calcularTotalSubProducto() {
+    
 
+    imprimirComanda() {
+        if (Platform.OS === 'web') {
+            return <>
+                <SView
+                    style={{
+                        backgroundColor: STheme.color.primary,
+                        padding: 10,
+                        borderRadius: 8,
+                    }}
+                    onPress={() => {
+                        SNavigation.navigate(Parent.path + '/comanda', { pk: this.pk });
+                    }}
+                    center>
+                    <SText
+                        style={{
+                            color: STheme.color.white,
+                        }}
+                    >Imprimir Comanda</SText>
+                </SView>
+            </>
+        }
     }
 
     detalleProducto() {
@@ -533,6 +558,8 @@ class root extends Component {
                 row
                 style={{ backgroundColor: STheme.color.white }}
             >
+                <SHr height={15} />
+                {this.imprimirComanda()}
                 <SView col={'xs-11'} row center>
                     <SView col={'xs-12'}>
                         <SHr height={15} />
@@ -710,9 +737,7 @@ class root extends Component {
     }
 
     contenido(data) {
-        // if (!this.loadData()) return <SLoad />
         if (!data) return <SLoad />;
-        // if (!dataUsuario) return <SView />;
         this.data = data;
         return (
             <SView col={'xs-12'} row backgroundColor={STheme.color.card} center>
@@ -941,6 +966,7 @@ class root extends Component {
     render() {
         return (
             <SPage
+                id="recibo"
                 onRefresh={() => {
                     Model.pedido.Action.CLEAR();
                 }}
