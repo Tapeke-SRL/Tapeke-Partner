@@ -48,7 +48,7 @@ class root extends Component {
         }).then((res) => {
             this.data = res.data;
             this.setState({ loading: false });
-            // this.imprimirComanda()
+            this.imprimirComanda()
         });
     }
 
@@ -278,7 +278,7 @@ class root extends Component {
                         style={{
                             width: this.sizeComanda.Rollo.width + "mm",
                             borderRadius: 8,
-                            borderColor: 'red',
+                            borderColor: 'lightgray',
                             borderWidth: 1,
                             borderStyle: 'solid',
                             backgroundColor: STheme.color.background,
