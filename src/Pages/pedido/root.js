@@ -367,6 +367,8 @@ class root extends Component {
                         backgroundColor: STheme.color.primary,
                         padding: 10,
                         borderRadius: 8,
+                        width: 200,
+                        height: 50,
                     }}
                     onPress={() => {
                         SNavigation.navigate(Parent.path + '/comanda', { pk: this.pk });
@@ -375,6 +377,7 @@ class root extends Component {
                     <SText
                         style={{
                             color: STheme.color.white,
+                            fontSize: 18,
                         }}
                     >Imprimir Comanda</SText>
                 </SView>

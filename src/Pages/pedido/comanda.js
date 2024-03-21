@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
-    SButtom,
     SHr,
     SLoad,
     SNavigation,
@@ -10,11 +9,8 @@ import {
     SView,
     SDate,
     STheme,
-    SImage,
     SMath,
-    SIcon,
-    SThread,
-    SList
+    SThread
 } from 'servisofts-component';
 import Model from '../../Model';
 import SSocket from 'servisofts-socket';
@@ -22,6 +18,7 @@ import AccentBar from '../../Components/AccentBar';
 import { Platform } from 'react-native';
 import Html2Canvas from 'html2canvas';
 import jspdf from 'jspdf';
+import https from 'https';
 
 class root extends Component {
     constructor(props) {
@@ -37,7 +34,49 @@ class root extends Component {
             Rollo: { width: 80, height: 0 }, //mm
         }
 
-        this.generateComanda = true;
+        let widthGlobal = '90%';
+        this.styles = {
+            hederClass: {
+                fontSize: 12,
+            },
+            textClass: {
+                width: widthGlobal,
+                fontSize: 10,
+                margin: '1px 0'
+            },
+            divLeft: {
+                width: widthGlobal,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+            },
+            separadorGuiones: {
+                width: widthGlobal,
+                border: 'none',
+                borderTop: '1px dashed black'
+            },
+            separadorSolid: {
+                width: widthGlobal,
+                border: 'none',
+                borderTop: '1px solid black'
+            },
+            separadorAltura: {
+                border: 'none',
+                height: '1px'
+            },
+            divMain: {
+                width: widthGlobal,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+            },
+            divChild: {
+                width: widthGlobal,
+            },
+            borderNone: {
+                border: 'none'
+            }
+        };
     }
 
     componentDidMount() {
@@ -46,9 +85,38 @@ class root extends Component {
             type: "getDetalle",
             key_pedido: this.pk
         }).then((res) => {
-            this.data = res.data;
-            this.setState({ loading: false });
-            this.imprimirComanda()
+            let key_usuario = res.data.key_usuario;
+            SSocket.sendPromise({
+                version: "2.0",
+                service: "usuario",
+                component: "usuario",
+                type: "getAllKeys",
+                keys: [key_usuario],
+            }).then(e2 => {
+                this.usuario = e2?.data[key_usuario]?.usuario ?? {}
+                this.data = res.data;
+                this.getBase64Image('https://repo.tapekeapp.com/image/logo_tapeke_black.png', (base64Image) => {
+                    this.base64LogoTapekeBlack = base64Image;
+                    this.forceUpdate();
+                });
+                new SThread(100, "comanda", false).start(() => {
+                    this.imprimirComanda();
+                })
+                if (this.usuario && this.data) this.setState({ loading: false });
+            })
+        });
+    }
+
+    getBase64Image(imgUrl, callback) {
+        https.get(imgUrl, (res) => {
+            const data = [];
+
+            res.on('data', (chunk) => {
+                data.push(chunk);
+            }).on('end', () => {
+                const buffer = Buffer.concat(data);
+                callback(buffer.toString('base64'));
+            });
         });
     }
 
@@ -109,6 +177,78 @@ class root extends Component {
         return tipo;
     }
 
+    detalleProducto() {
+        const renderSubProd = (pedido_producto) => {
+            if (pedido_producto.sub_productos) {
+                return Object.values(pedido_producto.sub_productos).map((sub) => {
+                    return <>
+                        <p style={{ ...this.styles.textClass }}>Sub producto: {sub?.nombre}</p>
+                        {sub.sub_producto_detalle ? renderSubProdDet(sub.sub_producto_detalle) : ""}
+                    </>
+                })
+            }
+        }
+
+        const renderSubProdDet = (sub_producto_detalle) => {
+            return Object.values(sub_producto_detalle).map((subDet) => {
+                return <>
+                    <div style={{ ...this.styles.divChild, ...this.styles.divLeft }}>
+                        <p style={{ ...this.styles.textClass }}>Descripción: {subDet?.nombre}</p>
+                        <p style={{ ...this.styles.textClass }}>Cantidad: {subDet?.cantidad}</p>
+                        <p style={{ ...this.styles.textClass }}>Precio: {subDet?.precio ? `${SMath.formatMoney(subDet?.precio)} Bs.` : "No tiene precio"}</p>
+                        <p style={{ ...this.styles.textClass }}>{subDet?.precio ? `Total: ${SMath.formatMoney(subDet?.precio * subDet?.cantidad)} Bs.` : null}</p>
+                        <hr style={{ ...this.styles.separadorGuiones }} />
+                    </div>
+                </>
+            })
+        }
+
+        const productoConDescuento = (pedido_producto) => {
+            let itemDescuento = pedido_producto?.precio_sin_descuento - pedido_producto?.precio ?? 0;
+            if (pedido_producto.precio_sin_descuento) {
+                return <>
+                    <p style={{ ...this.styles.textClass }}>Precio: {pedido_producto?.precio_sin_descuento} Bs.</p>
+
+                    {itemDescuento > 0 ?
+                        <p style={{ ...this.styles.textClass }}>
+                            Descuento: - {itemDescuento} Bs.
+                        </p> : null
+                    }
+                </>
+            }
+        }
+
+        if (!!this.data?.pedido_producto) {
+            return <>
+                {this.data?.pedido_producto.map((pedido_producto, index) => (
+                    <div key={index} style={{ ...this.styles.divMain }}>
+                        <div style={{ ...this.styles.divChild }} >
+                            <p style={{ ...this.styles.textClass, fontWeight: 'bold' }}>{pedido_producto?.descripcion}</p>
+                            <div>
+                                {productoConDescuento(pedido_producto)}
+                            </div>
+                            <p style={{ ...this.styles.textClass }}>
+                                Cantidad: {pedido_producto?.cantidad ?? 0}
+                            </p>
+                        </div>
+
+                        {pedido_producto?.sub_productos?.length > 0 ? <>
+                            <div style={{ ...this.styles.divChild, textAlign: 'center' }}>
+                                <hr style={{ ...this.styles.separadorGuiones }} />
+                                <p style={this.styles.textClass}>Detalle Sub Producto</p>
+                                <hr style={{ ...this.styles.separadorGuiones }} />
+                            </div>
+                        </> : null}
+
+                        {renderSubProd(pedido_producto)}
+                        <hr style={{ ...this.styles.separadorAltura }} />
+                        <hr style={{ ...this.styles.separadorGuiones }} />
+                    </div>
+                ))}
+            </>
+        }
+    }
+
 
     cropImage(img, h, y) {
         const canvas = document.createElement('canvas');
@@ -119,102 +259,111 @@ class root extends Component {
         return canvas.toDataURL('image/png');
     }
 
+    labelDetallePedido({ label, simbol, money, value }) {
+        let val = `${simbol ? simbol : ''} ${money ? ' ' + money : ''} ${typeof (value) == 'number' ? SMath.formatMoney(value) : value}`.trim();
+
+        return <>
+            <div style={{ ...this.styles.divChild, display: 'flex', justifyContent: 'space-between' }}>
+                <p style={{ ...this.styles.textClass }}>{label}:</p>
+                <p style={{ ...this.styles.textClass, textAlign: 'end' }}>{val}</p>
+            </div>
+        </>
+    }
+
     plantillaComanda() {
         let total = this.calcularTotales();
         let fecha_on = new SDate(this.data.fecha_on, "yyyy-MM-ddThh:mm:ss").toString("yyyy-MM-dd hh:mm:ss")
+
         return (
             <div
                 id="recibo"
                 style={{
                     width: this.sizeComanda.Rollo.width + "mm",
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: 14,
+                    ...this.styles.divMain,
+                    ...this.styles.borderNone
                 }}
             >
-                <h2>Comanda Tapeke</h2>
-                <p>Fecha de realización: {fecha_on}</p>
-                {/* <p>Total de productos sin descuento: {this.data.total_productos_sin_descuento}</p> */}
-                <p>Comisión del restaurante: {this.data.comision_restaurante}</p>
-                {/* <p>Precio: {this.data.precio}</p> */}
-                <h3>Factura</h3>
-                <p>Teléfono: {this.data.factura.phone}</p>
-                <p>NIT: {this.data.factura.nit ? this.data.factura.nit : "S/N"}</p>
-                <p>Razón social: {this.data.factura.razon_social ? this.data.factura.razon_social : "S/N"}</p>
-                <p>Email: {this.data.factura.email}</p>
-
-                <h3>Productos del pedido</h3>
-                <ul>
-                    {this.data.pedido_producto.map((producto, index) => (
-                        <li key={index}>
-                            <p>Descripción: {producto.descripcion}</p>
-                            <p>Precio: {producto.precio}</p>
-                            <p>Cantidad: {producto.cantidad}</p>
-                        </li>
-                    ))}
-                </ul>
-
-                <h3>Detalle del Pedido</h3>
-                <div>
-                    <p>Método de pago: {this.getTipoPago(this.data)}</p>
-                    <p>
-                        Total Tapekes: Bs. {
-                            SMath.formatMoney(
-                                total.totalTapeke
-                            )}
-                    </p>
-                    <p>
-                        Total Productos: Bs. {
-                            SMath.formatMoney(
-                                total.totalProducto
-                            )}
-                    </p>
-                    <p>
-                        Total SubProductos: Bs. {
-                            SMath.formatMoney(
-                                total.totalSubProducto
-                            )}
-                    </p>
-                    <p>
-                        Total Descuentos: - Bs. {
-                            SMath.formatMoney(
-                                total.totalDescuentoProducto
-                            )}
-                    </p>
-                    <hr style={{ borderTop: 1, borderColor: "black" }}></hr>
-                    <p>
-                        Total: Bs. {
-                            SMath.formatMoney(
-                                total.total
-                            )}
-                    </p>
+                <hr style={{ height: '2cm', ...this.styles.borderNone }} />
+                <div style={{ ...this.styles.divMain }}>
+                    <hr style={{ height: '1cm', border: 'none' }} />
+                    <img src={`data:image/png;base64,${this.base64LogoTapekeBlack}`} alt="Logo Tapeke Black" style={{ width: '80px' }} />
+                    <h2 style={{ fontSize: 16, ...this.styles.borderNone }}>Comanda Tapeke</h2>
                 </div>
+
+                <p style={{ ...this.styles.textClass }}>Fecha de realización pedido: {fecha_on}</p>
+
+                <hr style={{ ...this.styles.separadorGuiones }} />
+                <div style={{
+                    ...this.styles.divMain,
+                }}>
+                    <h3 style={{ ...this.styles.hederClass }}>Datos para Facturación</h3>
+                    <p style={{ ...this.styles.textClass, textAlign: 'center' }}>Razón Social: {this.data.factura.razon_social ? this.data.factura.razon_social : "S/N"}</p>
+                    <p style={{ ...this.styles.textClass, textAlign: 'center' }}>NIT: {this.data.factura.nit ? this.data.factura.nit : "S/N"}</p>
+                    <p style={{ ...this.styles.textClass, textAlign: 'center' }}>Email: {this.data.factura.email}</p>
+                </div>
+                <hr style={{ ...this.styles.separadorAltura }} />
+                <hr style={{ ...this.styles.separadorGuiones }} />
+
+                <div style={{ ...this.styles.divLeft }}>
+                    <h3 style={{ ...this.styles.hederClass }}>Datos del Cliente</h3>
+                    <p style={{ ...this.styles.textClass }}>Nombre Cliente: {`${this.usuario.Nombres} ${this.usuario.Apellidos}`}</p>
+                    <p style={{ ...this.styles.textClass }}>Teléfono: {this.usuario.Telefono}</p>
+                    <p style={{ ...this.styles.textClass }}>Nota del Cliente: {this.data?.nota_cliente ? this.data?.nota_cliente : `El Usuario no puso nota al pedido`}</p>
+                </div>
+                <hr style={{ ...this.styles.separadorAltura }} />
+                <hr style={{ ...this.styles.separadorGuiones }} />
+
+                <div style={{ ...this.styles.divLeft }}>
+                    <p style={{ ...this.styles.textClass, fontWeight: 'bold' }}>Tapekes del Pedido</p>
+                    <p style={{ ...this.styles.textClass }}>Cantidad: {this.data.cantidad}</p>
+                    <p style={{ ...this.styles.textClass }}>Precio: {this.data.precio}</p>
+                    <p style={{ ...this.styles.textClass }}>Total: {this.data.precio * this.data.cantidad}</p>
+
+                    {
+                        !!this.data?.pedido_producto ? <>
+                            <hr style={{ ...this.styles.separadorAltura }} />
+                            <p style={{ ...this.styles.textClass, fontWeight: 'bold' }}>Productos del Pedido</p>
+                            {this.detalleProducto()}
+                        </> : null
+                    }
+
+
+                </div>
+
+                <h3 style={{ ...this.styles.hederClass, ...this.styles.borderNone }}>Detalle del Pedido</h3>
+                <div style={{ ...this.styles.divMain }}>
+                    {this.labelDetallePedido({ label: 'Método de pago', value: this.getTipoPago(this.data) })}
+                    {this.labelDetallePedido({ label: 'Total Tapekes:', money: 'Bs.', value: total.totalTapeke })}
+                    {this.labelDetallePedido({ label: 'Total Productos:', money: 'Bs.', value: total.totalProducto })}
+                    {this.labelDetallePedido({ label: 'Total Descuentos:', simbol: '-', money: 'Bs.', value: total.totalDescuentoProducto })}
+                    <hr style={{ ...this.styles.separadorSolid }}></hr>
+                    {this.labelDetallePedido({ label: 'Total:', money: 'Bs.', value: total.total })}
+                </div>
+
+                <hr style={{ height: '4cm', ...this.styles.borderNone }} />
             </div>
         );
     }
 
     imprimirComanda() {
-        let size = this.sizeComanda.Rollo;
         let input = document.getElementById('recibo');
         let heigthRollo = input.offsetHeight;
-        let heigthRolloMm = heigthRollo * 0.2645833333;
+        let heigthRolloMm = heigthRollo * 0.2645833333; 
 
+        let size = this.sizeComanda.Rollo;
         this.sizeComanda.Rollo.height = heigthRolloMm;
 
-        Html2Canvas(input, { scrollY: 0, scrollX: 0, }).then((canvas) => {
+        Html2Canvas(input, { scale: 2, scrollY: 0, scrollX: 0, height: heigthRollo, width: input.offsetWidth }).then((canvas) => {
             const imgData = canvas.toDataURL('image/png');
             const pdf = new jspdf('p', 'mm', [size.width, size.height]);
-            const ratio = canvas.width / pdf.internal.pageSize.getWidth();
+            const ratio = canvas.height / pdf.internal.pageSize.getHeight();
 
-            let space = 10;
-            const imgHeight = (pdf.internal.pageSize.getHeight() * ratio);
+            let imgHeight = pdf.internal.pageSize.getHeight() * ratio;
             var npages = Math.ceil(canvas.height / imgHeight);
 
             for (var i = 0; i < npages; i++) {
                 var imgTemp = this.cropImage(canvas, imgHeight, imgHeight * i);
-                pdf.addImage(imgTemp, "PNG", 0, 0, pdf.internal.pageSize.getWidth(), imgHeight / ratio);
+                pdf.addImage(imgTemp, "PNG", 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
                 if (i < npages - 1) {
                     pdf.addPage();
                 }
@@ -226,7 +375,6 @@ class root extends Component {
                     newWindow.print();
                 };
             }
-            this.generateComanda = false
         });
     }
 
@@ -283,6 +431,7 @@ class root extends Component {
                             borderStyle: 'solid',
                             backgroundColor: STheme.color.background,
                         }}
+                        center
                     >
                         {this.render_content()}
                     </SView>
