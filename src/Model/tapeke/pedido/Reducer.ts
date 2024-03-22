@@ -1,5 +1,6 @@
 import { SReducer } from "servisofts-model";
 import { SNavigation, SThread } from 'servisofts-component';
+import Sounds from "../../../Components/Sounds";
 
 export default class Reducer extends SReducer {
 
@@ -14,29 +15,34 @@ export default class Reducer extends SReducer {
             state.data_activos = action.data;
         }
     }
+
     editar(state: any, action: any): void {
+        let pedido = action.data;
+
+        const filterNewPedido = (pedido) => {
+            if (state.data[pedido.key] && pedido.state == 'listo') {
+                new SThread(200, "newPedido", false).start(() => {
+                    Sounds.play();
+                    SNavigation.navigate("/pedido", { pk: pedido.key });
+                })
+            }
+        }
+
         if (action.estado == "exito") {
             if (state.data) {
-                if (!state.data[action.data[this.model.pk]]) {
-                    new SThread(100, "sadasd", false).start(() => {
-                        SNavigation.navigate("/pedido", { pk: action.data[this.model.pk] });
-
-                    })
-                }
-                state.data[action.data[this.model.pk]] = action.data;
+                filterNewPedido(pedido);
             }
-            if (state.data_activos) {
-                if (!state.data_activos[action.data[this.model.pk]]) {
-                    new SThread(100, "sadasd", false).start(() => {
-                        SNavigation.navigate("/pedido", { pk: action.data[this.model.pk] });
+            state.data[pedido.key] = pedido;
+        }
 
-                    })
-                }
-                state.data_activos[action.data[this.model.pk]] = action.data;
+        if (state.data_activos) {
+            if (!state.data_activos[pedido.key]) {
+                filterNewPedido(action.data);
             }
-
+            state.data_activos[pedido.key] = pedido;
         }
     }
+
     registro(state: any, action: any): void {
         if (action.estado == "exito") {
             if (state.data) {

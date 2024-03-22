@@ -33,10 +33,15 @@ export default class Action extends SAction {
     getVendidosData = ({ key_pack, fecha, key_restaurante }) => {
         var data = this.getAllByHorarioRestaurante({ fecha: fecha, key_restaurante: key_restaurante });
         if (!data) return null;
-        var arr = Object.values(data).filter((item: any) => 
-        item.key_pack == key_pack 
-        && item.fecha == fecha 
-        && (item.state != "pago_en_proceso" && item.state != "pendiente_pago" && item.state != "timeout_pago")
+        var arr = Object.values(data).filter((item: any) =>
+            item.key_pack == key_pack
+            && item.fecha == fecha
+            && (
+                item.state != "pago_en_proceso"
+                && item.state != "pendiente_pago"
+                && item.state != "timeout_pago"
+                && item.state != "anulado"
+            )
         );
         var cantidad = 0;
         arr.map((item: any) => cantidad += item.cantidad);
@@ -67,7 +72,9 @@ export default class Action extends SAction {
         var objFinal = Object.values(data).filter((a: any) => key_usuario == a.key_usuario
             && a.state != "entregado"
             && a.state != "pendiente_pago"
+            && a.state != "pago_en_proceso"
             && a.state != "timeout_pago"
+            && a.state != "anulado"
         )
         return objFinal;
     }
