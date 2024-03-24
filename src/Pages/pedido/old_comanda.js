@@ -34,50 +34,44 @@ class root extends Component {
             Rollo: { width: 80, height: 0 }, //mm
         }
 
-        this.widthGlobal = '90%';
+        let widthGlobal = '90%';
         this.styles = {
             hederClass: {
                 fontSize: 12,
             },
             textClass: {
-                width: this.widthGlobal,
+                width: widthGlobal,
                 fontSize: 10,
                 margin: '1px 0'
             },
             divLeft: {
-                width: this.widthGlobal,
+                width: widthGlobal,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'flex-start',
             },
             separadorGuiones: {
-                width: this.widthGlobal,
+                width: widthGlobal,
                 border: 'none',
                 borderTop: '1px dashed black'
             },
             separadorSolid: {
-                width: this.widthGlobal,
+                width: widthGlobal,
                 border: 'none',
                 borderTop: '1px solid black'
             },
             separadorAltura: {
                 border: 'none',
-                margin: 0,
-                height: 8
+                height: '1px'
             },
             divMain: {
-                width: this.widthGlobal,
+                width: widthGlobal,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
             },
             divChild: {
-                width: this.widthGlobal,
-            },
-            divSpaceBetween: {
-                display: 'flex',
-                justifyContent: 'space-between',
-                width: '100%'
+                width: widthGlobal,
             },
             borderNone: {
                 border: 'none'
@@ -172,20 +166,23 @@ class root extends Component {
         return totales;
     }
 
-    tipoDePago() {
-        if (this.data?.tipo_pago && this.data?.tipo_pago?.length > 0) {
-            return !!this.data.tipo_pago.find(o => o.type == "efectivo") ? "Efectivo" : `Online - ${this.data.tipo_pago[0].type}`;
-        } else {
-            return "El pago con QR nunca se pago";
+    getTipoPago(datas) {
+        var tipo = 'Pago online';
+        if (datas.tipo_pago) {
+            var efectivo = datas.tipo_pago.find(o => o.type == 'efectivo');
+            if (efectivo) {
+                tipo = 'Efectivo';
+            }
         }
+        return tipo;
     }
-
 
     detalleProducto() {
         const renderSubProd = (pedido_producto) => {
             if (pedido_producto.sub_productos) {
                 return Object.values(pedido_producto.sub_productos).map((sub) => {
                     return <>
+                        <p style={{ ...this.styles.textClass }}>Sub producto: {sub?.nombre}</p>
                         {sub.sub_producto_detalle ? renderSubProdDet(sub.sub_producto_detalle) : ""}
                     </>
                 })
@@ -195,9 +192,12 @@ class root extends Component {
         const renderSubProdDet = (sub_producto_detalle) => {
             return Object.values(sub_producto_detalle).map((subDet) => {
                 return <>
-                    <div style={{ ...this.styles.divSpaceBetween }}>
-                        <p style={{ ...this.styles.textClass, marginLeft: 15, width: 25 }}>{`- ${subDet?.cantidad}x`}</p>
-                        <p style={{ ...this.styles.textClass }}>{subDet?.nombre}</p>
+                    <div style={{ ...this.styles.divChild, ...this.styles.divLeft }}>
+                        <p style={{ ...this.styles.textClass }}>Descripción: {subDet?.nombre}</p>
+                        <p style={{ ...this.styles.textClass }}>Cantidad: {subDet?.cantidad}</p>
+                        <p style={{ ...this.styles.textClass }}>Precio: {subDet?.precio ? `${SMath.formatMoney(subDet?.precio)} Bs.` : "No tiene precio"}</p>
+                        <p style={{ ...this.styles.textClass }}>{subDet?.precio ? `Total: ${SMath.formatMoney(subDet?.precio * subDet?.cantidad)} Bs.` : null}</p>
+                        <hr style={{ ...this.styles.separadorGuiones }} />
                     </div>
                 </>
             })
@@ -218,34 +218,31 @@ class root extends Component {
             }
         }
 
-        const totalSubProductoDetalleIteam = (pedido_producto) => {
-            let totalSub = 0;
-            if (pedido_producto.sub_productos) {
-                Object.values(pedido_producto.sub_productos).map((sub) => {
-                    Object.values(sub.sub_producto_detalle).map((subDet) => {
-                        totalSub += (subDet?.precio * subDet?.cantidad) * pedido_producto.cantidad;
-                    })
-                })
-            }
-            return totalSub;
-        }
-
         if (!!this.data?.pedido_producto) {
             return <>
                 {this.data?.pedido_producto.map((pedido_producto, index) => (
-                    <div key={index} style={{ ...this.styles.divMain, width: '100%' }}>
-
-                        <div style={{ ...this.styles.divSpaceBetween }}>
-                            <p style={{ ...this.styles.textClass, width: 35 }}>
-                                {pedido_producto?.cantidad ?? 0}x
+                    <div key={index} style={{ ...this.styles.divMain }}>
+                        <div style={{ ...this.styles.divChild }} >
+                            <p style={{ ...this.styles.textClass, fontWeight: 'bold' }}>{pedido_producto?.descripcion}</p>
+                            <div>
+                                {productoConDescuento(pedido_producto)}
+                            </div>
+                            <p style={{ ...this.styles.textClass }}>
+                                Cantidad: {pedido_producto?.cantidad ?? 0}
                             </p>
-                            <p style={{ ...this.styles.textClass, textAlign: 'left' }}>{pedido_producto?.descripcion}</p>
-                            <p style={{ ...this.styles.textClass, textAlign: 'right' }}>Bs. {SMath.formatMoney((pedido_producto?.precio_sin_descuento * pedido_producto.cantidad) + totalSubProductoDetalleIteam(pedido_producto))} </p>
-                            {/* <div>{productoConDescuento(pedido_producto)}</div> */}
                         </div>
+
+                        {pedido_producto?.sub_productos?.length > 0 ? <>
+                            <div style={{ ...this.styles.divChild, textAlign: 'center' }}>
+                                <hr style={{ ...this.styles.separadorGuiones }} />
+                                <p style={this.styles.textClass}>Detalle Sub Producto</p>
+                                <hr style={{ ...this.styles.separadorGuiones }} />
+                            </div>
+                        </> : null}
 
                         {renderSubProd(pedido_producto)}
                         <hr style={{ ...this.styles.separadorAltura }} />
+                        <hr style={{ ...this.styles.separadorGuiones }} />
                     </div>
                 ))}
             </>
@@ -266,7 +263,7 @@ class root extends Component {
         let val = `${simbol ? simbol : ''} ${money ? ' ' + money : ''} ${typeof (value) == 'number' ? SMath.formatMoney(value) : value}`.trim();
 
         return <>
-            <div style={{ ...this.styles.divChild }}>
+            <div style={{ ...this.styles.divChild, display: 'flex', justifyContent: 'space-between' }}>
                 <p style={{ ...this.styles.textClass }}>{label}:</p>
                 <p style={{ ...this.styles.textClass, textAlign: 'end' }}>{val}</p>
             </div>
@@ -275,6 +272,7 @@ class root extends Component {
 
     plantillaComanda() {
         let total = this.calcularTotales();
+        let fecha_on = new SDate(this.data.fecha_on, "yyyy-MM-ddThh:mm:ss").toString("yyyy-MM-dd hh:mm:ss")
 
         return (
             <div
@@ -285,102 +283,64 @@ class root extends Component {
                     ...this.styles.borderNone
                 }}
             >
-                <hr style={{ height: '30px', border: 'none' }} />
+                <hr style={{ height: '2cm', ...this.styles.borderNone }} />
                 <div style={{ ...this.styles.divMain }}>
-                    <p style={{ ...this.styles.textClass, textAlign: 'center' }}>* Documento NO FISCAL *</p>
-                    <img src={`data:image/png;base64,${this.base64LogoTapekeBlack}`} alt="Logo Tapeke Black" style={{ width: '50px' }} />
+                    <hr style={{ height: '1cm', border: 'none' }} />
+                    <img src={`data:image/png;base64,${this.base64LogoTapekeBlack}`} alt="Logo Tapeke Black" style={{ width: '80px' }} />
+                    <h2 style={{ fontSize: 16, ...this.styles.borderNone }}>Comanda Tapeke</h2>
                 </div>
-                <p style={{ ...this.styles.textClass, textAlign: 'center' }}>{this.data?.restaurante?.nombre}</p>
+
+                <p style={{ ...this.styles.textClass }}>Fecha de realización pedido: {fecha_on}</p>
 
                 <hr style={{ ...this.styles.separadorGuiones }} />
-                <div style={{ ...this.styles.divMain }}>
-                    <p style={{ ...this.styles.textClass, textAlign: 'center' }}>Santa Cruz, {new SDate(this.data.fecha_on, "yyyy-MM-ddThh:mm:ss").toString("dd de MONTH del yyyy")}</p>
-                    <hr style={{ ...this.styles.separadorAltura }} />
-                    <div style={{ ...this.styles.divSpaceBetween }}>
-                        <div>
-                            <p style={{ fontSize: 14, fontWeight: 'bold', textAlign: 'center', margin: 0 }}>{`# ${this.data?.key.slice(-6)}`}</p>
-                            <p style={{ fontSize: 8, width: 'auto', textAlign: 'center', margin: 0 }}>Código de pedido</p>
-                        </div>
-
-                        <div>
-                            <p style={{ fontSize: 14, fontWeight: 'bold', textAlign: 'center', margin: 0 }}>{new SDate(this.data.fecha_on, "yyyy-MM-ddThh:mm:ss").toString("hh:mm")}</p>
-                            <p style={{ fontSize: 8, width: 'auto', textAlign: 'center', margin: 0 }}>Hora de ingreso del pedido</p>
-                        </div>
-                    </div>
-                </div>
-                <hr style={{ ...this.styles.separadorGuiones }} />
-
-
                 <div style={{
                     ...this.styles.divMain,
-                    width: '100%',
                 }}>
-                    <p style={{ ...this.styles.textClass }}>Nombre Cliente: {`${this.usuario.Nombres} ${this.usuario.Apellidos}`}</p>
-                    <p style={{ ...this.styles.textClass }}>Teléfono: {this.usuario.Telefono}</p>
-                    <p style={{ ...this.styles.textClass }}>Email: {this.data.factura.email}</p>
-
-                    <hr style={{ ...this.styles.separadorAltura }} />
-                    <p style={{ ...this.styles.textClass }}>Razón Social: {this.data.factura.razon_social ? this.data.factura.razon_social : "S/N"}</p>
-                    <p style={{ ...this.styles.textClass }}>NIT: {this.data.factura.nit ? this.data.factura.nit : "S/N"}</p>
-
-                    <hr style={{ ...this.styles.separadorAltura }} />
-                    <div style={{ display: 'flex', width: '90%' }}>
-                        <p style={{ ...this.styles.textClass, width: '50%' }}>Nota del Cliente:</p>
-                        <p style={{ ...this.styles.textClass, alignText: 'left' }}>{this.data?.nota_cliente ? this.data?.nota_cliente : `El Usuario no puso nota al pedido`}</p>
-                    </div>
+                    <h3 style={{ ...this.styles.hederClass }}>Datos para Facturación</h3>
+                    <p style={{ ...this.styles.textClass, textAlign: 'center' }}>Razón Social: {this.data.factura.razon_social ? this.data.factura.razon_social : "S/N"}</p>
+                    <p style={{ ...this.styles.textClass, textAlign: 'center' }}>NIT: {this.data.factura.nit ? this.data.factura.nit : "S/N"}</p>
+                    <p style={{ ...this.styles.textClass, textAlign: 'center' }}>Email: {this.data.factura.email}</p>
                 </div>
-
                 <hr style={{ ...this.styles.separadorAltura }} />
                 <hr style={{ ...this.styles.separadorGuiones }} />
 
                 <div style={{ ...this.styles.divLeft }}>
-                    <p style={{ ...this.styles.textClass, fontWeight: 'bold' }}>TAPEKES</p>
+                    <h3 style={{ ...this.styles.hederClass }}>Datos del Cliente</h3>
+                    <p style={{ ...this.styles.textClass }}>Nombre Cliente: {`${this.usuario.Nombres} ${this.usuario.Apellidos}`}</p>
+                    <p style={{ ...this.styles.textClass }}>Teléfono: {this.usuario.Telefono}</p>
+                    <p style={{ ...this.styles.textClass }}>Nota del Cliente: {this.data?.nota_cliente ? this.data?.nota_cliente : `El Usuario no puso nota al pedido`}</p>
+                </div>
+                <hr style={{ ...this.styles.separadorAltura }} />
+                <hr style={{ ...this.styles.separadorGuiones }} />
 
-                    <div style={{ ...this.styles.divSpaceBetween }}>
-                        <p style={{ ...this.styles.textClass }}>{this.data.cantidad} x     -</p>
-                        <p style={{ ...this.styles.textClass, textAlign: 'right' }}>Bs. {SMath.formatMoney(this.data.precio * this.data.cantidad)}</p>
-                    </div>
+                <div style={{ ...this.styles.divLeft }}>
+                    <p style={{ ...this.styles.textClass, fontWeight: 'bold' }}>Tapekes del Pedido</p>
+                    <p style={{ ...this.styles.textClass }}>Cantidad: {this.data.cantidad}</p>
+                    <p style={{ ...this.styles.textClass }}>Precio: {this.data.precio}</p>
+                    <p style={{ ...this.styles.textClass }}>Total: {this.data.precio * this.data.cantidad}</p>
 
                     {
                         !!this.data?.pedido_producto ? <>
                             <hr style={{ ...this.styles.separadorAltura }} />
-                            <p style={{ ...this.styles.textClass, fontWeight: 'bold' }}>íTEMS</p>
+                            <p style={{ ...this.styles.textClass, fontWeight: 'bold' }}>Productos del Pedido</p>
                             {this.detalleProducto()}
                         </> : null
                     }
-                </div>
-                <hr style={{ ...this.styles.separadorGuiones }} />
-                <div style={{ width: this.widthGlobal }}>
-                    <div style={{ ...this.styles.divSpaceBetween }}>
-                        <p style={{ ...this.styles.textClass }}>{`Subtotal:`}</p>
-                        <p style={{ ...this.styles.textClass, textAlign: 'right' }}>{`Bs. ${SMath.formatMoney(total.totalProducto + total.totalSubProducto)}`}</p>
-                    </div>
 
-                    <div style={{ ...this.styles.divSpaceBetween }}>
-                        <p style={{ ...this.styles.textClass }}>{`(-) Descuento Promo:`}</p>
-                        <p style={{ ...this.styles.textClass, textAlign: 'right' }}>{`Bs. ${SMath.formatMoney(total.totalDescuentoItem)}`}</p>
-                    </div>
+
                 </div>
 
-                <hr style={{ ...this.styles.separadorGuiones }} />
-                <div
-                    style={{
-                        ...this.styles.divSpaceBetween,
-                        fontWeight: 'bold',
-                        width: this.widthGlobal,
-                    }}>
-                    <p style={{ ...this.styles.textClass, fontSize: 16 }}>Total Pedido:</p>
-                    <p style={{ ...this.styles.textClass, fontSize: 16, textAlign: 'right' }}>Bs. {SMath.formatMoney(total.total)}</p>
+                <h3 style={{ ...this.styles.hederClass, ...this.styles.borderNone }}>Detalle del Pedido</h3>
+                <div style={{ ...this.styles.divMain }}>
+                    {this.labelDetallePedido({ label: 'Método de pago', value: this.getTipoPago(this.data) })}
+                    {this.labelDetallePedido({ label: 'Total Tapekes:', money: 'Bs.', value: total.totalTapeke })}
+                    {this.labelDetallePedido({ label: 'Total Productos:', money: 'Bs.', value: total.totalProducto })}
+                    {this.labelDetallePedido({ label: 'Total Descuentos:', simbol: '-', money: 'Bs.', value: total.totalDescuentoProducto })}
+                    <hr style={{ ...this.styles.separadorSolid }}></hr>
+                    {this.labelDetallePedido({ label: 'Total:', money: 'Bs.', value: total.total })}
                 </div>
 
-                <hr style={{ ...this.styles.separadorGuiones }} />
-                <div style={{ ...this.styles.divSpaceBetween, width: this.widthGlobal, }}>
-                    <p style={{ ...this.styles.textClass  }}>Método de Pago:</p>
-                    <p style={{ ...this.styles.textClass, textAlign: 'right'}}>{this.tipoDePago(this.data?.tipo_pago)}</p>
-                </div>
-                <hr style={{ ...this.styles.separadorGuiones }} />
-
-                <hr style={{ height: '30px', border: 'none' }} />
+                <hr style={{ height: '4cm', ...this.styles.borderNone }} />
             </div>
         );
     }
@@ -388,7 +348,7 @@ class root extends Component {
     imprimirComanda() {
         let input = document.getElementById('recibo');
         let heigthRollo = input.offsetHeight;
-        let heigthRolloMm = heigthRollo * 0.2645833333;
+        let heigthRolloMm = heigthRollo * 0.2645833333; 
 
         let size = this.sizeComanda.Rollo;
         this.sizeComanda.Rollo.height = heigthRolloMm;
