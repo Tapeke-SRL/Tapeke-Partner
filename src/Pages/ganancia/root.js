@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { SButtom, SDate, SHr, SIcon, SList, SLoad, SMath, SNavigation, SPage, SText, STheme, SView } from 'servisofts-component';
+import { SPopup, SDate, SHr, SIcon, SList, SLoad, SMath, SNavigation, SPage, SText, STheme, SView } from 'servisofts-component';
 import TopBar from '../../Components/TopBar';
 import Model from '../../Model';
 import SSocket from 'servisofts-socket'
@@ -307,10 +307,13 @@ class root extends Component {
                         borderRadius: 8
                     }}
                     onPress={() => {
-                        SNavigation.navigate("/ganancia/tablaPedido", { conciliado: false });
+                        SPopup.dateBetween("Selecciona las fechas", (evt) => {
+                            evt.conciliado = false
+                            SNavigation.navigate("/ganancia/tablaPedido", evt);
+                        });
                     }}
                 >
-                    <SText fontSize={12} color={STheme.color.white} bold>Ver tabla historial pedidos</SText>
+                    <SText fontSize={12} color={STheme.color.white} bold>Ver tabla pedidos por conciliar</SText>
                 </SView>
                 <SHr height={10} />
                 {this.getLista()}
