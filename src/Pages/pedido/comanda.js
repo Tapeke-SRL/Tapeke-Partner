@@ -10,15 +10,15 @@ import {
     SDate,
     STheme,
     SMath,
-    SThread
+    SThread,
+    SImage
 } from 'servisofts-component';
 import Model from '../../Model';
 import SSocket from 'servisofts-socket';
 import AccentBar from '../../Components/AccentBar';
 import { Platform } from 'react-native';
-import Html2Canvas from 'html2canvas';
-import jspdf from 'jspdf';
-import https from 'https';
+import html2canvas from 'html2canvas';
+import jspdf  from 'jspdf';
 
 class root extends Component {
     constructor(props) {
@@ -101,28 +101,11 @@ class root extends Component {
             }).then(e2 => {
                 this.usuario = e2?.data[key_usuario]?.usuario ?? {}
                 this.data = res.data;
-                this.getBase64Image('https://repo.tapekeapp.com/image/logo_tapeke_black.png', (base64Image) => {
-                    this.base64LogoTapekeBlack = base64Image;
-                    this.forceUpdate();
-                });
-                new SThread(100, "comanda", false).start(() => {
+                new SThread(50, "comanda", false).start(() => {
                     this.imprimirComanda();
                 })
                 if (this.usuario && this.data) this.setState({ loading: false });
             })
-        });
-    }
-
-    getBase64Image(imgUrl, callback) {
-        https.get(imgUrl, (res) => {
-            const data = [];
-
-            res.on('data', (chunk) => {
-                data.push(chunk);
-            }).on('end', () => {
-                const buffer = Buffer.concat(data);
-                callback(buffer.toString('base64'));
-            });
         });
     }
 
@@ -241,7 +224,6 @@ class root extends Component {
                             </p>
                             <p style={{ ...this.styles.textClass, textAlign: 'left' }}>{pedido_producto?.descripcion}</p>
                             <p style={{ ...this.styles.textClass, textAlign: 'right' }}>Bs. {SMath.formatMoney((pedido_producto?.precio_sin_descuento * pedido_producto.cantidad) + totalSubProductoDetalleIteam(pedido_producto))} </p>
-                            {/* <div>{productoConDescuento(pedido_producto)}</div> */}
                         </div>
 
                         {renderSubProd(pedido_producto)}
@@ -288,7 +270,9 @@ class root extends Component {
                 <hr style={{ height: '30px', border: 'none' }} />
                 <div style={{ ...this.styles.divMain }}>
                     <p style={{ ...this.styles.textClass, textAlign: 'center' }}>* Documento NO FISCAL *</p>
-                    <img src={`data:image/png;base64,${this.base64LogoTapekeBlack}`} alt="Logo Tapeke Black" style={{ width: '50px' }} />
+
+                    <SImage src={require('../../Assets/img/logo_tapeke_black.png')} style={{ border: 'none', height: 35 }} />
+
                 </div>
                 <p style={{ ...this.styles.textClass, textAlign: 'center' }}>{this.data?.restaurante?.nombre}</p>
 
@@ -375,8 +359,8 @@ class root extends Component {
 
                 <hr style={{ ...this.styles.separadorGuiones }} />
                 <div style={{ ...this.styles.divSpaceBetween, width: this.widthGlobal, }}>
-                    <p style={{ ...this.styles.textClass  }}>Método de Pago:</p>
-                    <p style={{ ...this.styles.textClass, textAlign: 'right'}}>{this.tipoDePago(this.data?.tipo_pago)}</p>
+                    <p style={{ ...this.styles.textClass }}>Método de Pago:</p>
+                    <p style={{ ...this.styles.textClass, textAlign: 'right' }}>{this.tipoDePago(this.data?.tipo_pago)}</p>
                 </div>
                 <hr style={{ ...this.styles.separadorGuiones }} />
 
@@ -386,6 +370,7 @@ class root extends Component {
     }
 
     imprimirComanda() {
+
         let input = document.getElementById('recibo');
         let heigthRollo = input.offsetHeight;
         let heigthRolloMm = heigthRollo * 0.2645833333;
@@ -393,7 +378,7 @@ class root extends Component {
         let size = this.sizeComanda.Rollo;
         this.sizeComanda.Rollo.height = heigthRolloMm;
 
-        Html2Canvas(input, { scale: 2, scrollY: 0, scrollX: 0, height: heigthRollo, width: input.offsetWidth }).then((canvas) => {
+        html2canvas(input, { scale: 2, scrollY: 0, scrollX: 0, height: heigthRollo, width: input.offsetWidth }).then((canvas) => {
             const imgData = canvas.toDataURL('image/png');
             const pdf = new jspdf('p', 'mm', [size.width, size.height]);
             const ratio = canvas.height / pdf.internal.pageSize.getHeight();
@@ -453,32 +438,46 @@ class root extends Component {
     }
 
     render() {
-        return (
-            <SPage
-                onRefresh={() => {
-                    Model.pedido.Action.CLEAR();
-                }}
-                header={<AccentBar />}
-            >
-                <SView center>
-                    {this.volverImprimirComanda()}
-                    <SView
-                        style={{
-                            width: this.sizeComanda.Rollo.width + "mm",
-                            borderRadius: 8,
-                            borderColor: 'lightgray',
-                            borderWidth: 1,
-                            borderStyle: 'solid',
-                            backgroundColor: STheme.color.background,
-                        }}
-                        center
-                    >
-                        {this.render_content()}
+        if (Platform.OS === 'web') {
+            return (
+                <SPage
+                    onRefresh={() => {
+                        Model.pedido.Action.CLEAR();
+                    }}
+                    header={<AccentBar />}
+                >
+                    <SView center>
+                        {this.volverImprimirComanda()}
+                        <SView
+                            style={{
+                                width: this.sizeComanda.Rollo.width + "mm",
+                                borderRadius: 8,
+                                borderColor: 'lightgray',
+                                borderWidth: 1,
+                                borderStyle: 'solid',
+                                backgroundColor: STheme.color.background,
+                            }}
+                            center
+                        >
+                            {this.render_content()}
+                        </SView>
+                        <SHr height={30} />
                     </SView>
-                    <SHr height={30} />
-                </SView>
-            </SPage>
-        );
+                </SPage>
+            );
+        }else{
+            return (
+                <SPage
+                    onRefresh={() => {
+                        Model.pedido.Action.CLEAR();
+                    }}
+                    header={<AccentBar />}
+                >
+                    <SText>No es compatible con Movil</SText>
+                </SPage>
+            );
+        
+        }
     }
 }
 const initStates = state => {

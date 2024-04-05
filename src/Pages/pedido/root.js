@@ -23,8 +23,6 @@ import SSocket from 'servisofts-socket';
 import Popups from '../../Components/Popups';
 import AccentBar from '../../Components/AccentBar';
 import { Platform } from 'react-native';
-import Html2Canvas from 'html2canvas';
-import jspdf from 'jspdf';
 import { Parent } from '.';
 
 class root extends Component {
@@ -357,7 +355,6 @@ class root extends Component {
         return totales;
     }
 
-    
 
     imprimirComanda() {
         if (Platform.OS === 'web') {

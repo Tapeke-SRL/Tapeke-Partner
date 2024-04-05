@@ -152,8 +152,8 @@ class tablaPedido extends Component {
           { key: "fecha", label: "Fecha de Entrega", order: "desc", width: 100 },
           { key: "key", label: "Key Pedido", width: 250 },
           { key: "state", label: "Estado", width: 80 },
-          { key: "key_usuario", label: "Usuario", width: 200, render: a => a ? users[a].Nombres + " " + users[a].Apellidos : "No se pillo el usuario" },
-          { key: "key_conductor", label: "Driver", width: 200, render: a => a ? users[a].Nombres + " " + users[a].Apellidos : "Recoger del lugar" },
+          { key: "key_usuario", label: "Usuario", width: 200, render: a => a ? users[a]?.Nombres + " " + users[a]?.Apellidos : "No se pillo el usuario" },
+          { key: "key_conductor", label: "Driver", width: 200, render: a => a ? users[a]?.Nombres + " " + users[a]?.Apellidos : "Recoger del lugar" },
 
           { key: "cantidad", label: "Cantidad Tapekes", width: 110 },
           { key: "precio", label: "Precio Unitario Tapekes", width: 150, render: a => "Bs. " + SMath.formatMoney(a, 2) },

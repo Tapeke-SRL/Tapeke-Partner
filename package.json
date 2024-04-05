@@ -64,7 +64,8 @@
     "xlsx": "^0.18.5",
     "xlsx-color": "^0.14.30",
     "html2canvas": "^1.4.1",
-    "jspdf": "^2.5.1"
+    "jspdf": "^2.5.1",
+    "react-native-sound": "^0.11.2"
   },
   "resolutions": {
     "react-error-overlay": "6.0.9"

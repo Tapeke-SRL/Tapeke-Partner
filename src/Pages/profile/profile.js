@@ -63,10 +63,7 @@ class index extends Component {
                         overflow: "hidden",
                     }} border={STheme.color.card}>
                         <SImage src={SSocket.api.root + "usuario/" + usuario?.key + "?date=" + new Date().getTime(1000)}
-
                             style={{ resizeMode: 'cover', }} />
-
-
                     </SView>
                 </SView>
                 <SHr />

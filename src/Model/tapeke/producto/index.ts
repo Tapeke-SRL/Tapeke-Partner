@@ -28,7 +28,7 @@ export default new SModel<Action, Reducer>({
 
         "limite_compra": { type: "integer", editable: true, label: "Limite de compra" },
 
-        "fecha_habilitacion_automatica": { type: "date", label: "Limite de compra" },
+        "fecha_habilitacion_automatica": { type: "date", label: "Fecha habilitación automática" },
     },
     image: {
         api: "root",
