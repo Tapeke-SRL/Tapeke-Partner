@@ -308,6 +308,32 @@ class root extends Component {
         </>
     }
 
+    calcularDescuentoCubreTapeke(obj) {
+        let totalDesc = {
+            totalDescCubreTapeke: 0,
+            totalDescCubrePartner: 0,
+            porcentajeCubreTapeke: 0,
+            porcentajeCubrePartner: 0,
+        };
+
+        if (obj?.descuentos) {
+            Object.values(obj.descuentos).map((desc) => {
+                if (desc.cobertura) {
+                    let coberturaTapeke = desc.total_descuento_producto * (desc.cobertura ?? 0);
+                    let coberturaPartner = desc.total_descuento_producto - coberturaTapeke;
+
+                    totalDesc.totalDescCubreTapeke += parseFloat(coberturaTapeke, 2);
+                    totalDesc.totalDescCubrePartner += parseFloat(coberturaPartner, 2);
+                    totalDesc.porcentajeCubreTapeke = desc.cobertura;
+                    totalDesc.porcentajeCubrePartner = 1 - desc.cobertura;
+                }
+
+            });
+        }
+
+        return totalDesc;
+    }
+
     calcularTotales() {
         if (!this.data) return;
         let totales = {
@@ -315,6 +341,7 @@ class root extends Component {
             totalProducto: 0,
             totalSubProducto: 0,
 
+            totalDescCubrePartner: 0,
             totalDescuentoProducto: 0,
             totalDescuentoItem: 0,
             total: 0,
@@ -349,8 +376,11 @@ class root extends Component {
             });
         }
 
+        let totalDesc = this.calcularDescuentoCubreTapeke(this.data);
+        totales.totalDescCubrePartner = totalDesc.totalDescCubrePartner;
+
         totales.totalDescuentoProducto += totales.totalDescuentoItem;
-        totales.total = (totales.totalTapeke + totales.totalProducto + totales.totalSubProducto - (totales.totalDescuentoProducto));
+        totales.total = (totales.totalTapeke + totales.totalProducto + totales.totalSubProducto - (totales.totalDescCubrePartner));
 
         return totales;
     }
@@ -434,7 +464,8 @@ class root extends Component {
                     >
                         Bs. {pedido_producto?.precio_sin_descuento ?? 0}{' '}
                     </SText>
-                    {itemDescuento > 0 ?
+
+                    {/* {itemDescuento > 0 ?
                         <SText
                             fontSize={12}
                             font={'Roboto'}
@@ -443,7 +474,7 @@ class root extends Component {
                         >
                             - {itemDescuento} Bs. Descuento
                         </SText> : null
-                    }
+                    } */}
                 </>
             }
         }
@@ -685,14 +716,14 @@ class root extends Component {
                             fontSize={15}
                             font={'Roboto'}
                         >
-                            Total Descuentos
+                            Total Descuento cubre Partner
                         </SText>
                     </SView>
                     <SView col={'xs-6'} style={{ alignItems: 'flex-end' }}>
                         <SText color={STheme.color.danger} fontSize={15} font={'Roboto'} flex>
                             - Bs.
                             {SMath.formatMoney(
-                                total.totalDescuentoProducto
+                                total.totalDescCubrePartner
                             )}
                         </SText>
                     </SView>

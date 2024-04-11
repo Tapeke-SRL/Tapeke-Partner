@@ -391,19 +391,19 @@ class root extends Component {
 
             <SText fontSize={15} color={STheme.color.gray} bold>Detalle Pago</SText>
 
-            {this.labelGanancia({ label: "Ingresos en Efectivo", value: efectivo, color: STheme.color.danger, simbolo: "-" })}
+            {this.labelGanancia({ label: "Ingresos en Efectivo", value: efectivo/* , color: STheme.color.success, simbolo: "+" */ })}
 
-            {this.labelGanancia({ label: "Ingresos en Linea", value: linea, color: STheme.color.success })}
+            {this.labelGanancia({ label: "Ingresos en Linea", value: linea/* , color: STheme.color.danger, simbolo: "-" */ })}
 
-            {this.labelGanancia({ label: "Descuento cubre Tapeke", value: descuento_cubre_tapeke, color: STheme.color.danger, simbolo: "-" })}
+            {this.labelGanancia({ label: "Descuento cubre Tapeke", value: descuento_cubre_tapeke/* , color: STheme.color.success, simbolo: "+" */ })}
 
-            {this.labelGanancia({ label: "Descuento cubre Partner en linea", value: descuento_cubre_partner, color: STheme.color.success })}
+            {this.labelGanancia({ label: "Descuento cubre Partner en linea", value: descuento_cubre_partner/* , color: STheme.color.danger, simbolo: "-" */ })}
 
-            {this.labelGanancia({ label: `Comisión Tapeke Efectivo`, value: comision_tapeke_efectivo, color: STheme.color.success })}
+            {this.labelGanancia({ label: `Comisión Tapeke Efectivo`, value: comision_tapeke_efectivo/* , color: STheme.color.danger, simbolo: "-" */ })}
 
-            {this.labelGanancia({ label: `Comisión Tapeke Linea`, value: comision_tapeke_linea, color: STheme.color.success })}
+            {this.labelGanancia({ label: `Comisión Tapeke Linea`, value: comision_tapeke_linea/* , color: STheme.color.danger, simbolo: "-" */ })}
 
-            {this.labelGanancia({ label: `Total`, value: total_por_conciliar })}
+            {this.labelGanancia({ label: `Total`, value: (total_por_conciliar*-1) })}
 
             <SHr height={15} />
         </SView>
