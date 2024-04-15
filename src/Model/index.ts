@@ -28,9 +28,18 @@ Usuario.init({
     },
 });
 
-Roles_permisos.init({});
-Geolocation.init({});
-Chat.init({});
+Roles_permisos.init(
+    // @ts-ignore
+    {}
+);
+Geolocation.init(
+    // @ts-ignore
+    {}
+);
+Chat.init(
+    // @ts-ignore
+    {}
+);
 
 export default {
     ...Model,

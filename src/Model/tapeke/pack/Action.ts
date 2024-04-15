@@ -37,7 +37,7 @@ export default class Action extends SAction {
         return packs;
     }
 
-    getByKeyHorario = (key_horario, props) => {
+    getByKeyHorario = (key_horario:any, props:any) => {
         var data = this.getAllRecursive();
         if (!data) return null;
         return Object.values(data).filter((item: any) => item.key_horario == key_horario)[0];

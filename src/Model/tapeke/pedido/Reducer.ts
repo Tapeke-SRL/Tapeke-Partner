@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { SReducer } from "servisofts-model";
 import { SNavigation, SThread } from 'servisofts-component';
 import Sounds from "../../../Components/Sounds";

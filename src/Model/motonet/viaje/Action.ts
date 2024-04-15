@@ -8,7 +8,7 @@ type ACTIONS = "registro" | "buscar_conductor" | "negociar_conductor" | "aceptar
 export default class Action extends SAction {
 
 
-    action(action: ACTIONS, key_viaje, data) {
+    action(action: ACTIONS, key_viaje: any, data: any) {
 
         return new Promise((resolve, reject) => {
             SSocket.sendPromise({

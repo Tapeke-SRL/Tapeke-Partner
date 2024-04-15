@@ -30,7 +30,7 @@ export default class Action extends SAction {
         return horarios;
     }
 
-    getByKeyRestauranteProximo = (key, force) => {
+    getByKeyRestauranteProximo = (key:any, force:any) => {
         let { getByKeyRestauranteProximo, estado, key_restaurante_proximo } = this._getReducer();
         if (key_restaurante_proximo != key) {
             getByKeyRestauranteProximo = null;
@@ -104,7 +104,8 @@ export default class Action extends SAction {
     //     return list[0];
     // }
 
-    getByKeyRestaurante = ({ key }) => {
+    getByKeyRestaurante = ({ key }:any) => {
+        // @ts-ignore
         var data = this.getAll();
         if (!data) return null;
         var arr = Object.values(data).filter((item: any) => item.key == key);

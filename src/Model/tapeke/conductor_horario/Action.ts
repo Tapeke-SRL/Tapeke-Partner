@@ -36,7 +36,8 @@ export default class Action extends SAction {
         SSocket.send(petition);
         return null;
     }
-    getByDate({ key_zona, fecha }) {
+    getByDate({ key_zona, fecha }:any) {
+        // @ts-ignore
         var reducer = this._getReducer();
         if (reducer._fecha != fecha) {
             reducer._fecha = fecha;

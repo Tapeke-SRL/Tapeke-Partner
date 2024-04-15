@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { SDate, SStorage } from "servisofts-component";
 import { SAction } from "servisofts-model";
 import SSocket from 'servisofts-socket'
