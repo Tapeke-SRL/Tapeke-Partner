@@ -32,7 +32,7 @@ const App = (props) => {
                         // validator: Validator
                     }}
                     linking={{ 
-                        prefixes: ['https://tapeke.com', 'tapeke://'],
+                        prefixes: ["https://partner.tapekeapp.com/", "http://partner.tapekeapp.com/"],
                     }}
                 />
                 <SSocket
