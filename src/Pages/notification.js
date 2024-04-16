@@ -18,7 +18,7 @@ class notification extends Component {
         if (!notif) return <SLoad />
         return (
             <SPage title={'notification'}>
-                <SHr/>
+                <SHr />
                 <SList
                     data={notif}
                     filter={o => o.app == "driver"}
@@ -32,7 +32,7 @@ class notification extends Component {
                             <SHr />
                             <SText>{obj.title}</SText>
                             <SText>{obj.body}</SText>
-                            <SText>{new SDate(obj.fecha_on,"yyyy-MM-ddThh:mm:ss").toString("yyyy-MM-dd hh:mm")}</SText>
+                            <SText>{new SDate(obj.fecha_on, "yyyy-MM-ddThh:mm:ss").toString("yyyy-MM-dd hh:mm")}</SText>
                             <SHr />
                         </SView>
                     }}
