@@ -1,5 +1,10 @@
 package com.tapeke_restaurante_app;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
+import android.os.Bundle;
+
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
@@ -16,6 +21,16 @@ public class MainActivity extends ReactActivity {
     return "tapeke_restaurante_app";
   }
 
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      NotificationChannel channel = new NotificationChannel("default_channel_id", "My Channel", NotificationManager.IMPORTANCE_HIGH);
+      NotificationManager notificationManager = getSystemService(NotificationManager.class);
+      notificationManager.createNotificationChannel(channel);
+    }
+
+  }
     /**
    * Returns the instance of the {@link ReactActivityDelegate}. Here we use a util
    * class {@link
