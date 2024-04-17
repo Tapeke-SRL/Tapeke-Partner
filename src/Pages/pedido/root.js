@@ -22,6 +22,8 @@ import PedidoState from './Components/PedidoState';
 import SSocket from 'servisofts-socket';
 import Popups from '../../Components/Popups';
 import AccentBar from '../../Components/AccentBar';
+import { Platform } from 'react-native';
+import { Parent } from '.';
 
 class root extends Component {
     constructor(props) {
@@ -306,6 +308,32 @@ class root extends Component {
         </>
     }
 
+    calcularDescuentoCubreTapeke(obj) {
+        let totalDesc = {
+            totalDescCubreTapeke: 0,
+            totalDescCubrePartner: 0,
+            porcentajeCubreTapeke: 0,
+            porcentajeCubrePartner: 0,
+        };
+
+        if (obj?.descuentos) {
+            Object.values(obj.descuentos).map((desc) => {
+                if (desc.cobertura) {
+                    let coberturaTapeke = desc.total_descuento_producto * (desc.cobertura ?? 0);
+                    let coberturaPartner = desc.total_descuento_producto - coberturaTapeke;
+
+                    totalDesc.totalDescCubreTapeke += parseFloat(coberturaTapeke, 2);
+                    totalDesc.totalDescCubrePartner += parseFloat(coberturaPartner, 2);
+                    totalDesc.porcentajeCubreTapeke = desc.cobertura;
+                    totalDesc.porcentajeCubrePartner = 1 - desc.cobertura;
+                }
+
+            });
+        }
+
+        return totalDesc;
+    }
+
     calcularTotales() {
         if (!this.data) return;
         let totales = {
@@ -313,6 +341,7 @@ class root extends Component {
             totalProducto: 0,
             totalSubProducto: 0,
 
+            totalDescCubrePartner: 0,
             totalDescuentoProducto: 0,
             totalDescuentoItem: 0,
             total: 0,
@@ -347,14 +376,40 @@ class root extends Component {
             });
         }
 
+        let totalDesc = this.calcularDescuentoCubreTapeke(this.data);
+        totales.totalDescCubrePartner = totalDesc.totalDescCubrePartner;
+
         totales.totalDescuentoProducto += totales.totalDescuentoItem;
-        totales.total = (totales.totalTapeke + totales.totalProducto + totales.totalSubProducto - (totales.totalDescuentoProducto));
+        totales.total = (totales.totalTapeke + totales.totalProducto + totales.totalSubProducto - (totales.totalDescCubrePartner));
 
         return totales;
     }
 
-    calcularTotalSubProducto() {
 
+    imprimirComanda() {
+        if (Platform.OS === 'web') {
+            return <>
+                <SView
+                    style={{
+                        backgroundColor: STheme.color.primary,
+                        padding: 10,
+                        borderRadius: 8,
+                        width: 200,
+                        height: 50,
+                    }}
+                    onPress={() => {
+                        SNavigation.navigate(Parent.path + '/comanda', { pk: this.pk });
+                    }}
+                    center>
+                    <SText
+                        style={{
+                            color: STheme.color.white,
+                            fontSize: 18,
+                        }}
+                    >Imprimir Comanda</SText>
+                </SView>
+            </>
+        }
     }
 
     detalleProducto() {
@@ -409,7 +464,8 @@ class root extends Component {
                     >
                         Bs. {pedido_producto?.precio_sin_descuento ?? 0}{' '}
                     </SText>
-                    {itemDescuento > 0 ?
+
+                    {/* {itemDescuento > 0 ?
                         <SText
                             fontSize={12}
                             font={'Roboto'}
@@ -418,7 +474,7 @@ class root extends Component {
                         >
                             - {itemDescuento} Bs. Descuento
                         </SText> : null
-                    }
+                    } */}
                 </>
             }
         }
@@ -533,6 +589,8 @@ class root extends Component {
                 row
                 style={{ backgroundColor: STheme.color.white }}
             >
+                <SHr height={15} />
+                {this.imprimirComanda()}
                 <SView col={'xs-11'} row center>
                     <SView col={'xs-12'}>
                         <SHr height={15} />
@@ -658,14 +716,14 @@ class root extends Component {
                             fontSize={15}
                             font={'Roboto'}
                         >
-                            Total Descuentos
+                            Total Descuento cubre Partner
                         </SText>
                     </SView>
                     <SView col={'xs-6'} style={{ alignItems: 'flex-end' }}>
                         <SText color={STheme.color.danger} fontSize={15} font={'Roboto'} flex>
                             - Bs.
                             {SMath.formatMoney(
-                                total.totalDescuentoProducto
+                                total.totalDescCubrePartner
                             )}
                         </SText>
                     </SView>
@@ -710,9 +768,7 @@ class root extends Component {
     }
 
     contenido(data) {
-        // if (!this.loadData()) return <SLoad />
         if (!data) return <SLoad />;
-        // if (!dataUsuario) return <SView />;
         this.data = data;
         return (
             <SView col={'xs-12'} row backgroundColor={STheme.color.card} center>
@@ -941,6 +997,7 @@ class root extends Component {
     render() {
         return (
             <SPage
+                id="recibo"
                 onRefresh={() => {
                     Model.pedido.Action.CLEAR();
                 }}

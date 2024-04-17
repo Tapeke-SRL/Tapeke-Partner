@@ -1,5 +1,0 @@
-#!/bin/bash
-
-. .env
-
-scp -r build/* servisofts@192.168.2.2:$SERVER_BUILD_PATH/

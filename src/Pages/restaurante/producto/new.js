@@ -9,7 +9,7 @@ class index extends DPA.new {
         super(props, {
             Parent: Parent,
             params: ["key_restaurante"],
-            excludes: ["key", "fecha_on", "key_usuario", "estado", "key_restaurante", "habilitado"]
+            excludes: ["key", "fecha_on", "key_usuario", "estado", "key_restaurante", "habilitado", "fecha_habilitacion_automatica"]
         });
     }
 

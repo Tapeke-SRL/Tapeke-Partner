@@ -12,6 +12,7 @@ export default new SModel<Action, Reducer>({
         "fecha_on": { type: "timestamp", label: "Fecha de creacion" },
         "estado": { type: "integer" },
         "key_restaurante": { type: "text", fk: "restaurante" },
+        "state": { type: "text", editable: false,  fk: "estado" },
     },
     Action,
     Reducer,

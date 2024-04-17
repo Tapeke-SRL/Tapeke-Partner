@@ -144,14 +144,20 @@ class index extends Component {
 
       let entregado = obj.state == "entregado" || obj.state == "entregado_conductor" || obj.state == "conductor_llego";
       let error = obj.state == "cancelado" || obj.state == "no_recogido";
-
+      // TODO card pedido 
       return <>
-        <SView col={"xs-12"} style={{ borderWidth: 1, borderColor: STheme.color.lightGray, borderRadius: 8 }} row center backgroundColor={STheme.color.card}
+        <SView col={"xs-12"}
+          style={{
+            borderWidth: 1,
+            borderColor: STheme.color.lightGray,
+            borderRadius: 8,
+            padding: 8,
+            marginBottom: 10
+          }}
+          row center backgroundColor={STheme.color.card}
           onPress={() => { SNavigation.navigate("/pedido", { pk: obj.key }); }}
         >
-          <SHr height={10} />
-          <SView col={"xs-11"} row center>
-            <SView col={"xs-3"} center>
+          {/* <SView col={"xs-3"} center>
               <SView width={60} height={60} style={{ borderRadius: 8, overflow: "hidden" }}>
                 <SImage src={SSocket.api.root + "usuario/" + dataUsuario?.key} style={{
                   resizeMode: "cover", width: "100%",
@@ -159,33 +165,61 @@ class index extends Component {
                   borderRadius: 8, overflow: "hidden"
                 }} />
               </SView>
+            </SView> */}
+
+          <SView col={"xs-5"}
+            center
+            style={{
+              borderRightWidth: 1,
+              borderColor: STheme.color.lightGray
+            }}>
+            <SView col={"xs-12"} flex style={{ alignItems: "flex-start" }} row>
+              {/* <SIcon name="Add" width={10} height={10} d></SIcon> */}
+              <SText font={"Roboto"} fontSize={9} color={STheme.color.text} >{new SDate(obj.fecha_on).toString("hh:mm")}</SText>
             </SView>
-            <SView col={"xs-3"} center style={{ borderRightWidth: 1, borderColor: STheme.color.lightGray }}>
-              <SText font={"Roboto"} fontSize={13} color={STheme.color.primary}>PACKS</SText>
-              <SText font={"Roboto"} fontSize={24} color={STheme.color.text}>x {obj.cantidad}</SText>
+            <SHr height={5} />
+            <SView row>
+              <SView style={{ marginRight: 10 }}>
+                <SText font={"Roboto"} fontSize={13} color={STheme.color.primary}>TAPEKES</SText>
+                <SText font={"Roboto"} fontSize={24} color={STheme.color.text}>x {obj.cantidad}</SText>
+              </SView>
+              {/* <SView>
+                <SText font={"Roboto"} fontSize={13} color={STheme.color.primary}>ITEMS</SText>
+                <SText font={"Roboto"} fontSize={24} color={STheme.color.text}>x {obj.cantidad}</SText>
+              </SView> */}
             </SView>
-            <SView col={"xs-6"} row >
-              <SView col={"xs-1"} ></SView>
-              <SView row col={"xs-11"} >
-                <SView row col={"xs-12"} >
-                  <SText font={"Roboto"} fontSize={12} color={STheme.color.primary}>Nombre: </SText>
-                  <SText font={"Roboto"} fontSize={12} color={STheme.color.text}>{dataUsuario?.Nombres} {dataUsuario?.Apellidos}</SText>
-                </SView>
-                <SView row col={"xs-12"}>
-                  <SText font={"Roboto"} fontSize={12} color={STheme.color.primary}>Total: </SText>
-                  <SText font={"Roboto"} fontSize={12} color={STheme.color.text}>Bs. {montoTotal}</SText>
-                </SView>
-                <SView col={"xs-12"} flex style={{ alignItems: "flex-end", bottom: -5 }}>
-                  <SView width={35} height={35} style={{ borderRadius: 100, }} backgroundColor={!!error ? STheme.color.danger : (!!entregado ? STheme.color.success : STheme.color.lightGray)} center>
-                    <SIcon name="Aspa" width={20} height={20}></SIcon>
-                  </SView>
-                </SView>
+          </SView>
+
+          <SView col={"xs-7"} row >
+            <SView
+              style={{
+                padding: 10,
+              }}
+            >
+              <SView row >
+                <SText font={"Roboto"} fontSize={12} color={STheme.color.primary}>Nombre: </SText>
+                <SText font={"Roboto"} fontSize={12} color={STheme.color.text}>{dataUsuario?.Nombres} {dataUsuario?.Apellidos}</SText>
+              </SView>
+              <SView row >
+                <SText font={"Roboto"} fontSize={12} color={STheme.color.primary}>Tipo de entrega: </SText>
+                <SText font={"Roboto"} fontSize={12} color={STheme.color.text}>{obj.delivery && obj.delivery > 0 ? "Delivery":"Recoger"}</SText>
+              </SView>
+              {/* <SView row >
+                <SText font={"Roboto"} fontSize={12} color={STheme.color.primary}>Método de pago: </SText>
+                <SText font={"Roboto"} fontSize={12} color={STheme.color.text}>{dataUsuario?.Nombres} {dataUsuario?.Apellidos}</SText>
+              </SView> */}
+              <SView row>
+                <SText font={"Roboto"} fontSize={12} color={STheme.color.primary}>Total: </SText>
+                <SText font={"Roboto"} fontSize={12} color={STheme.color.text}>Bs. {montoTotal}</SText>
               </SView>
             </SView>
-            <SHr height={10} />
+            <SView col={"xs-12"} flex style={{ alignItems: "flex-end", bottom: -40 }}>
+              <SView width={25} height={25} style={{ borderRadius: 100, }} backgroundColor={!!error ? STheme.color.danger : (!!entregado ? STheme.color.success : STheme.color.lightGray)} center>
+                <SIcon name="Aspa" width={10} height={10}></SIcon>
+              </SView>
+            </SView>
           </SView>
         </SView>
-        <SHr height={10} />
       </>
     })
   }
@@ -249,6 +283,7 @@ class index extends Component {
     // this.pack = Model.pack.Action.getByKeyHorario(this.horario_proximo.key);
     // if (!this.pack) return null;
     this.pedidos = Model.pedido.Action.getVendidosData({ fecha: this.horario_proximo.fecha, key_pack: this.horario_proximo.key_pack, key_restaurante: this.pk });
+
     if (!this.pedidos) return false;
     return true;
   }

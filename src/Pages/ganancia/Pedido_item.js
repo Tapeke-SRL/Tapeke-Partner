@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { SDate, SHr, SIcon, SMath, SPage, SText, STheme, SView } from 'servisofts-component';
+import { connect } from 'react-redux';
+import { SDate, SHr, SMath, SPage, SText, STheme, SView, SIcon, SNavigation } from 'servisofts-component';
 
 class Pedido_item extends Component {
     constructor(props) {
@@ -8,10 +9,36 @@ class Pedido_item extends Component {
         };
     }
 
+    calcularTotal(cantidad, precio, pedido_producto) {
+        let total = cantidad * precio;
+
+        if (pedido_producto) {
+            Object.values(pedido_producto).map((prod) => {
+                if (prod.precio_sin_descuento) {
+                    total += (prod.cantidad * prod.precio_sin_descuento)
+                } else {
+                    total += (prod.cantidad * prod.precio)
+                }
+
+                if (prod.sub_productos) {
+                    Object.values(prod.sub_productos).map((sub) => {
+                        if (sub.sub_producto_detalle) {
+                            Object.values(sub.sub_producto_detalle).map((subDet) => {
+                                total += (subDet.cantidad * subDet.precio)
+                            })
+                        }
+                    })
+                }
+            })
+        }
+
+        return total;
+    }
+
     render() {
-        const { state, precio, fecha, fecha_on, comision_restaurante, cantidad, key_pedido, horario, delivery, tipo_pago } = this.props.data;
+        const { key, state, precio, fecha, comision_restaurante, tipo_pago, cantidad, delivery, pedido_producto } = this.props.data;
         let tipo_pago_str = "Online";
-        const diasSemana = ['LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB', 'DOM'];
+
         if (tipo_pago) {
             if (tipo_pago.find(a => a.type == "efectivo")) {
                 tipo_pago_str = "Efectivo";
@@ -19,39 +46,37 @@ class Pedido_item extends Component {
         }
         return <SView col={"xs-12"} card row style={{
             padding: 9, borderRadius: 8
-        }} center>
+        }} center onPress={() => SNavigation.navigate("/pedido", { pk: key })}>
             <SView col={"xs-2.2"}
                 height
                 center
                 style={{ borderRightColor: "#DADADA", borderRightWidth: 2 }}
             >
-                <SText fontSize={11} color={STheme.color.gray} >
-                    {diasSemana[new SDate(fecha).getDayOfWeek()]}
+                <SText fontSize={15} color={STheme.color.gray} >
+                    {new SDate(fecha, "yyyy-MM-dd").getDayOfWeekJson().textSmall}
                 </SText>
-                <SText fontSize={11} color={STheme.color.gray}>
+                <SText fontSize={10} color={STheme.color.gray}>
                     {fecha}
                 </SText>
-                {/* <SText fontSize={10.5} color={STheme.color.gray}> */}
-                    {/* {new SDate(fecha).toString("hh:mm:ss")} */}
-                {/* </SText> */}
+
             </SView>
             <SView col={"xs-3.5"} center
                 height
                 style={{ borderRightColor: "#DADADA", borderRightWidth: 2 }}
             >
-                <SText bold fontSize={11} color={STheme.color.primary}>PRECIO</SText>
-                <SText fontSize={12} bold>{"Bs."} {SMath.formatMoney(precio * cantidad)}</SText>
+                <SText fontSize={10} color={STheme.color.gray}>PRECIO</SText>
+                <SText fontSize={14} >{"Bs."} {SMath.formatMoney(this.calcularTotal(cantidad, precio, pedido_producto))}</SText>
             </SView>
             <SView col={"xs-3.5"} center
                 height
                 style={{ borderRightColor: "#DADADA", borderRightWidth: 2 }}
             >
-                <SText bold fontSize={11} color={STheme.color.primary}>COMISIÓN</SText>
-                <SText bold fontSize={12} color={STheme.color.danger}> - Bs. {SMath.formatMoney(comision_restaurante ?? 0)}</SText>
+                <SText fontSize={10} color={STheme.color.gray}>COMISIÓN</SText>
+                <SText fontSize={14} color={STheme.color.danger}> - Bs. {SMath.formatMoney(comision_restaurante ?? 0)}</SText>
             </SView>
             <SView col={"xs-2.8"} style={{ alignItems: "flex-end" }} height center>
                 <SIcon name={(delivery > 0 ? "Idelivery" : "Irecoger")} width={30} fill={STheme.color.lightGray} />
-                <SText bold fontSize={10} color="#96BE00"
+                <SText fontSize={10} color={STheme.color.success}
                     style={{
                         textTransform: "uppercase"
                     }}
@@ -62,7 +87,7 @@ class Pedido_item extends Component {
                     <SView col={"xs-12"} row center>
                         <SIcon name='Ipago' height={9} width={14} fill={STheme.color.lightGray} />
                         <SView width={5} />
-                        <SText fontSize={10}
+                        <SText fontSize={8}
                             style={{
                                 textTransform: "uppercase",
                                 color: STheme.color.gray
@@ -72,24 +97,8 @@ class Pedido_item extends Component {
                 </SView>
             </SView>
             <SView flex />
-            {/* <SText fontSize={10}>{horario?.porcentaje_comision}%</SText>
-            <SHr />
-            <SText bold fontSize={14}
-                style={{
-                    textTransform: "capitalize"
-                }}
-            >
-                {state}
-            </SText>
-            <SView flex />
-            <SText bold>{"Bs."} {SMath.formatMoney(precio)}</SText>
-            <SView width={10} />
-            <SText bold color={STheme.color.danger}> - {SMath.formatMoney(comision_restaurante ?? 0)}</SText> */}
         </SView>
+
     }
 }
-// const initStates = (state) => {
-//     return { state }
-// };
-// export default connect(initStates)(Pedido_item);
 export default (Pedido_item);
