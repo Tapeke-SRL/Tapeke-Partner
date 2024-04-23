@@ -1,5 +1,7 @@
 # Tapeke partner
 
+Probando si sube.
+
 para compilar en android se nesecita la carpeta secrets con los archivos:
     - (*) keystore.properties 
     - ( ) android_release.jks

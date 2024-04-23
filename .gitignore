@@ -103,6 +103,7 @@ yarn-error.log*
 /android/app/src/main/res/values/strings.xml
 /android/keystore.properties
 
+
 /public/firebase-messaging-sw.js
 
 /src/Config/socket.ts
@@ -111,9 +112,12 @@ yarn-error.log*
 
 /.ssh/id_rsa
 /.ssh/config
+public/.well-known/apple-app-site-association
+public/.well-known/assetlinks.json
 # END
 
 
 # /src/LoginApi/config.ts 
 *.apk
 
+ios/.xcode.env.local

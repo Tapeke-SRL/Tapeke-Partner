@@ -2,7 +2,7 @@ import { SAction } from "servisofts-model";
 import Model from "../..";
 export default class Action extends SAction {
 
-    getAllByKeyUsuario(key_usuario) {
+    getAllByKeyUsuario(key_usuario:any) {
         var usuarioRol = Model.usuarioRol.Action.getAllByKeyUsuario(key_usuario);
         var roles = Model.rol.Action.getAll();
         var datos = Model.dato.Action.getAll();
@@ -21,13 +21,14 @@ export default class Action extends SAction {
             Object.values(dato_rol).map((dr: any) => {
                 var dato = datos[dr.key_dato]
                 if (!dato) return;
-                resp[dato.key] = dato;
+                // resp[dato.key] = dato;
+                var dato:any = datos[dr.key_dato] as { key: string };
 
             })
         });
         return resp;
     }
-    getAllByKeyRol(keyRol) {
+    getAllByKeyRol(keyRol: any) {
         var datos = Model.dato.Action.getAll();
         if (!datos) return null;
         var resp = {};
@@ -38,8 +39,8 @@ export default class Action extends SAction {
         Object.values(dato_rol).map((dr: any) => {
             var dato = datos[dr.key_dato]
             if (!dato) return;
-            resp[dato.key] = dato;
-
+            // resp[dato.key] = dato;
+            var dato:any = datos[dr.key_dato] as { key: string };
         })
         return resp;
     }

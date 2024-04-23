@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { SStorage } from "servisofts-component";
 import { SAction } from "servisofts-model";
 import SSocket from 'servisofts-socket'
@@ -10,11 +12,12 @@ export default class Action extends SAction {
     // }
 
     getAllByHorarioRestaurante(extra?: { key_restaurante: any, fecha: any }) {
+        // @ts-ignore
         var reducer = this._getReducer();
         if (reducer.key_restaurante != extra.key_restaurante || reducer.fecha != extra.fecha) {
             reducer.data = null;
             reducer.key_restaurante = extra.key_restaurante;
-            reducer.fecha = extra.fecha;
+            reducer.fecha = extra?.fecha;
         }
         const data = reducer?.data;
         if (!data) {

@@ -31,8 +31,11 @@ const App = (props) => {
                         title: 'Tapeke Partner', pages: Pages,
                         // validator: Validator
                     }}
-                    linking={{ 
-                        prefixes: ['https://tapeke.com', 'tapeke://'],
+                    linking={{
+                        prefixes: ["https://partner.tapekeapp.com/", "http://partner.tapekeapp.com/"],
+                        getInitialURL: () => {
+                            Firebase.getInitialURL();
+                        }
                     }}
                 />
                 <SSocket
@@ -40,14 +43,31 @@ const App = (props) => {
                     identificarse={(props) => {
                         var usuario = props.state.usuarioReducer.usuarioLog;
                         // console.log(DeviceKey.getKey());
+                        let tags = {
+                            platform: Platform.OS,
+                            user_type: "undefined",
+                            app: Config.appName,
+                            app_version: packageInfo.version
+                        };
+                        if (usuario) {
+                            tags["key_usuario"] = usuario?.key;
+                            // tags["user_type"] = "admin"
+                        }
+
                         return {
                             data: usuario ? usuario : {},
                             deviceKey: DeviceKey.getKey(),
                             firebase: {
+                                tags: tags,
                                 platform: Platform.OS,
                                 token: DeviceKey.getKey(),
                                 key_usuario: usuario?.key,
-                                app: Config.appName
+                                app: Config.appName,
+                                descripcion: Platform.select({
+                                    "web": `Web ${window.navigator.userAgent}`,
+                                    "android": `Android ${Platform?.constants?.Version}, ${Platform?.constants?.Manufacturer} ${Platform?.constants?.Brand} ${Platform?.constants?.Model}`,
+                                    "ios": `IOS ${Platform?.Version}, ${Platform?.constants?.systemName}`,
+                                }),
                             }
                         };
                     }}

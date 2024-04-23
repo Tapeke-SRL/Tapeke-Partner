@@ -3,8 +3,9 @@ import SSocket from 'servisofts-socket'
 import Model from "../..";
 export default class Action extends SAction {
 
-    getMediaByRestaurante = (key_restaurante) => {
+    getMediaByRestaurante = (key_restaurante:any) => {
         return SSocket.sendPromise({
+            // @ts-ignore
             ...this.model.info,
             type: "get_media_restaurante",
             estado: "cargando",
@@ -21,7 +22,7 @@ export default class Action extends SAction {
     //         key_usuario: Model.usuario.Action.getKey()
     //     })
     // }
-    getComentarios = (key_restaurante) => {
+    getComentarios = (key_restaurante:any) => {
         return SSocket.sendPromise({
             ...this.model.info,
             type: "getComentarios",

@@ -32,7 +32,10 @@ Roles_permisos.init(
     // @ts-ignore
     {}
 );
-Geolocation.init({});
+Geolocation.init(
+    // @ts-ignore
+    {}
+);
 Chat.init(
     // @ts-ignore
     {}
