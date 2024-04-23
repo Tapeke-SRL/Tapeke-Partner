@@ -51,14 +51,14 @@ class Firebase {
                 console.log(err.message);
             });
 
-            const unsubscribe = messaging().onMessage(async remoteMessage => {
-                console.log('Message receivedddd. ', remoteMessage);
-                BuildNotification(remoteMessage);
-            });
+            // const unsubscribe = messaging().onMessage(async remoteMessage => {
+            //     console.log('Message receivedddd. ', remoteMessage);
+            //     BuildNotification(remoteMessage);
+            // });
 
-            messaging().setBackgroundMessageHandler(async remoteMessage => {
-                BuildNotification(remoteMessage)
-            });
+            // messaging().setBackgroundMessageHandler(async remoteMessage => {
+            //     BuildNotification(remoteMessage)
+            // });
 
             notifee.registerForegroundService(async ({ type, detail }) => {
                 console.log("registerForegroundService", type, detail)
@@ -100,32 +100,32 @@ const handleNavigateDeepLink = (notification) => {
         }
     }
 }
-const BuildNotification = async (notification) => {
-    let notify = {
+// const BuildNotification = async (notification) => {
+//     let notify = {
 
-        title: notification?.data?.title,
-        body: notification?.data?.body,
-        data: notification?.data,
-        ios: {
-            attachments: [
+//         title: notification?.data?.title,
+//         body: notification?.data?.body,
+//         data: notification?.data,
+//         ios: {
+//             attachments: [
 
-            ]
-        },
-        android: {
+//             ]
+//         },
+//         android: {
 
-            channelId: "default_channel_id",
-            // smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
-            // largeIcon: notification?.data?.image,
+//             channelId: "default_channel_id",
+//             // smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
+//             // largeIcon: notification?.data?.image,
 
-            pressAction: {
-                id: 'default'
-            }
-        },
-    }
-    if (notification?.data?.image) {
-        notify.android.largeIcon = notification?.data?.image;
-        notify.ios.attachments.push({ url: notification?.data?.image });
-    }
-    await notifee.displayNotification(notify);
-}
+//             pressAction: {
+//                 id: 'default'
+//             }
+//         },
+//     }
+//     if (notification?.data?.image) {
+//         notify.android.largeIcon = notification?.data?.image;
+//         notify.ios.attachments.push({ url: notification?.data?.image });
+//     }
+//     await notifee.displayNotification(notify);
+// }
 export default Firebase;
