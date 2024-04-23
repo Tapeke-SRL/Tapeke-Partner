@@ -24,7 +24,7 @@ jobs:
           cache: "npm"
           cache-dependency-path: package-lock.json
 
-      - run: npm ci
+      - run: npm ci -f
       - run: ./bin/version
       - name: set up JDK 11
         uses: actions/setup-java@v3
