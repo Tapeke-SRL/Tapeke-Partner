@@ -26,6 +26,7 @@ export default class Action extends SAction {
     }
 
     toTime(hora) {
+        // @ts-ignore
         return new SDate(hora, "hh:mm").getTime()
     }
     getHorariosReducidosByKey(key_zona, day) {
