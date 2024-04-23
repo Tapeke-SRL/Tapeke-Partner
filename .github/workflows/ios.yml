@@ -25,7 +25,7 @@ jobs:
           cache: "npm"
           cache-dependency-path: package-lock.json
 
-      - run: npm ci
+      - run: npm ci -f
       - run: ./bin/version
       - run: sudo xcode-select -s /Applications/Xcode.app
       - run: sudo gem install cocoapods -v 1.15.2
