@@ -82,6 +82,7 @@ class root extends Component {
             totalPorConciliar: 0
         }
 
+        let keysPedidos = [];
         const calcularTotalProd = (obj) => {
             let totalProd = 0;
             // total += obj.cantidad * obj.precio;
@@ -90,8 +91,11 @@ class root extends Component {
                     if (prod.precio_sin_descuento) {
                         totalProd += (prod.cantidad * prod.precio_sin_descuento)
 
-                        // Calcular descuento Tapeke
-                        total.totalDescCubreTapeke += (prod.cantidad * (prod.precio_sin_descuento - prod.precio))
+                        // Calcular descuento Producto
+                        if (!keysPedidos.includes(obj.key)) {
+                            keysPedidos.push(obj.key);
+                            total.totalDescCubreTapeke += (prod.cantidad * (prod.precio_sin_descuento - prod.precio))
+                        }
                     } else {
                         totalProd += (prod.cantidad * prod.precio)
                     }
@@ -403,7 +407,7 @@ class root extends Component {
 
             {this.labelGanancia({ label: `Comisión Tapeke Linea`, value: comision_tapeke_linea/* , color: STheme.color.danger, simbolo: "-" */ })}
 
-            {this.labelGanancia({ label: `Total`, value: (total_por_conciliar*-1) })}
+            {this.labelGanancia({ label: `Total`, value: (total_por_conciliar * -1) })}
 
             <SHr height={15} />
         </SView>
