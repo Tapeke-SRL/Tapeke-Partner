@@ -22,6 +22,9 @@ class index extends Component {
   }
 
   componentDidMount() {
+    if(!this.pk){
+      SNavigation.goBack()
+    }
     this.isRun = true;
     this.hilo();
   }
