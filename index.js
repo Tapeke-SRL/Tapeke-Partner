@@ -7,6 +7,8 @@ import notifee, { EventType, AndroidStyle } from '@notifee/react-native';
 
 
 const BuildNotification = async (notification) => {
+    console.log('Message receivedddd. ', notification);
+
     let notify = {
 
         title: notification?.data?.title,
@@ -20,8 +22,8 @@ const BuildNotification = async (notification) => {
         android: {
 
             channelId: "default_channel_id",
-            // smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
-            // largeIcon: notification?.data?.image,
+            smallIcon: 'icon_uno', // optional, defaults to 'ic_launcher'.
+            color: '#ffffff',
 
             pressAction: {
                 id: 'default'
@@ -35,7 +37,6 @@ const BuildNotification = async (notification) => {
     await notifee.displayNotification(notify);
 }
 const unsubscribe = messaging().onMessage(async remoteMessage => {
-    console.log('Message receivedddd. ', remoteMessage);
     await BuildNotification(remoteMessage);
 });
 

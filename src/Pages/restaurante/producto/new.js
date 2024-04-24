@@ -4,6 +4,8 @@ import SSocket from 'servisofts-socket';
 import { SNavigation, SPopup } from 'servisofts-component';
 import Model from '../../../Model';
 
+import PButtom from '../../../Components/PButtom';
+
 class index extends DPA.new {
     constructor(props) {
         super(props, {
@@ -11,6 +13,11 @@ class index extends DPA.new {
             params: ["key_restaurante"],
             excludes: ["key", "fecha_on", "key_usuario", "estado", "key_restaurante", "habilitado", "fecha_habilitacion_automatica"]
         });
+
+        this.state = {
+            categoria_producto: null,
+            loading: false
+        };
     }
 
     $allowAccess() {
@@ -46,17 +53,30 @@ class index extends DPA.new {
         return inp;
     }
 
+    $submitName() {
+        return null
+    }
+
     $onSubmit(data) {
+        this.setState({ loading: true });
+
         data.habilitado = false;
         let defaulSelect = "Añadir si cree conveniente";
 
-        if (data.precio <= 0) {
-            SPopup.alert("El producto no puede tener un precio menor o igual a 0")
+        if (data.ley_seca == "true" && (data.mayor_edad == "false" || data.mayor_edad == defaulSelect)) {
+            SPopup.alert("No puede seleccionar ley seca si el producto no es para mayor de edad.");
             return;
         }
 
-        if (data.ley_seca == "true" && (data.mayor_edad == "false" || data.mayor_edad == defaulSelect)) {
-            SPopup.alert("No puede seleccionar ley seca si el producto no es para mayor de edad.");
+        if (this.$params.key_restaurante) {
+            data.key_restaurante = this.$params.key_restaurante;
+        } else {
+            SPopup.alert("No hay Key Restaurante, reportar ese error.")
+            return;
+        }
+
+        if (data.precio <= 0) {
+            SPopup.alert("El producto no puede tener un precio menor o igual a 0")
             return;
         }
 
@@ -64,7 +84,10 @@ class index extends DPA.new {
 
         if (data.ley_seca == defaulSelect) { data.ley_seca = "false" };
 
-        if (!this.state.categoria_producto.key) return null;
+        if (!this.state.categoria_producto?.key) {
+            this.setState({ loading: false });
+            return SPopup.alert("Seleccione una categoria");
+        }
         data.key_categoria_producto = this.state.categoria_producto.key;
 
         Parent.model.Action.registro({
@@ -76,10 +99,23 @@ class index extends DPA.new {
                 SSocket.api.root + "upload/producto/" + resp.data.key
             );
 
-            SNavigation.goBack();
+            SNavigation.navigate("/restaurante/producto", { key_restaura: this.$params.key_restaurante });
         }).catch(e => {
+            SPopup.alert("Error en el server: " + e.error)
             console.error(e);
+            this.setState({ loading: false });
         })
+    }
+
+    $footer() {
+        return <PButtom
+            danger={true}
+            loading={this.state.loading}
+            fontSize={20}
+            onPress={() => { this.form.submit() }}
+        >
+            Crear Producto
+        </PButtom>
     }
 }
 
