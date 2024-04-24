@@ -1,24 +1,60 @@
 import { Text, View } from 'react-native'
 import React, { Component } from 'react'
-import { SDate, SInput, SPage, SText, SView } from 'servisofts-component'
+import { SButtom, SDate, SInput, SPage, SText, SView } from 'servisofts-component'
 import Model from '../Model'
 import { connect } from 'react-redux';
+
+
+import messaging from '@react-native-firebase/messaging';
+import notifee, { EventType, AndroidStyle } from '@notifee/react-native';
+
+
+const BuildNotification = async (notification) => {
+    console.log('Message receivedddd. ', notification);
+
+    let notify = {
+        title: notification?.data?.title,
+        body: notification?.data?.body,
+        data: notification?.data,
+        ios: {
+            attachments: [
+
+            ]
+        },
+        android: {
+
+            channelId: "default_channel_id",
+            smallIcon: 'icon_uno', // optional, defaults to 'ic_launcher'.
+            color: '#ffffff',
+            // largeIcon: notification?.data?.image,
+
+            pressAction: {
+                id: 'default'
+            }
+        },
+    }
+    if (notification?.data?.image) {
+        notify.android.largeIcon = notification?.data?.image;
+        notify.ios.attachments.push({ url: notification?.data?.image });
+    }
+    await notifee.displayNotification(notify);
+}
+
 class test extends Component {
 
+
+    hanldrePress = () => {
+        BuildNotification({
+            data: {
+                title: "test",
+                body: "algo de descripcion",
+            }
+        })
+    }
     render() {
-        let users = Model.usuario.Action.getLastEdit("1980-01-01T00:00:00.000")
-        // let users = Model.usuario.Action.getLastEdit(new SDate().toString("yyyy-MM-ddThh:mm:ss"))
-        let cantidad = 0;
-        if (users) {
-            cantidad = Object.keys(users).length;
-        }
         return (
             <SPage>
-                <SView col={"xs-12"} center>
-                    <SText bold fontSize={20}>{cantidad}</SText>
-                    {/* <SInput type={"date"} defaultValue={}/> */}
-                </SView>
-                <SText>{JSON.stringify(users, "\n", "\t")}</SText>
+                <SButtom type='danger' onPress={this.hanldrePress}>SEND</SButtom>
             </SPage>
         )
     }
