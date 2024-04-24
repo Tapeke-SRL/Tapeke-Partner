@@ -22,6 +22,9 @@ class index extends Component {
   }
 
   componentDidMount() {
+    if (!this.pk) {
+      SNavigation.goBack()
+    }
     this.isRun = true;
     this.hilo();
   }
@@ -202,7 +205,7 @@ class index extends Component {
               </SView>
               <SView row >
                 <SText font={"Roboto"} fontSize={12} color={STheme.color.primary}>Tipo de entrega: </SText>
-                <SText font={"Roboto"} fontSize={12} color={STheme.color.text}>{obj.delivery && obj.delivery > 0 ? "Delivery":"Recoger"}</SText>
+                <SText font={"Roboto"} fontSize={12} color={STheme.color.text}>{obj.delivery && obj.delivery > 0 ? "Delivery" : "Recoger"}</SText>
               </SView>
               {/* <SView row >
                 <SText font={"Roboto"} fontSize={12} color={STheme.color.primary}>Método de pago: </SText>
