@@ -34,7 +34,7 @@ const App = (props) => {
                     linking={{
                         prefixes: ["https://partner.tapekeapp.com/", "http://partner.tapekeapp.com/"],
                         getInitialURL: () => {
-                            Firebase.getInitialURL();
+                            Firebase.getInitialURL(); // TODO volver a activar
                         }
                     }}
                 />

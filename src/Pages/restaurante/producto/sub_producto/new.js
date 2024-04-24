@@ -3,6 +3,8 @@ import { Parent } from '.';
 import { SNavigation, SPopup } from 'servisofts-component';
 import Model from '../../../../Model';
 
+import PButtom from '../../../../Components/PButtom';
+
 class index extends DPA.new {
     constructor(props) {
         super(props, {
@@ -10,6 +12,10 @@ class index extends DPA.new {
             params: ["key_producto"],
             excludes: ["key", "fecha_on", "key_usuario", "estado", "key_producto"]
         });
+
+        this.state = {
+            loading: false
+        };
     }
 
     // $allowAccess() {
@@ -18,11 +24,16 @@ class index extends DPA.new {
     // }
 
     $inputs() {
-        var imp = super.$inputs();
-        return imp;
+        var inp = super.$inputs();
+        return inp;
+    }
+
+    $submitName() {
+        return null
     }
 
     $onSubmit(data) {
+        this.setState({ loading: true });
         data.key_producto = this.$params.key_producto;
 
         data.cantidad_seleccion = parseInt(data.cantidad_seleccion);
@@ -49,8 +60,21 @@ class index extends DPA.new {
         }).then((resp) => {
             SNavigation.goBack();
         }).catch(e => {
+            SPopup.alert("Error en el server: " + e.error)
             console.error(e);
+            this.setState({ loading: false });
         })
+    }
+
+    $footer() {
+        return <PButtom
+            danger={true}
+            loading={this.state.loading}
+            fontSize={16}
+            onPress={() => { this.form.submit() }}
+        >
+            Crear Sub Producto
+        </PButtom>
     }
 }
 
