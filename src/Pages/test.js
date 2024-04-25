@@ -5,7 +5,6 @@ import Model from '../Model'
 import { connect } from 'react-redux';
 
 
-import messaging from '@react-native-firebase/messaging';
 import notifee, { EventType, AndroidStyle } from '@notifee/react-native';
 
 
