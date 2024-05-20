@@ -21,7 +21,8 @@ class index extends DPA.list {
     }
 
     $allowNew() {
-        return Model.usuarioPage.Action.getPermiso({ url: Parent.path, permiso: "new" });
+        // return Model.usuarioPage.Action.getPermiso({ url: Parent.path, permiso: "new" });
+        return true
     }
 
     $allowAccess() {
