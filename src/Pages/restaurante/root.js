@@ -22,7 +22,7 @@ class index extends Component {
   }
 
   componentDidMount() {
-    if(!this.pk){
+    if (!this.pk) {
       SNavigation.goBack()
     }
     this.isRun = true;
@@ -88,7 +88,7 @@ class index extends Component {
                         </SView> */}
             <SView col={"xs-12"} row >
               <SView center width={70} card height={70} style={{ borderRadius: 8, overflow: 'hidden', }}>
-                <SImage src={`${SSocket.api.root}restaurante/${this.data.key}`} style={{ width: "100%", position: "relative", resizeMode: "cover" }} />
+                <SImage src={`${SSocket.api.root}restaurante/.128_${this.data.key}`} style={{ width: "100%", position: "relative", resizeMode: "cover" }} />
               </SView>
               <SView flex center row >
                 <SView col={"xs-1"}  >
@@ -147,83 +147,104 @@ class index extends Component {
 
       let entregado = obj.state == "entregado" || obj.state == "entregado_conductor" || obj.state == "conductor_llego";
       let error = obj.state == "cancelado" || obj.state == "no_recogido";
+
+      let paddingLeftText = 1
       // TODO card pedido 
-      return <>
-        <SView col={"xs-12"}
+      return <SView col={"xs-12"}
+        style={{
+          borderWidth: 1,
+          borderColor: STheme.color.lightGray,
+          borderRadius: 8,
+          padding: 6,
+        }}
+        row backgroundColor={STheme.color.card}
+        onPress={() => { SNavigation.navigate("/pedido", { pk: obj.key }); }}
+      >
+
+        <SView col={"xs-5"}
+          // backgroundColor="#ff00ff"
           style={{
-            borderWidth: 1,
-            borderColor: STheme.color.lightGray,
-            borderRadius: 8,
-            padding: 8,
-            marginBottom: 10
-          }}
-          row center backgroundColor={STheme.color.card}
-          onPress={() => { SNavigation.navigate("/pedido", { pk: obj.key }); }}
-        >
-          {/* <SView col={"xs-3"} center>
-              <SView width={60} height={60} style={{ borderRadius: 8, overflow: "hidden" }}>
-                <SImage src={SSocket.api.root + "usuario/" + dataUsuario?.key} style={{
-                  resizeMode: "cover", width: "100%",
-                  height: "100%",
-                  borderRadius: 8, overflow: "hidden"
-                }} />
-              </SView>
-            </SView> */}
-
-          <SView col={"xs-5"}
-            center
+            borderRightWidth: 1,
+            borderColor: STheme.color.lightGray
+          }}>
+          <SText center fontSize={10}>#{obj.key.substr(0, 6)}</SText>
+          <SView col={"xs-12"}
+            flex row center
             style={{
-              borderRightWidth: 1,
-              borderColor: STheme.color.lightGray
-            }}>
-            <SView col={"xs-12"} flex style={{ alignItems: "flex-start" }} row>
-              {/* <SIcon name="Add" width={10} height={10} d></SIcon> */}
-              <SText font={"Roboto"} fontSize={9} color={STheme.color.text} >{new SDate(obj.fecha_on).toString("hh:mm")}</SText>
-            </SView>
-            <SHr height={5} />
-            <SView row>
-              <SView style={{ marginRight: 10 }}>
-                <SText font={"Roboto"} fontSize={13} color={STheme.color.primary}>TAPEKES</SText>
-                <SText font={"Roboto"} fontSize={24} color={STheme.color.text}>x {obj.cantidad}</SText>
-              </SView>
-              {/* <SView>
-                <SText font={"Roboto"} fontSize={13} color={STheme.color.primary}>ITEMS</SText>
-                <SText font={"Roboto"} fontSize={24} color={STheme.color.text}>x {obj.cantidad}</SText>
-              </SView> */}
-            </SView>
-          </SView>
+              justifyContent: 'space-evenly'
+            }}
+          >
 
-          <SView col={"xs-7"} row >
-            <SView
-              style={{
-                padding: 10,
-              }}
-            >
-              <SView row >
-                <SText font={"Roboto"} fontSize={12} color={STheme.color.primary}>Nombre: </SText>
-                <SText font={"Roboto"} fontSize={12} color={STheme.color.text}>{dataUsuario?.Nombres} {dataUsuario?.Apellidos}</SText>
-              </SView>
-              <SView row >
-                <SText font={"Roboto"} fontSize={12} color={STheme.color.primary}>Tipo de entrega: </SText>
-                <SText font={"Roboto"} fontSize={12} color={STheme.color.text}>{obj.delivery && obj.delivery > 0 ? "Delivery":"Recoger"}</SText>
-              </SView>
-              {/* <SView row >
-                <SText font={"Roboto"} fontSize={12} color={STheme.color.primary}>Método de pago: </SText>
-                <SText font={"Roboto"} fontSize={12} color={STheme.color.text}>{dataUsuario?.Nombres} {dataUsuario?.Apellidos}</SText>
-              </SView> */}
-              <SView row>
-                <SText font={"Roboto"} fontSize={12} color={STheme.color.primary}>Total: </SText>
-                <SText font={"Roboto"} fontSize={12} color={STheme.color.text}>Bs. {montoTotal}</SText>
-              </SView>
+            {/* TODO VAlidar si no viene tapeke no mostra */}
+            <SView center>
+              <SText font={"Roboto"} fontSize={14} color={STheme.color.primary}>TAPEKE</SText>
+              <SText font={"Roboto"} fontSize={12} color={STheme.color.text} bold>x {obj.cantidad}</SText>
             </SView>
-            <SView col={"xs-12"} flex style={{ alignItems: "flex-end", bottom: -40 }}>
-              <SView width={25} height={25} style={{ borderRadius: 100, }} backgroundColor={!!error ? STheme.color.danger : (!!entregado ? STheme.color.success : STheme.color.lightGray)} center>
+
+            {/* TODO VAlidar si no viene iteams no mostra */}
+            <SView center>
+              <SText font={"Roboto"} fontSize={14} color={STheme.color.primary}>ÍTEMS</SText>
+              <SText font={"Roboto"} fontSize={12} color={STheme.color.text} bold>x FD{/* {obj.cantidad} */}</SText>
+            </SView>
+
+          </SView>
+        </SView>
+
+        <SView col={"xs-7"}
+          padding={5}
+        >
+          <SView
+            row
+          >
+            <SView
+              flex
+              col={"xs-10"}
+            >
+              <SView>
+                <SText font={"Roboto"} fontSize={12} color={STheme.color.primary}>Cliente: </SText>
+                <SText font={"Roboto"} fontSize={12} color={STheme.color.text}>{dataUsuario?.Nombres} {dataUsuario?.Apellidos}</SText>
+              </SView>
+
+              <SText font={"Roboto"} fontSize={12} color={STheme.color.primary}>Total:
+                <SText font={"Roboto"} fontSize={12} color={STheme.color.text}
+                  style={{ paddingLeft: paddingLeftText }}>
+                  Bs. {montoTotal}
+                </SText>
+              </SText>
+            </SView>
+
+            <SView
+              col={"xs-2"}
+              center
+            >
+              <SText flex center fontSize={10}>{new SDate(obj.fecha_on, "yyyy-MM-dd hh:mm:ss.S").toString("hh:mm")}</SText>
+              <SView width={25} height={25}
+                center
+                style={{ borderRadius: 100 }}
+                backgroundColor={!!error ? STheme.color.danger : (!!entregado ? STheme.color.accent : STheme.color.lightGray)} >
                 <SIcon name="Aspa" width={10} height={10}></SIcon>
               </SView>
             </SView>
           </SView>
+          <SHr />
+          <SView>
+            <SText font={"Roboto"} fontSize={12} color={STheme.color.primary}>Método de pago:
+              <SText font={"Roboto"} fontSize={12} color={STheme.color.text}
+                style={{ paddingLeft: paddingLeftText }}>
+                FD
+              </SText>
+            </SText>
+
+            <SText font={"Roboto"} fontSize={12} color={STheme.color.primary}>Tipo de entrega:
+              <SText font={"Roboto"} fontSize={12} color={STheme.color.text}
+                style={{ paddingLeft: paddingLeftText }}>
+                {obj.delivery && obj.delivery > 0 ? "Delivery" : "Recoger"}
+              </SText>
+            </SText>
+          </SView>
+
         </SView>
-      </>
+      </SView>
     })
   }
 

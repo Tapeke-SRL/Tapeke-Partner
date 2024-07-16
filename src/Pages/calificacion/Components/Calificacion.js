@@ -34,7 +34,7 @@ class Calificacion extends React.Component {
                 <SText color={STheme.color.darkGray} fontSize={24}>ESTRELLAS</SText>
                 <SHr height={10} />
                 <SView col={"xs-10"} center style={{ borderWidth: 2, borderColor: STheme.color.primary, backgroundColor: STheme.color.white, borderRadius: 8 }}>
-                    <SText color={STheme.color.text} fontSize={32}>{parseFloat(data.star_media ?? 0).toFixed(1)}</SText>
+                    <SText color={STheme.color.text} fontSize={32}>{parseFloat(data?.pedido_star_media ?? 0).toFixed(1)}</SText>
                 </SView>
             </SView>
         </SView>)
@@ -140,13 +140,13 @@ class Calificacion extends React.Component {
             <>
                 <SHr height={15} />
                 {this.getEstrellas(this.state.media)}
-                <SHr height={15} />
+                {/* <SHr height={15} />
                 {this.getcalificacion2(this.state.media)}
                 <SHr height={15} />
                 {this.getcalificacion3(this.state.media)}
                 <SHr height={15} />
-                {this.getcalificacion1(this.state.media)}
-                <SHr height={100} />
+                {this.getcalificacion1(this.state.media)} */}
+                <SHr height={20} />
                 {this.render_comentarios()}
                 <SHr height={100} />
 
