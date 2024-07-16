@@ -45,13 +45,29 @@ class index extends Component {
         let precio = this._input_precio.getValue();
         let hi = this._input_hi.getValue();
         let hf = this._input_hf.getValue();
+
+        if (hi.length != 5) {
+          SPopup.alert("La hora inicio debe ser el formato 24:00");
+          return;
+        }
+        if (hf.length != 5) {
+          SPopup.alert("La hora fin debe ser el formato 24:00");
+          return;
+        }
+
         if (!duracion_minima) {
           SPopup.alert("Ocurrio un error de conexion, verifique su internet y recargue la ventana.");
           return
         }
+
         let dhi = new SDate(hi, "hh:mm");
         let dhf = new SDate(hf, "hh:mm");
-        console.log(dhi.diffTime(dhf))
+
+        if (dhi.toString().length < 5 || dhf.toString().length < 0) {
+          SPopup.alert("El formato de la hora debe ser hh:mm");
+          return;
+        }
+
         if (dhi.diffTime(dhf) < (1000 * parseFloat(duracion_minima.value))) {
           SPopup.alert("La hora inicio debe ser mayor a la hora fin por minimo " + (parseFloat(duracion_minima.value) / 60).toFixed(0) + " minutos. ");
           return;

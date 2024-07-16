@@ -257,23 +257,26 @@ class root extends Component {
 
     cardDetalle({ col, title, cantTap, montoIngTap, cantProd, montoIngProd }) {
 
-        const subCard = ({ label, cantidad, monto }) => {
-            let fontSizeTitle = 12;
-            let fontSizeLabel = 14;
+        const subCard = ({ label, cantidad, monto, colHijo }) => {
+            let fontSizeTitle = 10;
+            let fontSizeLabel = 12;
             return <>
-                <SHr height={10} />
-                <SView row center>
-                    <SText fontSize={fontSizeTitle} color={STheme.color.text} width={50} center bold>{label}</SText>
+                <SHr/>
+                <SView col={colHijo} row center>
+                    <SText col={"xs-12"} fontSize={fontSizeTitle} color={STheme.color.text} center bold>{label}</SText>
                     <SHr />
-                    <SText fontSize={fontSizeLabel} bold color={STheme.color.text}>{cantidad}</SText>
+                    <SText fontSize={fontSizeLabel} color={STheme.color.text}>{cantidad}</SText>
                     <SHr />
                 </SView>
 
-                <SView row center>
+                <SView col={colHijo}  row center>
                     <SText fontSize={fontSizeTitle} color={STheme.color.text} bold>INGRESOS</SText>
                     <SHr />
-                    <SText fontSize={fontSizeLabel} color={STheme.color.text}>Bs. </SText>
-                    <SText fontSize={fontSizeLabel} bold color={STheme.color.text}>{SMath.formatMoney(monto)}</SText>
+
+                    <SText fontSize={fontSizeLabel} color={STheme.color.text}>
+                        <SText fontSize={fontSizeLabel} color={STheme.color.text}>Bs. </SText>
+                        {SMath.formatMoney(monto)}
+                    </SText>
                     <SHr />
                 </SView>
             </>
@@ -295,8 +298,8 @@ class root extends Component {
                     {title}
                 </SText>
 
-                {subCard({ label: "CANTIDAD TAPEKES", cantidad: cantTap, monto: montoIngTap })}
-                {subCard({ label: "CANTIDAD PRODUCTOS", cantidad: cantProd, monto: montoIngProd })}
+                {subCard({ label: "CANTIDAD TAPEKES", cantidad: cantTap, monto: montoIngTap, colHijo: col })}
+                {subCard({ label: "CANTIDAD PRODUCTOS", cantidad: cantProd, monto: montoIngProd, colHijo: col })}
             </SView>
         </>
     }
@@ -311,7 +314,7 @@ class root extends Component {
         cantProdRecoger,
         montoIngProdRecoger
     }) {
-        return <SView col={"xs-12"} row center>
+        return <SView col={"xs-12"} row>
 
             {this.cardDetalle({
                 col: "xs-6",
@@ -364,8 +367,8 @@ class root extends Component {
         return <>
             <SHr height={5} />
             <SView col={"xs-10"} row center >
-                <SView col={"xs-6"} row center style={{ justifyContent: 'flex-start' }}>
-                    <SText fontSize={13} color={STheme.color.text} center >{label}</SText>
+                <SView col={"xs-6"} row>
+                    <SText col={'xs-12'} fontSize={13} color={STheme.color.text} >{label}</SText>
                 </SView>
                 <SView col={"xs-6"} row center style={{ justifyContent: 'flex-end', }} >
                     <SText fontSize={13} color={!color ? STheme.color.text : color} center >{simbolo ? simbolo : ""} Bs. {SMath.formatMoney(value)}</SText>
@@ -420,7 +423,7 @@ class root extends Component {
 
         this.deuda = parseFloat((total.linea) - (total.comision_linea + total.comision_efectivo)).toFixed(2);
 
-        return <SView col={"xs-12"} >
+        return <SView>
             <SHr />
             <SText>Última conciliación: {new SDate(this.state?.ultima_conciliacion?.fecha_cierre).toString("yyyy-MM-dd")}</SText>
             <SText># Pedidos por Conciliar: {Object.values(this.state.data).length}</SText>
@@ -513,6 +516,18 @@ class root extends Component {
             <Container>
                 {/* {this.getHeader()} */}
                 {this.getTableDetail(totales)}
+                <SView
+                    style={{
+                        backgroundColor: STheme.color.primary,
+                        borderRadius: 10,
+                        padding: 12
+                    }}
+                    onPress={() => {
+                        SNavigation.navigate('/ganancia/historial')
+                    }}
+                >
+                    <SText color={STheme.color.background} bold>Ver Historial de conciliaciónes</SText>
+                </SView>
                 {this.historialPedidos()}
             </Container>
         </SPage>

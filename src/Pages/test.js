@@ -5,7 +5,6 @@ import Model from '../Model'
 import { connect } from 'react-redux';
 
 
-import messaging from '@react-native-firebase/messaging';
 import notifee, { EventType, AndroidStyle } from '@notifee/react-native';
 
 
@@ -24,7 +23,7 @@ const BuildNotification = async (notification) => {
         android: {
 
             channelId: "default_channel_id",
-            smallIcon: 'icon_uno', // optional, defaults to 'ic_launcher'.
+            smallIcon: 'icon_notification_partner', // optional, defaults to 'ic_launcher'.
             color: '#ffffff',
             // largeIcon: notification?.data?.image,
 
