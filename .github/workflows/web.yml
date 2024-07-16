@@ -1,7 +1,7 @@
 name: "CI/CD SERVISOFTS - WEB"
 on:
   push:
-    branches: ["test"]
+    # branches: ["test"]
 
 jobs:
   compile_web:
