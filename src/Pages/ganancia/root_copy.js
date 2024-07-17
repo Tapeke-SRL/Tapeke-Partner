@@ -40,6 +40,8 @@ class root extends Component {
     }
 
     calcularMontos() {
+        if (!this.state.data) return;
+
         let total = {
             efectivo: 0,
             linea: 0,
@@ -80,14 +82,20 @@ class root extends Component {
             totalPorConciliar: 0
         }
 
-        // let keysPedidos = [];
-        const calcularTotalProdYSub = (obj) => {
+        let keysPedidos = [];
+        const calcularTotalProd = (obj) => {
             let totalProd = 0;
+            // total += obj.cantidad * obj.precio;
             if (obj.pedido_producto) {
                 Object.values(obj.pedido_producto).map((prod) => {
                     if (prod.precio_sin_descuento) {
                         totalProd += (prod.cantidad * prod.precio_sin_descuento)
-                        total.totalDescCubreTapeke += (prod.cantidad * (prod.precio_sin_descuento - prod.precio))
+
+                        // Calcular descuento Producto
+                        if (!keysPedidos.includes(obj.key)) {
+                            keysPedidos.push(obj.key);
+                            total.totalDescCubreTapeke += (prod.cantidad * (prod.precio_sin_descuento - prod.precio))
+                        }
                     } else {
                         totalProd += (prod.cantidad * prod.precio)
                     }
@@ -106,14 +114,13 @@ class root extends Component {
             return totalProd;
         }
 
-        // const calTotalDescProd = (obj) => {
-        //     let totalDesc = 0;
-        //     if (obj.pedido_producto) {
-        //         totalDesc = obj.total_descuento_producto - obj.total_descuento_delivery
-        //     }
-
-        //     return parseFloat(totalDesc, 2);
-        // }
+        const calcularTotalDescuento = (obj) => {
+            let totalDesc = 0;
+            if (obj) {
+                totalDesc = obj.total_descuento_producto - obj.total_descuento_delivery
+            }
+            return parseFloat(totalDesc, 2);
+        }
 
         const contadorProd = (obj) => {
             let cantidad = 0;
@@ -126,12 +133,11 @@ class root extends Component {
         }
 
         this.keys_pedidos = [];
-        let totalDesc = this.calcularDescuentoCobertura(null);
-
-        this.pedidoPorConciliarFilterDate?.map(obj => {
+        let totalDesc = this.calcularDescuentoCubreTapeke(null);
+        Object.values(this.state.data).map(obj => {
             this.keys_pedidos.push(obj.key);
 
-            totalDesc = this.calcularDescuentoCobertura(obj);
+            totalDesc = this.calcularDescuentoCubreTapeke(obj);
             total.totalDescCubreTapeke += totalDesc.totalDescCubreTapeke;
             total.totalDescCubrePartner += totalDesc.totalDescCubrePartner;
 
@@ -140,27 +146,27 @@ class root extends Component {
                 total.montoIngTapDel += obj.cantidad * obj.precio;
 
                 total.cantProdDel += contadorProd(obj);
-                total.montoIngProdDel += calcularTotalProdYSub(obj);
+                total.montoIngProdDel += calcularTotalProd(obj) - (calcularTotalDescuento(obj));
             } else {
                 total.cantTapRecoger += obj.cantidad;
                 total.montoIngTapRecoger += obj.cantidad * obj.precio;
 
                 total.cantProdRecoger = contadorProd(obj);
-                total.montoIngProdRecoger += calcularTotalProdYSub(obj);
+                total.montoIngProdRecoger += calcularTotalProd(obj) - (calcularTotalDescuento(obj));
             }
 
             if (!obj.tipo_pago) return;
 
             if (obj.tipo_pago.find(a => a.type == "efectivo")) {
-                total.efectivo += ((obj.cantidad * obj.precio) + calcularTotalProdYSub(obj));
+                total.efectivo += ((obj.cantidad * obj.precio) + calcularTotalProd(obj) - (calcularTotalDescuento(obj)));
                 total.comision_efectivo += obj.comision_restaurante;
-                totalDesc = this.calcularDescuentoCobertura(obj);
+                totalDesc = this.calcularDescuentoCubreTapeke(obj);
                 total.totalDescEfectivo = (totalDesc.totalDescCubreTapeke ?? 0) + (totalDesc.totalDescCubrePartner ?? 0);
                 total.totalComisionEfectivo += obj.comision_restaurante;
             } else {
-                total.linea += ((obj.cantidad * obj.precio) + calcularTotalProdYSub(obj));
+                total.linea += ((obj.cantidad * obj.precio) + calcularTotalProd(obj) - (calcularTotalDescuento(obj)));
                 total.comision_linea += obj.comision_restaurante;
-                totalDesc = this.calcularDescuentoCobertura(obj);
+                totalDesc = this.calcularDescuentoCubreTapeke(obj);
                 total.totalDescLinea = totalDesc.totalDescCubreTapeke + totalDesc.totalDescCubrePartner;
                 total.totalComisionLinea += obj.comision_restaurante;
             }
@@ -168,48 +174,30 @@ class root extends Component {
             total.totalDescProducto += obj.total_descuento_producto;
             total.totalDescDelivery += obj.total_descuento_delivery;
             total.totalDescuento = total.totalDescProducto + total.totalDescDelivery;
-            // console.log(`${obj.key} : ${(obj.cantidad * obj.precio) + calcularTotalProdYSub(obj)}`);
-            total.total += ((obj.cantidad * obj.precio) + calcularTotalProdYSub(obj));
-            // console.log(total.total);
 
-            // this.keys_pedidos.push(obj.key);
+            total.total += ((obj.cantidad * obj.precio) + calcularTotalProd(obj));
         })
 
         total.totalDescCubrePartner = total.totalDescCubrePartner - (total.totalDescEfectivo * totalDesc.porcentajeCubrePartner);
 
-
-        // TODO falta definir esté metodo
-        total.totalPorConciliar = total.linea + total.totalDescCubreTapeke - (total.totalDescCubrePartner + total.comision_linea + total.comision_efectivo);
-
-        return total;
-    }
-
-    calcularDescuentoCobertura(obj) {
-        let totalDesc = {
-            totalDescCubreTapeke: 0,
-            totalDescCubrePartner: 0,
-            porcentajeCubreTapeke: 0,
-            porcentajeCubrePartner: 0,
-        };
-
-        if (obj?.descuentos) {
-            Object.values(obj.descuentos).map((desc) => {
-
-                if (desc.cobertura) {
-                    let coberturaTapeke = desc.total_descuento_producto * (desc.cobertura ?? 0);
-                    let coberturaPartner = desc.total_descuento_producto - coberturaTapeke;
-
-                    // TODO implementacion de descuentos delivery que cubre partner.
-
-                    totalDesc.totalDescCubreTapeke += parseFloat(coberturaTapeke, 2);
-                    totalDesc.totalDescCubrePartner += parseFloat(coberturaPartner, 2);
-                    totalDesc.porcentajeCubreTapeke = desc.cobertura;
-                    totalDesc.porcentajeCubrePartner = 1 - desc.cobertura;
-                }
-            });
+        {
+            this.ganancias({
+                total_ingresos: total.total,
+                linea: total.linea,
+                efectivo: total.efectivo,
+                comision_tapeke_efectivo: total.totalComisionEfectivo,
+                comision_tapeke_linea: total.totalComisionLinea,
+                deuda: this.deuda,
+                descuento_cubre_tapeke: total.totalDescCubreTapeke,
+                descuento_cubre_partner: total.totalDescCubrePartner,
+                total_por_conciliar: total.totalPorConciliar
+            })
         }
 
-        return totalDesc;
+        total.totalPorConciliar = total.linea + total.totalDescCubreTapeke - total.totalDescCubrePartner - (total.comision_linea + total.comision_efectivo);
+
+        total.total = (total.total) - (total.totalDescuento);
+        return total;
     }
 
     head({ cantidadTotal }) {
@@ -419,13 +407,15 @@ class root extends Component {
 
             {this.labelGanancia({ label: `Comisión Tapeke Linea`, value: comision_tapeke_linea/* , color: STheme.color.danger, simbolo: "-" */ })}
 
-            {this.labelGanancia({ label: `Total`, value: total_por_conciliar })}
+            {this.labelGanancia({ label: `Total`, value: (total_por_conciliar * -1) })}
 
             <SHr height={15} />
         </SView>
     }
 
     getTableDetail(totales) {
+        if (!this.state.data) return <SLoad />
+
         let total = totales;
 
         this.deuda = parseFloat((total.linea) - (total.comision_linea + total.comision_efectivo)).toFixed(2);
@@ -514,8 +504,6 @@ class root extends Component {
     }
 
     render() {
-        if (!this.state.data) return <SLoad />
-        this.pedidoPorConciliarFilterDate = Object.values(this.state.data);
         let totales = this.calcularMontos();
         return (<SPage hidden header={<><TopBar type={"default"} title={"Ganancias"} />
             <SView backgroundColor={"#96BE00"} height={20} col={"xs-12"}></SView></>}
