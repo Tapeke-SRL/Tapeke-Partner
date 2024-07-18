@@ -90,12 +90,6 @@ class root extends Component {
                 Object.values(obj.pedido_producto).map((prod) => {
                     if (prod.precio_sin_descuento) {
                         totalProd += (prod.cantidad * prod.precio_sin_descuento)
-
-                        // Calcular descuento Producto
-                        if (!keysPedidos.includes(obj.key)) {
-                            keysPedidos.push(obj.key);
-                            total.totalDescCubreTapeke += (prod.cantidad * (prod.precio_sin_descuento - prod.precio))
-                        }
                     } else {
                         totalProd += (prod.cantidad * prod.precio)
                     }
@@ -133,11 +127,11 @@ class root extends Component {
         }
 
         this.keys_pedidos = [];
-        let totalDesc = this.calcularDescuentoCubreTapeke(null);
+        let totalDesc = this.calcularDescuentoCobertura(null);
         Object.values(this.state.data).map(obj => {
             this.keys_pedidos.push(obj.key);
 
-            totalDesc = this.calcularDescuentoCubreTapeke(obj);
+            totalDesc = this.calcularDescuentoCobertura(obj);
             total.totalDescCubreTapeke += totalDesc.totalDescCubreTapeke;
             total.totalDescCubrePartner += totalDesc.totalDescCubrePartner;
 
@@ -160,14 +154,14 @@ class root extends Component {
             if (obj.tipo_pago.find(a => a.type == "efectivo")) {
                 total.efectivo += ((obj.cantidad * obj.precio) + calcularTotalProd(obj) - (calcularTotalDescuento(obj)));
                 total.comision_efectivo += obj.comision_restaurante;
-                totalDesc = this.calcularDescuentoCubreTapeke(obj);
-                total.totalDescEfectivo = (totalDesc.totalDescCubreTapeke ?? 0) + (totalDesc.totalDescCubrePartner ?? 0);
+                totalDesc = this.calcularDescuentoCobertura(obj);
+                total.totalDescEfectivo += (totalDesc.totalDescCubreTapeke ?? 0) + (totalDesc.totalDescCubrePartner ?? 0);
                 total.totalComisionEfectivo += obj.comision_restaurante;
             } else {
                 total.linea += ((obj.cantidad * obj.precio) + calcularTotalProd(obj) - (calcularTotalDescuento(obj)));
                 total.comision_linea += obj.comision_restaurante;
-                totalDesc = this.calcularDescuentoCubreTapeke(obj);
-                total.totalDescLinea = totalDesc.totalDescCubreTapeke + totalDesc.totalDescCubrePartner;
+                totalDesc = this.calcularDescuentoCobertura(obj);
+                total.totalDescLinea += totalDesc.totalDescCubreTapeke + totalDesc.totalDescCubrePartner;
                 total.totalComisionLinea += obj.comision_restaurante;
             }
 
@@ -180,24 +174,58 @@ class root extends Component {
 
         total.totalDescCubrePartner = total.totalDescCubrePartner - (total.totalDescEfectivo * totalDesc.porcentajeCubrePartner);
 
-        {
-            this.ganancias({
-                total_ingresos: total.total,
-                linea: total.linea,
-                efectivo: total.efectivo,
-                comision_tapeke_efectivo: total.totalComisionEfectivo,
-                comision_tapeke_linea: total.totalComisionLinea,
-                deuda: this.deuda,
-                descuento_cubre_tapeke: total.totalDescCubreTapeke,
-                descuento_cubre_partner: total.totalDescCubrePartner,
-                total_por_conciliar: total.totalPorConciliar
-            })
-        }
-
         total.totalPorConciliar = total.linea + total.totalDescCubreTapeke - total.totalDescCubrePartner - (total.comision_linea + total.comision_efectivo);
 
         total.total = (total.total) - (total.totalDescuento);
         return total;
+    }
+
+    calcularDescuentoCobertura(obj) {
+        let totalDesc = {
+            totalDescCubreTapeke: 0,
+            totalDescCubrePartner: 0,
+            porcentajeCubreTapeke: 0,
+            porcentajeCubrePartner: 0,
+        };
+
+
+        if (obj?.descuentos) {
+            Object.values(obj.descuentos).map((desc) => {
+                if (desc.cobertura) {
+                    let coberturaTapeke = desc.total_descuento_producto * (desc.cobertura ?? 0);
+                    let coberturaPartner = desc.total_descuento_producto - coberturaTapeke;
+
+                    // TODO implementacion de descuentos delivery que cubre partner.
+
+                    totalDesc.totalDescCubreTapeke += parseFloat(coberturaTapeke, 2);
+                    totalDesc.totalDescCubrePartner += parseFloat(coberturaPartner, 2);
+                    totalDesc.porcentajeCubreTapeke = desc.cobertura;
+                    totalDesc.porcentajeCubrePartner = 1 - desc.cobertura;
+                }
+            });
+        }
+
+        if (obj?.pedido_producto) {
+            // TODO aca va que este tipo de descuento lo cuebre el partner.
+            const exclude = ['pollos campeón', 'sakura brasas']
+            Object.values(obj.pedido_producto).map((prod) => {
+                if (prod.descuento_monto) {
+                    let coberturaTapeke = 0.50;
+                    if (exclude.some(nombre => obj.restaurante.nombre.toLowerCase().includes(nombre.toLowerCase()))) {
+                        coberturaTapeke = 1;
+                    }
+                    let coberturaPartner = 1 - coberturaTapeke;
+                    let monto = (prod.cantidad * (prod.precio_sin_descuento - prod.precio))
+
+                    totalDesc.totalDescCubreTapeke += monto * coberturaTapeke;
+                    totalDesc.totalDescCubrePartner += monto * coberturaPartner
+                } else {
+                    totalDesc.totalDescCubreTapeke += (prod.cantidad * (prod.precio_sin_descuento - prod.precio))
+                }
+            })
+        }
+
+        return totalDesc;
     }
 
     head({ cantidadTotal }) {
@@ -261,7 +289,7 @@ class root extends Component {
             let fontSizeTitle = 10;
             let fontSizeLabel = 12;
             return <>
-                <SHr/>
+                <SHr />
                 <SView col={colHijo} row center>
                     <SText col={"xs-12"} fontSize={fontSizeTitle} color={STheme.color.text} center bold>{label}</SText>
                     <SHr />
@@ -269,7 +297,7 @@ class root extends Component {
                     <SHr />
                 </SView>
 
-                <SView col={colHijo}  row center>
+                <SView col={colHijo} row center>
                     <SText fontSize={fontSizeTitle} color={STheme.color.text} bold>INGRESOS</SText>
                     <SHr />
 
@@ -335,33 +363,6 @@ class root extends Component {
             })}
         </SView>
     }
-
-    calcularDescuentoCubreTapeke(obj) {
-        let totalDesc = {
-            totalDescCubreTapeke: 0,
-            totalDescCubrePartner: 0,
-            porcentajeCubreTapeke: 0,
-            porcentajeCubrePartner: 0,
-        };
-
-        if (obj?.descuentos) {
-            Object.values(obj.descuentos).map((desc) => {
-                if (desc.cobertura) {
-                    let coberturaTapeke = desc.total_descuento_producto * (desc.cobertura ?? 0);
-                    let coberturaPartner = desc.total_descuento_producto - coberturaTapeke;
-
-                    totalDesc.totalDescCubreTapeke += parseFloat(coberturaTapeke, 2);
-                    totalDesc.totalDescCubrePartner += parseFloat(coberturaPartner, 2);
-                    totalDesc.porcentajeCubreTapeke = desc.cobertura;
-                    totalDesc.porcentajeCubrePartner = 1 - desc.cobertura;
-                }
-
-            });
-        }
-
-        return totalDesc;
-    }
-
 
     labelGanancia({ label, value, color, simbolo }) {
         return <>
