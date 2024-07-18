@@ -1,352 +1,169 @@
 import React, { Component } from 'react';
-import DPA, { connect } from 'servisofts-page';
-import { Parent } from "."
-import Model from '../../../Model';
-import SSocket from 'servisofts-socket'
-import { SNavigation, SText, SView, SIcon, SPopup, SButtom, SList, SHr, SImage, SMath, SInput, STheme, SLoad, SDate } from 'servisofts-component';
-import {
-    ScrollView,
-} from 'react-native';
+import { View, Text, ScrollView, StyleSheet, SectionList, Vibration } from 'react-native';
+import { SIcon, SImage, SLoad, SNavigation, SPage, SText, STheme, SThread, SView } from 'servisofts-component';
+import TopBar from '../../../Components/TopBar';
+import SSocket from 'servisofts-socket';
 
-class index extends DPA.list {
+
+
+const renderSectionSeparator = () => (
+    <View style={styles.sectionSeparator} />
+);
+
+
+export default class list extends Component {
+    static TOPBAR = <TopBar type={"default"} title='Productos' />
     constructor(props) {
-        super(props, {
-            Parent: Parent,
-            limit: 10,
-            params: ["key_restaurante"],
-            excludes: ["key", "estado", "key_usuario"],
-            onRefresh: () => {
-                Parent.model.Action.CLEAR()
-            }
-        });
-    }
+        super(props);
+        this.state = {
+            openSections: {}
+        };
+        this.key_restaurante = SNavigation.getParam("key_restaurante")
 
+    }
     componentDidMount() {
-        if (!Model.restaurante.Action.getSelect()) {
+        if (!this.key_restaurante) {
             SNavigation.goBack();
             return;
         }
-
-        Parent.model.Action.CLEAR()
-        Model.categoria_producto.Action.CLEAR()
-    }
-
-    $allowNew() {
-        // return Model.usuarioPage.Action.getPermiso({ url: Parent.path, permiso: "new" });
-        return true;
-    }
-
-    $allowAccess() {
-        // return Model.usuarioPage.Action.getPermiso({ url: Parent.path, permiso: "view" });
-        return true
-    }
-
-    $filter(data) {
-        return data.estado != 0
-    }
-
-    $getData() {
-        return Parent.model.Action.getAll({ key_restaurante: this.$params.key_restaurante });
-    }
-
-    $getDataCategoriaProducto() {
-        return Model.categoria_producto.Action.getAll({ key_restaurante: this.$params.key_restaurante });
-    }
-
-    $order() {
-        return [{ key: "fecha_on", order: "desc", type: "date" }];
-    }
-
-    $menu() {
-        let menu = super.$menu();
-        menu.push({ children: this.listCategoria() })
-        return menu;
-    }
-
-    listCategoria() {
-        return <>
-            <SView padding={7}
-                onPress={() => {
-                    SNavigation.navigate("/restaurante/categoria_producto/list", { key_restaurante: this.$params.key_restaurante })
-                }}
-            >
-                <SText>Lista Categorías</SText>
-            </SView>
-        </>
-    }
-
-    onEdit(obj) {
-        SNavigation.navigate(Parent.path + "/edit", { pk: obj.key, key_restaurante: this.$params.key_restaurante })
-    }
-
-    handleChange_habilitado(obj) {
-        if (!this.editPermiso) {
-            SPopup.alert("No tienes permisos para esta acción.")
-            return;
-        }
-
-        Model.producto.Action.editar({
-            data: {
-                ...obj,
-                habilitado: !obj.habilitado
-            },
-            key_usuario: Model.usuario.Action.getKey()
+        new SThread(100).start(() => {
+            this.setState({ ready: true })
         })
+        this.getData();
     }
 
-    handleChange_mayor_edad(obj) {
-        if (!this.editPermiso) {
-            SPopup.alert("No tienes permisos para esta acción.")
-            return;
-        }
-
-        Model.producto.Action.editar({
-            data: {
-                ...obj,
-                mayor_edad: !obj.mayor_edad
-            },
-            key_usuario: Model.usuario.Action.getKey()
+    async getData() {
+        const categorias = await SSocket.sendPromise({
+            component: "categoria_producto",
+            type: "getAll",
+            key_restaurante: this.key_restaurante
         })
-    }
 
-    handleChange_ley_seca(obj) {
-        if (!this.editPermiso) {
-            SPopup.alert("No tienes permisos para esta acción.")
-            return;
-        }
-
-        Model.producto.Action.editar({
-            data: {
-                ...obj,
-                ley_seca: !obj.ley_seca
-            },
-            key_usuario: Model.usuario.Action.getKey()
+        const productos = await SSocket.sendPromise({
+            component: "producto",
+            type: "getAll",
+            key_restaurante: this.key_restaurante
         })
-    }
 
-    tiempoHabilitacion(fechaHora) {
-        const ahora = new SDate();
-        const fechaObjetivo = new SDate(fechaHora, "yyyy-MM-ddThh:mm:ss");
+        let ARRAY = [];
+        Object.values(categorias.data).map(categoria => {
+            const data = Object.values(productos.data).filter(prd => prd.estado > 0 && prd.key_categoria_producto == categoria.key)
+            ARRAY.push({
+                ...categoria,
+                cantidad: data.length,
+                data: data
 
-        const diferencia = fechaObjetivo.getTime() - ahora.getTime();
-        if (diferencia < 0) {
-            return "La fecha y hora ya han pasado";
-        }
-
-        const segundos = Math.floor(diferencia / 1000);
-        const minutos = Math.floor(segundos / 60);
-        const horas = Math.floor(minutos / 60);
-        // const dias = Math.floor(horas / 24);
-
-        if (horas == 0) {
-            return `Faltan ${minutos % 60} minutos para la habilitación`;
-        }
-
-        return `Faltan ${horas % 24} horas, ${minutos % 60} minutos para la habilitación`;
-    }
-
-    componentHabilitado(producto) {
-        let ph = {};
-
-        if (producto?.fecha_habilitacion_automatica) {
-            ph = { key: "", content: <SText color={STheme.color.danger}>{this.tiempoHabilitacion(producto?.fecha_habilitacion_automatica)}</SText> };
-        } else {
-            if (producto?.habilitado) {
-                ph = { key: "true", content: <SText color={STheme.color.accent}>Habilitado</SText> };
-            } else {
-                ph = { key: "false", content: <SText color={STheme.color.danger}>deshabilitado</SText> };
-            }
-        }
-
-
-        return <>
-            <SView margin={2} row center>
-                <SText fontSize={15}>Disponibilidad:</SText>
-                <SHr width={10} />
-                <SInput customStyle="clean" style={{ height: 50 }} cu ref={ref => this.prodHabilitado = ref} value={ph} type={"select"} options={[
-                    { key: "", content: "" },
-                    { key: "true", content: <SText color={STheme.color.accent}>Habilitado</SText> },
-                    { key: "false", content: <SText color={STheme.color.danger}>deshabilitado</SText> },
-                    { key: "30", content: <SText color={STheme.color.danger}>No disponible por 30 Min</SText> },
-                    { key: "60", content: <SText color={STheme.color.danger}>No disponible por 1 hora</SText> },
-                    { key: "120", content: <SText color={STheme.color.danger}>No disponible por 2 hora</SText> },
-                    { key: "180", content: <SText color={STheme.color.danger}>No disponible por 3 hora</SText> },
-                    { key: "360", content: <SText color={STheme.color.danger}>No disponible por 6 hora</SText> },
-                    { key: "720", content: <SText color={STheme.color.danger}>No disponible por 12 hora</SText> },
-                    { key: "1440", content: <SText color={STheme.color.danger}>No disponible por 1  día</SText> },
-                ]} onChangeText={(select) => {
-                    Model.producto.Action.editar({
-                        data: {
-                            ...producto,
-                            habilitado: select == "true",
-                            fecha_habilitacion_automatica: (select != "true" && select != "false") ? new SDate().addMinute(parseInt(select)).toString("yyyy-MM-ddThh:mm:ss") : "null"
-                        },
-                        key_usuario: Model.usuario.Action.getKey()
-                    })
-                }} />
-            </SView>
-        </>
-    }
-
-
-    onDelete(obj) {
-        if (this.deletePermiso) {
-            SPopup.confirm({
-                title: "Eliminar Producto",
-                message: "¿Seguro que desea remover el producto?",
-                onPress: () => {
-                    Model.producto.Action.editar({
-                        data: {
-                            // ...obj,
-                            key: obj.key,
-                            estado: 0
-                        },
-                        key_usuario: Model.usuario.Action.getKey()
-                    })
-                }
             })
-        } else {
-            SPopup.alert("No tiene permisos para eliminar el tag")
-        }
+            // categoria.productos = 
+        })
+        ARRAY = ARRAY.sort((a, b) => a.index - b.index)
+        this.setState({ data: ARRAY })
     }
+    render() {
+        if (!this.state.ready) return <SLoad />
+        if (!this.state.data) return <SLoad />
+        const renderItem = ({ item }) => (
+            <View style={styles.item}>
+                <SView col={"xs-12"} row>
+                    <SView style={{ width: 40, height: 40, borderRadius: 4, overflow: "hidden" }} card>
+                        <SImage src={SSocket.api.root + "producto/.128_" + item.key} style={{
+                            resizeMode: "cover"
+                        }} />
+                    </SView>
+                    <SView width={8} />
+                    <SView flex style={{ justifyContent: "center" }}>
+                        <SText style={{ fontSize: 14, }} bold>{item?.nombre}</SText>
+                        <SText style={{ fontSize: 12, color: STheme.color.lightGray }} >{"Sin subproductos"}</SText>
+                    </SView>
+                    <SView height style={{ justifyContent: "center" }}>
+                        <SText style={{ fontSize: 12, color: STheme.color.lightGray }} >{"Disponible"}</SText>
+                    </SView>
+                </SView>
+            </View >
+        );
 
-
-    viewProductoCategoria(keyCategoria, dataProducto) {
-        if (!dataProducto) return null
-
-        this.deletePermiso = Model.usuarioPage.Action.getPermiso({ url: Parent.path, permiso: "delete" });
-        this.editPermiso = Model.usuarioPage.Action.getPermiso({ url: Parent.path, permiso: "edit" });
-
-        this.deletePermiso = true;
-        this.editPermiso = true;
-        // console.log("asd",dataProducto)
-        // return <SText>Aqui deberian ir los productos</SText>
-        return <>
-            <SList
-                data={dataProducto}
-                filter={(producto) => {
-                    if (producto.estado == 0) {
-                        return false;
-                    }
-
-                    if (producto.key_categoria_producto != keyCategoria) {
-                        return false;
-                    }
-
-                    return true;
-                }}
-                render={(producto) => {
-                    // return <SText>Un producto</SText>
-                    // if (Object.values(producto).length <= 0) return null;
-                    return <>
-                        <SView flex card style={{
-                            padding: 15,
-                            borderRadius: 10,
-                        }} >
-                            <SView>
-                                <SText fontSize={20} color={STheme.color.primary} bold padding={3}>{producto?.nombre}</SText>
-                                <SHr height={15} />
-                                <SView flex row
-                                    style={{
-                                        justifyContent: "space-evenly",
-                                        marginBottom: 15
-                                    }}
-                                >
-                                    <SView height={80} width={80} style={{ marginRight: 10 }}>
-                                        <SImage src={Model.producto._get_image_download_path(SSocket.api, producto?.key)} />
-                                    </SView>
-
-                                    <SView
-                                        style={{
-                                            marginLeft: 20
-                                        }}
-                                    >
-                                        <SText margin={5} fontSize={12}>Index: {producto?.index}</SText>
-                                        <SText margin={5} fontSize={12}>Limite de compra: {producto?.limite_compra}</SText>
-                                        <SText margin={5} fontSize={12}>Precio: {SMath.formatMoney(producto?.precio) + " Bs."}</SText>
-                                    </SView>
-                                </SView>
-                                <SText margin={5} fontSize={12}>Descripción:</SText>
-                                <SText margin={5} color={STheme.color.primary} fontSize={12}>{producto?.descripcion}</SText>
-                                <SHr height={30} />
-
-                                <SView flex row
-                                    style={{
-                                        justifyContent: "space-evenly"
-                                    }}
-                                >
-                                    <SView center>
-                                        <SView center>
-                                            <SText>Mayor de Edad: {JSON.parse(producto?.mayor_edad) == true ? "SI" : "NO"}</SText>
-                                            <SText>Ley Seca: {JSON.parse(producto?.ley_seca) == true ? "SI" : "NO"}</SText>
-                                            <SHr h={5} />
-                                            {this.componentHabilitado(producto)}
-                                        </SView>
-                                    </SView>
-                                    <SView center>
-                                        <SView row>
-                                            <SView style={{ marginRight: 10 }} onPress={() => this.onEdit(producto)}>
-                                                {this.editPermiso ? <SIcon name={"Edit"} height={30} width={30}></SIcon> : <SView />}
-                                            </SView>
-                                            <SView onPress={() => this.onDelete(producto)}>
-                                                {this.deletePermiso ? <SIcon name={"Delete"} height={30} width={30}></SIcon> : <SView />}
-                                            </SView>
-                                        </SView>
-                                        <SHr height={20} />
-                                        <SView
-                                            style={{
-                                                backgroundColor: STheme.color.primary,
-                                                fontSize: 15,
-                                                padding: 5,
-                                                borderRadius: 4
-                                            }}
-                                            onPress={() => SNavigation.navigate(Parent.path + "/sub_producto/list", { key_producto: producto.key })}>
-                                            <SText color={STheme.color.secondary}>Ver sub productos</SText>
-                                        </SView>
-                                    </SView>
-                                </SView>
-                            </SView>
-                        </SView>
-                    </>
-                }}
-            >
-            </SList>
-        </>
-    }
-
-    $render() {
-        // this.deletePermiso = Model.usuarioPage.Action.getPermiso({ url: Parent.path, permiso: "delete" });
-        // this.editPermiso = Model.usuarioPage.Action.getPermiso({ url: Parent.path, permiso: "edit" });
-
-        this.deletePermiso = true;
-        this.editPermiso = true;
-
-        this.dataProducto = this.$getData();
-        this.dataCategoria = this.$getDataCategoriaProducto();
-
-        if (!this.dataProducto && !this.dataCategoria) return <SLoad />
-        return <>
-            <SHr height={10} />
-            <SView col={"xs-12"}>
-                <SList
-                    data={this.dataCategoria}
-                    filter={this.$filter.bind(this)}
-                    order={[{ key: "index", order: "asc" }]}
-                    render={(categoria) => {
-                        if (Object.values(categoria).length <= 0) return null;
-
-                        return <>
-                            <SView row>
-                                <SText flex fontSize={20}>{categoria.nombre}</SText>
-                                <SText fontSize={15} center>Index: {categoria.index}</SText>
-                            </SView>
-                            <SHr height={10} />
-                            {this.viewProductoCategoria(categoria.key, this.dataProducto)}
-                        </>
-                    }}
-                />
+        const renderSectionHeader = ({ section }) => (
+            <SView style={styles.header} onPress={() => {
+                Vibration.vibrate(300)
+                if (!this.state.openSections[section.key]) {
+                    this.state.openSections[section.key] = section
+                } else {
+                    delete this.state.openSections[section.key]
+                }
+                this.setState({ ...this.state })
+            }} row>
+                <SView flex>
+                    <SText style={{ fontSize: 16, }} bold>{section?.nombre}</SText>
+                    <SText color={STheme.color.lightGray} fontSize={12}>{section.cantidad > 0 ? section.cantidad + " productos" : "Sin productos"}</SText>
+                </SView>
+                <SView height center>
+                    <SView width={16} height={16} style={{
+                        transform: [
+                            { rotate: this.state.openSections[section.key] ? "90deg" : "270deg" }
+                        ]
+                    }}>
+                        <SIcon name='Back' fill={STheme.color.lightGray} />
+                    </SView>
+                </SView>
             </SView>
-        </>
+        );
+        const renderEmptySection = () => (
+            <View style={styles.emptySection} />
+        );
+
+        return <SectionList
+            contentContainerStyle={{
+                padding: 8
+            }}
+            sections={this.state.data.map(sec => ({
+                ...sec,
+                data: this.state.openSections[sec.key] ? sec.data : [renderEmptySection]
+            }))}
+            keyExtractor={(item, index) => item.key}
+            // SectionSeparatorComponent={renderSectionSeparator}
+            renderItem={({ item, index }) => (typeof item === 'function' ? item() : renderItem({ item, index }))}
+            renderSectionHeader={renderSectionHeader}
+            // ItemSeparatorComponent={() => <View style={styles.sectionSeparator} />}
+            SectionSeparatorComponent={(d) => {
+                if (d.trailingItem) return null;
+                return <View style={styles.sectionSeparator} />
+            }}
+
+        />
     }
 }
-export default connect(index);
+
+const styles = StyleSheet.create({
+    item: {
+        padding: 8,
+        paddingTop: 12,
+        paddingBottom: 12,
+        borderBottomWidth: 1,
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+        borderColor: "#CCC",
+    },
+    title: {
+        fontSize: 16,
+    },
+
+    header: {
+        padding: 8,
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
+        borderWidth: 1,
+        borderColor: "#DDD",
+        // backgroundColor: '#f4f4f4',
+    },
+    headerTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    sectionSeparator: {
+        height: 12,
+        width: "100%",
+    },
+    emptySection: {
+        height: 0,
+    },
+});

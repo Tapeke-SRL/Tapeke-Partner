@@ -21,8 +21,8 @@ const theme: SThemeThemes = {
     background: "#ffffff",
     card: "#eeeeee99",
     mapStyle: MapStyle,
-    accent: "#96BE00"
-
+    accent: "#96BE00",
+    font: "Montserrat-Medium",
   },
   dark: {
     barStyle: "light-content",
@@ -34,7 +34,8 @@ const theme: SThemeThemes = {
     background: "#ffffff",
     card: "#eeeeee99",
     mapStyle: MapStyle,
-    accent: "#96BE00"
+    accent: "#96BE00",
+    font: "Montserrat-Medium",
   }
 }
 // const theme: SThemeThemes = {

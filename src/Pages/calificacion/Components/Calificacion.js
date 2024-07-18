@@ -15,12 +15,31 @@ class Calificacion extends React.Component {
         Model.calificacion.Action.getMediaByRestaurante(this.key).then((resp) => {
             this.setState({ media: resp.data });
         }).catch(e => {
-
+            console.error(data);
         })
+
         Model.calificacion.Action.getComentarios(this.key).then((resp) => {
+            this.getUserComentario(resp.data);
             this.setState({ data: resp.data });
         }).catch(e => {
+            console.error(data);
+        })
+    }
 
+    getUserComentario(data) {
+        let keys = [...new Set(Object.values(data).map(a => a.key_usuario).filter(key => key !== null))];
+
+
+        SSocket.sendPromise({
+            version: "2.0",
+            service: "usuario",
+            component: "usuario",
+            type: "getAllKeys",
+            keys: keys,
+        }).then(resp => {
+            this.setState({ usuarios: resp.data })
+        }).catch(e2 => {
+            SPopup.alert(e2.error)
         })
     }
 
@@ -103,26 +122,38 @@ class Calificacion extends React.Component {
 
 
     render_comentarios() {
-        var usuarios = Model.usuario.Action.getAll();
-        if (!this.state.data || !usuarios) return null;
-        console.log(this.state.data);
+        // if (Object.values(this.state.data).length == 0) return <SView>
+        //     <SText>No hay Comentarios en este comercio</SText>
+        // </SView>;
+
+
         return <SList data={this.state.data}
             limit={5}
             order={[{ key: "fecha_on", type: "date", order: "desc" }]}
             render={(obj) => {
-                var usuario = Model.usuario.Action.getByKey(obj.key_usuario);
-                return <SView col={"xs-12"} card center style={{
-                    padding: 4
-                }}>
+                let usuario = this.state.usuarios ? this.state.usuarios[obj.key_usuario]?.usuario : false;
+
+                console.log(`usuario: ${usuario}`);
+                return <SView col={"xs-12"} card center
+                    style={{
+                        padding: 8
+                    }}
+                >
+
                     <SView col={"xs-12"} row center>
                         <SView width={30} height={30} card>
                             <SImage src={Model.usuario._get_image_download_path(SSocket.api, obj.key_usuario)} />
                         </SView>
                         <SView width={4} />
-                        <SText bold >{usuario?.Nombres} {usuario?.Apellidos}</SText>
+                        {usuario ?
+                            <SText bold >{usuario.Nombres} {usuario.Apellidos}</SText>
+                            : null
+                        }
                         <SView flex />
                     </SView>
-                    <SHr height={4} />
+
+
+                    <SHr height={10} />
                     <SText col={"xs-12"}>{obj.comentario}</SText>
                     <SHr height={4} />
                     <SView col={"xs-12"} row>
@@ -135,7 +166,7 @@ class Calificacion extends React.Component {
     }
 
     render() {
-        if (!this.state.media) return null;
+        if (!this.state.media && !this.state.data) return <SLoad />;
         return (
             <>
                 <SHr height={15} />

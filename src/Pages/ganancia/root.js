@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { SPopup, SDate, SHr, SIcon, SList, SLoad, SMath, SNavigation, SPage, SText, STheme, SView } from 'servisofts-component';
+import { SPopup, SDate, SHr, SIcon, SList, SLoad, SMath, SNavigation, SPage, SText, STheme, SView, SThread } from 'servisofts-component';
 import TopBar from '../../Components/TopBar';
 import Model from '../../Model';
 import SSocket from 'servisofts-socket'
 import Pedido_item from './Pedido_item';
 import Container from '../../Components/Container';
 class root extends Component {
+    static TOPBAR = <><TopBar type={"default"} title={"Ganancias"} />
+        <SView backgroundColor={"#96BE00"} height={20} col={"xs-12"}></SView></>
     constructor(props) {
         super(props);
         this.state = {
@@ -17,6 +19,9 @@ class root extends Component {
     }
 
     componentDidMount() {
+        new SThread(200).start(() => {
+            this.setState({ ready: true })
+        })
         if (!Model.restaurante.Action.getSelect()) {
             SNavigation.goBack();
             return;
@@ -261,7 +266,7 @@ class root extends Component {
             let fontSizeTitle = 10;
             let fontSizeLabel = 12;
             return <>
-                <SHr/>
+                <SHr />
                 <SView col={colHijo} row center>
                     <SText col={"xs-12"} fontSize={fontSizeTitle} color={STheme.color.text} center bold>{label}</SText>
                     <SHr />
@@ -269,7 +274,7 @@ class root extends Component {
                     <SHr />
                 </SView>
 
-                <SView col={colHijo}  row center>
+                <SView col={colHijo} row center>
                     <SText fontSize={fontSizeTitle} color={STheme.color.text} bold>INGRESOS</SText>
                     <SHr />
 
@@ -508,8 +513,8 @@ class root extends Component {
 
     render() {
         let totales = this.calcularMontos();
-        return (<SPage hidden header={<><TopBar type={"default"} title={"Ganancias"} />
-            <SView backgroundColor={"#96BE00"} height={20} col={"xs-12"}></SView></>}
+        if (!this.state.ready) return <SLoad />
+        return (<SPage hidden
             onRefresh={(resolve) => {
                 this.getDatos();
             }}>

@@ -2,17 +2,17 @@
 import React, { Component } from 'react';
 import { Linking, PermissionsAndroid } from 'react-native'
 import { connect } from 'react-redux';
-import { SDate, SHr, SIcon, SImage, SList, SLoad, SMapView, SMapView2, SMarker, SNavigation, SPage, SPopup, SScrollView2, SText, STheme, SView } from 'servisofts-component';
-import BarraCargando from '../Components/BarraCargando';
+import { SDate, SHr, SIcon, SImage, SList, SLoad, SMapView, SMapView2, SMarker, SNavigation, SPage, SPopup, SScrollView2, SText, STheme, SThread, SView } from 'servisofts-component';
 import Container from '../Components/Container';
-import Marker from '../Components/Marker';
-import PBarraFooter from '../Components/PBarraFooter';
 import TopBar from '../Components/TopBar';
 import Model from '../Model';
 import SSocket from 'servisofts-socket'
-import PButtom2 from '../Components/PButtom2';
 import PButtom from '../Components/PButtom';
 class index extends Component {
+    static TOPBAR = <>
+        <TopBar type={"usuario"} />
+        <SView backgroundColor={"#96BE00"} height={20} col={"xs-12"}></SView>
+    </>
     constructor(props) {
         super(props);
         this.state = {
@@ -20,12 +20,17 @@ class index extends Component {
 
     }
 
+    componentDidMount() {
+        new SThread(200,"asdsa").start(() => {
+            this.setState({ ready: true })
+        })
+    }
     render_item(data) {
         let obj = data.restaurante ?? {};
 
         return <SView col={"xs-12"} backgroundColor={STheme.color.card} row
             style={{
-                borderWidth: 2, borderColor: STheme.color.lightGray,
+                borderWidth: 1, borderColor: STheme.color.lightGray,
                 borderRadius: 8, overflow: 'hidden'
             }
             } center onPress={() => {
@@ -33,22 +38,26 @@ class index extends Component {
                 SNavigation.navigate("/restaurante", { pk: `${obj.key}` });
                 // SNavigation.replace("/restaurante", { pk: `${obj.key}` });
             }}>
-            <SView col={"xs-3"} center row>
-                <SHr height={10} />
-                <SView width={70} height={70} style={{ borderRadius: 40, overflow: 'hidden', backgroundColor: '#eee', }}>
-                    <SImage src={SSocket.api.root + "restaurante/" + obj.key} style={{ resizeMode: "cover", }} />
+            <SView width={58} center row>
+                <SHr height={4} />
+                <SView width={50} height={50} style={{ borderRadius: 4, overflow: 'hidden', backgroundColor: '#eee', }}>
+                    <SImage src={SSocket.api.root + "restaurante/.128_" + obj.key} style={{ resizeMode: "cover", }} />
                 </SView>
-                <SHr height={10} />
+                <SHr height={4} />
             </SView>
-            <SView flex col={"xs-9"}>
-                <SHr height={10} />
+            <SView flex
+                style={{
+                    justifyContent: 'center',
+                    paddingLeft: 16
+                }}
+            >
                 <SText font={"Roboto"} fontSize={16} bold color={STheme.color.primary}>{`${obj.nombre}  `}</SText>
-                <SText font={"Roboto"} fontSize={13}>{`${obj.descripcion}`}</SText>
-                <SText font={"Roboto"} fontSize={12} style={{ fontStyle: "italic" }}>{`${obj.direccion}`}</SText>
-                <SHr height={10} />
+                {/* <SText font={"Roboto"} fontSize={13}>{`${obj.descripcion}`}</SText> */}
+                {/* <SText font={"Roboto"} fontSize={12} style={{ fontStyle: "italic" }}>{`${obj.direccion}`}</SText> */}
             </SView>
         </SView >
     }
+
     render_list() {
         if (!Model.usuario.Action.getUsuarioLog()) {
             return <SView />;
@@ -64,10 +73,6 @@ class index extends Component {
             return obj
         })
         arr = arr.filter((a) => a.estado != 0 && a?.restaurante?.estado > 0);
-
-        // if (Object.values(data).estado == "0") {
-        //     return SNavigation.replace("/welcome")
-        // }
 
 
         if (arr.length <= 0) {
@@ -89,16 +94,16 @@ class index extends Component {
                 {/* <SText>ya perteneces a un restaurante y no aparece en esta lista? Click aqui.</SText> */}
                 <SHr h={20} />
             </SView>
-
         }
 
         return <SList
             buscador
             data={arr}
-            render={this.render_item.bind(this)} />
+            render={this.render_item.bind(this)}
+        />
     }
     render() {
-
+        if (!this.state.ready) return <SLoad />
 
         return (<SPage
             hidden
@@ -110,9 +115,7 @@ class index extends Component {
                     resolve();
                 }
             }}
-            header={<TopBar type={"usuario"} />}
         >
-            <SView backgroundColor={"#96BE00"} height={20} col={"xs-12"}></SView>
             <Container>
                 <SHr height={10} />
                 {this.render_list()}

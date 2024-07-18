@@ -12,14 +12,6 @@ import BarraCargando from '../../Components/BarraCargando';
 
 
 class index extends Component {
-  static TOPBAR = <><TopBar type={"usuario"} />
-    <SView backgroundColor={"#96BE00"} height={20} col={"xs-12"}></SView>
-  </>
-
-  static FOOTER = <>
-    <PBarraFooter url={"pedido"} />
-  </>
-
   constructor(props) {
     super(props);
     this.state = {
@@ -30,11 +22,6 @@ class index extends Component {
   }
 
   componentDidMount() {
-    new SThread(200).start(() => {
-
-      this.setState({ ready: true })
-    })
-
     if (!this.pk) {
       SNavigation.goBack()
     }
@@ -87,6 +74,7 @@ class index extends Component {
     var usuario = Model.usuario.Action.getUsuarioLog();
 
     if (!usuario) return <SView />;
+    console.log("data", data)
     return (
       <SView col={"xs-12"} row backgroundColor={STheme.color.card} center>
         {/* <SHr height={18} /> */}
@@ -155,8 +143,7 @@ class index extends Component {
 
     return arr.map((obj, index) => {
       var montoTotal = obj.cantidad * obj.precio;
-      // var dataUsuario = Model.usuario.Action.getByKey(obj.key_usuario);
-      var dataUsuario = { Nombres: "ERROR", Apellidos: "SLOW" } // TODO
+      var dataUsuario = Model.usuario.Action.getByKey(obj.key_usuario);
 
       let entregado = obj.state == "entregado" || obj.state == "entregado_conductor" || obj.state == "conductor_llego";
       let error = obj.state == "cancelado" || obj.state == "no_recogido";
@@ -176,32 +163,30 @@ class index extends Component {
 
         <SView col={"xs-5"}
           // backgroundColor="#ff00ff"
-          flex
           style={{
             borderRightWidth: 1,
             borderColor: STheme.color.lightGray
           }}>
-
-          <SText center h={15} fontSize={10}>#{obj.key.substr(0, 6)}</SText>
-
+          <SText center fontSize={10}>#{obj.key.substr(0, 6)}</SText>
           <SView col={"xs-12"}
-            flex row
+            flex row center
             style={{
-              justifyContent: 'space-evenly',
-              alignItems: 'center',
+              justifyContent: 'space-evenly'
             }}
           >
+
             {/* TODO VAlidar si no viene tapeke no mostra */}
-            <SView flex center>
-              <SText fontSize={14} color={STheme.color.primary}>TAPEKE</SText>
-              <SText fontSize={12} color={STheme.color.text} bold>x {obj.cantidad}</SText>
+            <SView center>
+              <SText font={"Roboto"} fontSize={14} color={STheme.color.primary}>TAPEKE</SText>
+              <SText font={"Roboto"} fontSize={12} color={STheme.color.text} bold>x {obj.cantidad}</SText>
             </SView>
 
             {/* TODO VAlidar si no viene iteams no mostra */}
-            <SView flex center>
-              <SText fontSize={14} color={STheme.color.primary}>ÍTEMS</SText>
-              <SText fontSize={12} color={STheme.color.text} bold>x FD{/* {obj.cantidad} */}</SText>
+            <SView center>
+              <SText font={"Roboto"} fontSize={14} color={STheme.color.primary}>ÍTEMS</SText>
+              <SText font={"Roboto"} fontSize={12} color={STheme.color.text} bold>x FD{/* {obj.cantidad} */}</SText>
             </SView>
+
           </SView>
         </SView>
 
@@ -445,11 +430,11 @@ class index extends Component {
     </Container>
   }
   render() {
-    if (!this.state.ready) return <SLoad />
     return (<>
       <SPage title={'Pedidos próximos'}
         hidden
-        // footer={(!this.data || this.data?.estado == 2 ? null : <PBarraFooter url={"pedido"} />)}
+        header={<><TopBar type={"usuario"} /><SView backgroundColor={"#96BE00"} height={20} col={"xs-12"}></SView></>}
+        footer={(!this.data || this.data?.estado == 2 ? null : <PBarraFooter url={"pedido"} />)}
         onRefresh={(resolve) => {
           this.data = null;
           Model.restaurante.Action.CLEAR();

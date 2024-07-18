@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { SButtom, SDate, SHr, SIcon, SImage, SList, SNavigation, SPage, SText, STheme, SThread, SView } from 'servisofts-component';
+import { SButtom, SDate, SHr, SIcon, SImage, SList, SLoad, SNavigation, SPage, SText, STheme, SThread, SView } from 'servisofts-component';
 import Container from '../Components/Container';
+import TopBar from '../Components/TopBar';
 // import { AccentBar, Container } from '../Components';
 import Model from '../Model';
 
 class index extends Component {
+    static TOPBAR = <>
+        <TopBar type={"default"} title={"Notificaciones"} />
+        <SView backgroundColor={"#96BE00"} height={20} col={"xs-12"}></SView>
+    </>
+
     constructor(props) {
         super(props);
         this.state = {
@@ -13,7 +19,9 @@ class index extends Component {
     }
 
     componentDidMount() {
-
+        new SThread(200).start(() => {
+            this.setState({ ready: true })
+        })
     }
 
 
@@ -41,11 +49,11 @@ class index extends Component {
         </SView>
     }
     render() {
+        if (!this.state.ready) return <SLoad />
         return (
-            <SPage title={"Notificaciones"} onRefresh={(resolve)=>{
+            <SPage title={"Notificaciones"} onRefresh={(resolve) => {
                 Model.usuario_notification.Action.CLEAR();
-            }} >
-                <SView backgroundColor={"#96BE00"} height={20} col={"xs-12"}></SView>
+            }} hidden>
                 <Container>
                     {this.render_data()}
                 </Container>

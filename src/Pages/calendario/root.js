@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { SButtom, SHr, SLoad, SNavigation, SPage, SText, SView, SPopup, STheme, SImage, SMath, SIcon, SScrollView2, SDate, SList, SList2 } from 'servisofts-component';
+import { SButtom, SHr, SLoad, SNavigation, SPage, SText, SView, SPopup, STheme, SImage, SMath, SIcon, SScrollView2, SDate, SList, SList2, SThread } from 'servisofts-component';
 import Container from '../../Components/Container';
 import SSocket from 'servisofts-socket'
 import PBarraFooter from '../../Components/PBarraFooter';
@@ -11,6 +11,10 @@ import TopBar from '../../Components/TopBar';
 
 
 class root extends Component {
+    static TOPBAR = <TopBar type={"usuario"} />;
+    static FOOTER = <>
+        <PBarraFooter url={"calendario"} />
+    </>
     constructor(props) {
         super(props);
         this.state = {
@@ -20,8 +24,13 @@ class root extends Component {
         this.pk = SNavigation.getParam("pk");
     }
     componentDidMount() {
+        new SThread(100).start(() => {
+            this.setState({ ready: true })
+        })
+        if (this.scroll) {
+            this.scroll.scrollTo({ x: (this.state.curDay.getDay() - 1) * 88 })
+        }
         // console.log(this.state.curDay.getDay() * 73 )
-        this.scroll.scrollTo({ x: (this.state.curDay.getDay() - 1) * 88 })
     }
     renderDias(data, i) {
         let day = parseFloat(i) + 1
@@ -95,15 +104,18 @@ class root extends Component {
     }
 
     render() {
+        if (!this.state.ready) return <SView flex center>
+            <SLoad />
+        </SView>
         return (<SPage
             hidden
-            footer={<PBarraFooter url={"calendario"} />}
+            // footer={}
             center
             onRefresh={(re) => {
                 Model.horario.Action.CLEAR();
             }}
-            header={<TopBar type={"usuario"} />}
-            // header={<AccentBar />}
+        // header={}
+        // header={<AccentBar />}
         >
             <SView col={"xs-11.5 md-8"} flex>
                 <SHr />

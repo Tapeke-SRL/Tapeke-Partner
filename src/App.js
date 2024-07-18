@@ -14,7 +14,22 @@ import DeviceKey from './Firebase/DeviceKey';
 import ErrorBoundary from './Components/ErrorBoundary';
 
 setProps(Config.socket);
-Firebase.init();
+try {
+    if (Platform.OS == "web") {
+        if ((window.location.href + "").startsWith("https")) {
+            Firebase.init();
+        } else if ((window.location.href + "").startsWith("http://localhost")) {
+            Firebase.init();
+        } else {
+            console.log("No se activara el Fireabase Por que no contamos con SSL")
+        }
+    } else {
+        Firebase.init();
+    }
+} catch (e) {
+    console.log(e);
+}
+
 DeviceKey.init();
 const App = (props) => {
     return <Redux>
