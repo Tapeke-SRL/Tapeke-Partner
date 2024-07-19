@@ -11,6 +11,12 @@ const renderSectionSeparator = () => (
 );
 
 
+const BtnEditar = ({ onPress }) => {
+    return <SView width={30} height={30} onPress={onPress}>
+        <SImage src={require("../../../Assets/img/EDITAR2.png")} />
+    </SView>
+}
+
 export default class list extends Component {
     static TOPBAR = <TopBar type={"default"} title='Productos' />
     constructor(props) {
@@ -63,47 +69,62 @@ export default class list extends Component {
         if (!this.state.ready) return <SLoad />
         if (!this.state.data) return <SLoad />
         const renderItem = ({ item }) => (
-            <View style={styles.item}>
-                <SView col={"xs-12"} row>
-                    <SView style={{ width: 40, height: 40, borderRadius: 4, overflow: "hidden" }} card>
-                        <SImage src={SSocket.api.root + "producto/.128_" + item.key} style={{
-                            resizeMode: "cover"
-                        }} />
+            <SView col={"xs-12"} row >
+                <View style={styles.item}>
+                    <SView col={"xs-12"} row>
+                        <SView style={{ width: 40, height: 40, borderRadius: 4, overflow: "hidden" }} card>
+                            <SImage src={SSocket.api.root + "producto/.128_" + item.key} style={{
+                                resizeMode: "cover"
+                            }} />
+                        </SView>
+                        <SView width={8} />
+                        <SView flex style={{ justifyContent: "center" }}>
+                            <SText style={{ fontSize: 12, }} bold>{item?.nombre}</SText>
+                            <SText style={{ fontSize: 10, color: STheme.color.lightGray }} >{"Sin subproductos"}</SText>
+                        </SView>
+                        <SView height style={{ justifyContent: "center" }}>
+                            <SText style={{ fontSize: 10, color: STheme.color.lightGray }} >{"Disponible"}</SText>
+                        </SView>
                     </SView>
-                    <SView width={8} />
-                    <SView flex style={{ justifyContent: "center" }}>
-                        <SText style={{ fontSize: 14, }} bold>{item?.nombre}</SText>
-                        <SText style={{ fontSize: 12, color: STheme.color.lightGray }} >{"Sin subproductos"}</SText>
-                    </SView>
-                    <SView height style={{ justifyContent: "center" }}>
-                        <SText style={{ fontSize: 12, color: STheme.color.lightGray }} >{"Disponible"}</SText>
-                    </SView>
+                </View >
+                <SView width={40} center height>
+                    <BtnEditar />
                 </SView>
-            </View >
+            </SView >
         );
 
         const renderSectionHeader = ({ section }) => (
-            <SView style={styles.header} onPress={() => {
-                Vibration.vibrate(300)
-                if (!this.state.openSections[section.key]) {
-                    this.state.openSections[section.key] = section
-                } else {
-                    delete this.state.openSections[section.key]
-                }
-                this.setState({ ...this.state })
-            }} row>
-                <SView flex>
-                    <SText style={{ fontSize: 16, }} bold>{section?.nombre}</SText>
-                    <SText color={STheme.color.lightGray} fontSize={12}>{section.cantidad > 0 ? section.cantidad + " productos" : "Sin productos"}</SText>
-                </SView>
-                <SView height center>
-                    <SView width={16} height={16} style={{
-                        transform: [
-                            { rotate: this.state.openSections[section.key] ? "90deg" : "270deg" }
-                        ]
-                    }}>
-                        <SIcon name='Back' fill={STheme.color.lightGray} />
+            <SView width={"100%"} row>
+                <SView style={[styles.header, this.state.openSections[section.key] ? {
+                    borderBottomLeftRadius: 0,
+                    borderBottomRightRadius: 0,
+                } : {
+
+                }]} onPress={() => {
+                    Vibration.vibrate(300)
+                    if (!this.state.openSections[section.key]) {
+                        this.state.openSections[section.key] = section
+                    } else {
+                        delete this.state.openSections[section.key]
+                    }
+                    this.setState({ ...this.state })
+                }} row>
+                    <SView flex>
+                        <SText style={{ fontSize: 14, }} bold>{section?.nombre}</SText>
+                        <SText color={STheme.color.lightGray} fontSize={12}>{section.cantidad > 0 ? section.cantidad + " productos" : "Sin productos"}</SText>
                     </SView>
+                    <SView height center>
+                        <SView width={16} height={16} style={{
+                            transform: [
+                                { rotate: this.state.openSections[section.key] ? "90deg" : "270deg" }
+                            ]
+                        }}>
+                            <SIcon name='Back' fill={STheme.color.lightGray} />
+                        </SView>
+                    </SView>
+                </SView>
+                <SView width={40} center height>
+                    {!this.state.openSections[section.key] ? <BtnEditar /> : null}
                 </SView>
             </SView>
         );
@@ -113,7 +134,9 @@ export default class list extends Component {
 
         return <SectionList
             contentContainerStyle={{
-                padding: 8
+                padding: 8,
+                width: "100%",
+
             }}
             sections={this.state.data.map(sec => ({
                 ...sec,
@@ -135,6 +158,7 @@ export default class list extends Component {
 
 const styles = StyleSheet.create({
     item: {
+        flex: 1,
         padding: 8,
         paddingTop: 12,
         paddingBottom: 12,
@@ -148,9 +172,14 @@ const styles = StyleSheet.create({
     },
 
     header: {
+        flex: 1,
         padding: 8,
+        paddingTop: 16,
+        paddingBottom: 16,
         borderTopLeftRadius: 8,
         borderTopRightRadius: 8,
+        borderBottomLeftRadius: 8,
+        borderBottomRightRadius: 8,
         borderWidth: 1,
         borderColor: "#DDD",
         // backgroundColor: '#f4f4f4',
