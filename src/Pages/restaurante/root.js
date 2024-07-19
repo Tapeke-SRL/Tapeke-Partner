@@ -96,12 +96,12 @@ class index extends Component {
             {/* <SView col={"xs-12"}>
                             <SHr height={15} />
                             <SText fontSize={18} font={"Roboto"} style={{ fontWeight: "bold" }} color={STheme.color.darkGray}>Cliente</SText>
-                            <SHr height={15} />
+                            <S  Hr height={15} />
                         </SView> */}
             <SView col={"xs-12"} row >
               <SView center width={70} card height={70} style={{ borderRadius: 8, overflow: 'hidden', }}>
                 <SImage src={`${SSocket.api.root}restaurante/.128_${this.data.key}`} style={{ width: "100%", position: "relative", resizeMode: "cover" }} />
-              </SView>
+               </SView>       
               <SView flex center row >
                 <SView col={"xs-1"}  >
                 </SView>
