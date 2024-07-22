@@ -101,7 +101,7 @@ class index extends Component {
             <SView col={"xs-12"} row >
               <SView center width={70} card height={70} style={{ borderRadius: 8, overflow: 'hidden', }}>
                 <SImage src={`${SSocket.api.root}restaurante/.128_${this.data.key}`} style={{ width: "100%", position: "relative", resizeMode: "cover" }} />
-               </SView>       
+              </SView>
               <SView flex center row >
                 <SView col={"xs-1"}  >
                 </SView>
@@ -134,6 +134,24 @@ class index extends Component {
         {/* <SHr height={8} /> */}
       </SView>
     )
+  }
+
+  tipoDePago(tipo_pago) {
+    if (tipo_pago && tipo_pago?.length > 0) {
+      return !!tipo_pago.find(o => o.type == "efectivo") ? "Efectivo" : `Online - ${tipo_pago[0].type}`;
+    } else {
+      return;
+    }
+  }
+
+  cantidadProductos(pedido_producto) {
+    let cantidad = 0;
+    if (pedido_producto) {
+      pedido_producto.forEach(p => {
+        cantidad += p.cantidad;
+      });
+    }
+    return cantidad;
   }
 
   cardPedido(dataPackVendidos) {
@@ -169,6 +187,7 @@ class index extends Component {
           borderColor: STheme.color.lightGray,
           borderRadius: 8,
           padding: 6,
+          marginBottom: 10
         }}
         row backgroundColor={STheme.color.card}
         onPress={() => { SNavigation.navigate("/pedido", { pk: obj.key }); }}
@@ -191,17 +210,24 @@ class index extends Component {
               alignItems: 'center',
             }}
           >
-            {/* TODO VAlidar si no viene tapeke no mostra */}
-            <SView flex center>
-              <SText fontSize={14} color={STheme.color.primary}>TAPEKE</SText>
-              <SText fontSize={12} color={STheme.color.text} bold>x {obj.cantidad}</SText>
-            </SView>
+            {
+              obj.cantidad > 0 ?
+                <SView flex center>
+                  <SText fontSize={14} color={STheme.color.primary}>TAPEKE</SText>
+                  <SText fontSize={12} color={STheme.color.text} bold>x {obj.cantidad}</SText>
+                </SView>
+                : null
+            }
 
-            {/* TODO VAlidar si no viene iteams no mostra */}
-            <SView flex center>
-              <SText fontSize={14} color={STheme.color.primary}>ÍTEMS</SText>
-              <SText fontSize={12} color={STheme.color.text} bold>x FD{/* {obj.cantidad} */}</SText>
-            </SView>
+
+            {obj.pedido_producto ?
+              <SView flex center>
+                <SText fontSize={14} color={STheme.color.primary}>ÍTEMS</SText>
+                <SText fontSize={12} color={STheme.color.text} bold>x {this.cantidadProductos(obj.pedido_producto)}</SText>
+              </SView>
+              : null
+            }
+
           </SView>
         </SView>
 
@@ -246,7 +272,7 @@ class index extends Component {
             <SText font={"Roboto"} fontSize={12} color={STheme.color.primary}>Método de pago:
               <SText font={"Roboto"} fontSize={12} color={STheme.color.text}
                 style={{ paddingLeft: paddingLeftText }}>
-                FD
+                {this.tipoDePago(obj.tipo_pago)}
               </SText>
             </SText>
 

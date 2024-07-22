@@ -14,13 +14,7 @@ export default class Container extends Component {
 
         return (
             <SView col={"xs-12"} center {...rest}>
-                <SView
-                    col={"xs-11 sm-10 md-8 lg-6 xl-4 xxl-3"}
-                    center={center !== undefined ? center : true} // Aplicar `center` por defecto, pero permitir que sea removido
-                    {...rest}
-                >
-                    {this.props.children}
-                </SView>
+                
             </SView>
         );
     }

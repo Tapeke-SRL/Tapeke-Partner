@@ -401,9 +401,11 @@ class index extends Component {
           <SText center bold fontSize={16} >{"Su registro fue realizado correctamente"}</SText>
           <SHr h={16} />
         </SView>
-        <SImage src={require("../../Assets/img/registro.png")} style={{
-          height: 340
-        }} />
+        <SImage src={require("../../Assets/img/registro.png")}
+          style={{
+            height: 340
+          }}
+        />
         <SHr h={15} />
 
         <SView width={280} card

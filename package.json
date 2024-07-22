@@ -3,7 +3,7 @@
   "version": "1.4.36",
   "description": "tapeke_restaurante_app",
   "scripts": {
-    "start": "react-native start --port 8082",
+    "start": "react-native start",
     "build": "react-scripts build",
     "web": "react-scripts start",
     "test": "bin/test"
