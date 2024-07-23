@@ -142,6 +142,7 @@ class root extends Component {
             hidden
             onRefresh={() => {
                 Model.calificacion.Action.CLEAR();
+                // this.componentDidMount();
             }}
         >
             <Container center={false}>

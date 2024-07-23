@@ -45,6 +45,11 @@ export default class Action extends SAction {
             estado: "cargando"
         }).then(e => {
             console.log(e)
+            if(e.data.length === 0){
+                e.data.push({});
+            }else{
+                e.data = e.data;
+            }
             this._dispatch(e);
         })
         // SSocket.send({
