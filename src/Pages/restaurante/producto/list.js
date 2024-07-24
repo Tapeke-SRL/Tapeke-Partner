@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, StyleSheet, SectionList, Vibration } from 'react-native';
-import { SIcon, SImage, SLoad, SNavigation, SPage, SText, STheme, SThread, SView } from 'servisofts-component';
+import { View, Text, ScrollView, StyleSheet, SectionList, Vibration, Switch, UIManager, Dimensions, RefreshControl } from 'react-native';
+import { SHr, SIcon, SImage, SLoad, SNavigation, SPage, SPopup, SSwitch, SText, STheme, SThread, SView } from 'servisofts-component';
 import TopBar from '../../../Components/TopBar';
 import SSocket from 'servisofts-socket';
+import Model from '../../../Model';
+import restaurante from '..';
+import SelectHabilitado from './Components/SelectHabilitado';
+import ListItem from './Components/ListItem';
+import CrearNuevo from './Components/CrearNuevo';
 
 
 
@@ -11,10 +16,47 @@ const renderSectionSeparator = () => (
 );
 
 
-const BtnEditar = ({ onPress }) => {
+export const BtnEditar = ({ onPress }) => {
     return <SView width={30} height={30} onPress={onPress}>
         <SImage src={require("../../../Assets/img/EDITAR2.png")} />
     </SView>
+}
+
+
+const hanlePressCrear = (e, key_restaurante) => {
+    Vibration.vibrate(100)
+    e.currentTarget.measure((x, y, width, height, pageX, pageY) => {
+        const key_popup = "popupkey";
+        const windowheight = Dimensions.get("window").height
+        const itemWidth = 140;
+        const itemHeight = 70;
+        let top = pageY + height;
+        if (itemHeight + top > windowheight) {
+            top = windowheight - itemHeight;
+        }
+        let left = pageX - itemWidth + width;
+        SPopup.open({
+            key: key_popup,
+            type: "2",
+            content: <CrearNuevo
+                style={{
+                    left: left,
+                    top: top,
+                    width: itemWidth,
+                    height: itemHeight,
+                }}
+                onSelect={(e) => {
+                    SPopup.close(key_popup)
+                    if (e.key == "producto") {
+                        SNavigation.navigate("/restaurante/producto/new", { key_restaurante: key_restaurante })
+                    }
+                    if (e.key == "categoria") {
+                        SNavigation.navigate("/restaurante/categoria_producto/new", { key_restaurante: key_restaurante })
+                    }
+                }}
+            />
+        })
+    })
 }
 
 export default class list extends Component {
@@ -39,62 +81,85 @@ export default class list extends Component {
     }
 
     async getData() {
+        // const restaurante = Model.restaurante.Action.getSelect();
+        // console.log(restaurante)
+
+
+        // const restaurante = await SSocket.sendPromise({
+        //     component: "restaurante",
+        //     type: "getAllCategoriasYProductos",
+        //     key_restaurante: this.key_restaurante
+        // })
         const categorias = await SSocket.sendPromise({
-            component: "categoria_producto",
-            type: "getAll",
+            component: "restaurante",
+            type: "getCategoriasProductosDetallePartner",
             key_restaurante: this.key_restaurante
         })
 
-        const productos = await SSocket.sendPromise({
-            component: "producto",
-            type: "getAll",
-            key_restaurante: this.key_restaurante
-        })
+        // const productos = await SSocket.sendPromise({
+        //     component: "producto",
+        //     type: "getAll",
+        //     key_restaurante: this.key_restaurante
+        // })
 
-        let ARRAY = [];
+        let ARRAY = categorias.data;
         Object.values(categorias.data).map(categoria => {
-            const data = Object.values(productos.data).filter(prd => prd.estado > 0 && prd.key_categoria_producto == categoria.key)
-            ARRAY.push({
-                ...categoria,
-                cantidad: data.length,
-                data: data
+            // const data = Object.values(productos.data).filter(prd => prd.estado > 0 && prd.key_categoria_producto == categoria.key)
+            if (categoria.productos) {
+                categoria.data = categoria.productos;
+                categoria.cantidad = categoria.data.length;
+            } else {
+                categoria.data = []
+                categoria.cabntidad = 0;
+            }
 
-            })
+            // ARRAY.push({
+            //     ...categoria,
+            //     cantidad: data.length,
+            //     data: data
+
+            // })
             // categoria.productos = 
         })
         ARRAY = ARRAY.sort((a, b) => a.index - b.index)
-        this.setState({ data: ARRAY })
+
+        // this.state.openSections[ARRAY[0].key] = ARRAY[0]
+
+        this.setState({ restaurante: categorias.restaurante, data: ARRAY })
     }
     render() {
         if (!this.state.ready) return <SLoad />
         if (!this.state.data) return <SLoad />
-        const renderItem = ({ item }) => (
-            <SView col={"xs-12"} row >
-                <View style={styles.item}>
-                    <SView col={"xs-12"} row>
-                        <SView style={{ width: 40, height: 40, borderRadius: 4, overflow: "hidden" }} card>
-                            <SImage src={SSocket.api.root + "producto/.128_" + item.key} style={{
-                                resizeMode: "cover"
-                            }} />
-                        </SView>
-                        <SView width={8} />
-                        <SView flex style={{ justifyContent: "center" }}>
-                            <SText style={{ fontSize: 12, }} bold>{item?.nombre}</SText>
-                            <SText style={{ fontSize: 10, color: STheme.color.lightGray }} >{"Sin subproductos"}</SText>
-                        </SView>
-                        <SView height style={{ justifyContent: "center" }}>
-                            <SText style={{ fontSize: 10, color: STheme.color.lightGray }} >{"Disponible"}</SText>
-                        </SView>
-                    </SView>
-                </View >
-                <SView width={40} center height>
-                    <BtnEditar />
-                </SView>
-            </SView >
+        const renderItem = (itemprops) => (
+            <ListItem {...itemprops} key_restaurante={this.key_restaurante} onChange={e => {
+                this.setState({ ...this.state })
+            }} />
         );
 
-        const renderSectionHeader = ({ section }) => (
-            <SView width={"100%"} row>
+        const renderHeader = () => (
+            <SView col={"xs-12"}>
+                <SText font='Montserrat-Bold' fontSize={16}>MENÚ</SText>
+                <SText fontSize={12} font='Montserrat-Bold' color={STheme.color.primary}>{this.state?.restaurante?.nombre}</SText>
+                <SView col={"xs-12"} style={{
+                    alignItems: "flex-end"
+                }}>
+                    <SView width={140} height={26} center backgroundColor={STheme.color.primary} style={{
+                        borderRadius: 4
+                    }} onPress={e => hanlePressCrear(e, this.key_restaurante)}>
+                        <SText fontSize={12} color={STheme.color.white}>+ Crear Nuevo</SText>
+                    </SView>
+                </SView>
+                <SHr h={16} />
+            </SView>
+        )
+        const renderSectionHeader = ({ section }) => {
+            let habilitado = false;
+            section.productos.map(a => {
+                if (a.habilitado) {
+                    habilitado = true;
+                }
+            })
+            return <SView width={"100%"} row>
                 <SView style={[styles.header, this.state.openSections[section.key] ? {
                     borderBottomLeftRadius: 0,
                     borderBottomRightRadius: 0,
@@ -110,29 +175,101 @@ export default class list extends Component {
                     this.setState({ ...this.state })
                 }} row>
                     <SView flex>
-                        <SText style={{ fontSize: 14, }} bold>{section?.nombre}</SText>
+                        <SText style={{ fontSize: 14, }} font='Montserrat-Bold'>{section?.nombre}</SText>
                         <SText color={STheme.color.lightGray} fontSize={12}>{section.cantidad > 0 ? section.cantidad + " productos" : "Sin productos"}</SText>
                     </SView>
-                    <SView height center>
-                        <SView width={16} height={16} style={{
-                            transform: [
-                                { rotate: this.state.openSections[section.key] ? "90deg" : "270deg" }
-                            ]
-                        }}>
-                            <SIcon name='Back' fill={STheme.color.lightGray} />
+                    <SView height center row width={60}>
+                        <SView height center >
+                            <SView width={44} >
+                                <SSwitch
+                                    value={!!habilitado}
+                                    color={STheme.color.white}
+                                    // backgroundColor={"#DDD"}
+                                    // colorActive={"#fff"}
+                                    scale={2.3}
+                                    size={16}
+                                    onChange={e => {
+                                        SPopup.confirm({
+                                            title: habilitado ? "Se desabilitaran todos los productos" : "Se habilitaran todos los pruductos",
+                                            message: "Confirmar",
+                                            onPress: () => {
+                                                let dataToSend = [];
+                                                let configToSend = {}
+                                                if (habilitado) {
+                                                    // Desabilitamos
+                                                    configToSend = {
+                                                        habilitado: "false",
+                                                        fecha_habilitacion_automatica: "null"
+                                                    }
+
+                                                } else {
+                                                    // Habilitamos
+                                                    configToSend = {
+                                                        habilitado: "true",
+                                                        fecha_habilitacion_automatica: "null"
+                                                    }
+                                                }
+                                                section.productos.map((prd) => {
+                                                    dataToSend.push({
+                                                        key: prd.key,
+                                                        ...configToSend
+                                                    })
+                                                })
+                                                SSocket.sendPromise({
+                                                    component: "producto",
+                                                    type: "editarAll",
+                                                    key_usuario: Model.usuario.Action.getKey(),
+                                                    data: dataToSend
+                                                }).then(e => {
+                                                    section.productos.map((prd) => {
+                                                        prd.habilitado = configToSend.habilitado == "true"
+                                                        prd.fecha_habilitacion_automatica = configToSend.fecha_habilitacion_automatica
+
+                                                    })
+                                                    this.setState({ ...this.state });
+                                                    // item.habilitado = e.data.habilitado;
+                                                    // item.fecha_habilitacion_automatica = e.data.fecha_habilitacion_automatica;
+                                                    // if (onChange) onChange()
+                                                    console.log(e);
+                                                }).catch(e => {
+                                                    console.error(e);
+                                                })
+                                            }
+                                        })
+                                    }}
+                                />
+                            </SView>
+                        </SView>
+                        <SView height center >
+                            <SView width={16} height={16} style={{
+                                transform: [
+                                    { rotate: this.state.openSections[section.key] ? "90deg" : "270deg" }
+                                ]
+                            }}>
+                                <SIcon name='Back' fill={STheme.color.lightGray} />
+                            </SView>
                         </SView>
                     </SView>
                 </SView>
-                <SView width={40} center height>
-                    {!this.state.openSections[section.key] ? <BtnEditar /> : null}
+                <SView width={40} height style={{
+                    justifyContent: "center",
+                    alignItems: "flex-end"
+                }}>
+                    {(!this.state.openSections[section.key] && !!section.key_restaurante) ? <BtnEditar onPress={() => {
+                        SNavigation.navigate("/restaurante/categoria_producto/edit", { key_restaurante: this.key_restaurante, pk: section.key })
+                    }} /> : null}
                 </SView>
             </SView>
-        );
+        }
         const renderEmptySection = () => (
             <View style={styles.emptySection} />
         );
 
         return <SectionList
+            refreshControl={<RefreshControl refreshing={false} onRefresh={(e) => {
+                this.setState({ data: null })
+                this.componentDidMount();
+            }} />}
             contentContainerStyle={{
                 padding: 8,
                 width: "100%",
@@ -144,8 +281,9 @@ export default class list extends Component {
             }))}
             keyExtractor={(item, index) => item.key}
             // SectionSeparatorComponent={renderSectionSeparator}
-            renderItem={({ item, index }) => (typeof item === 'function' ? item() : renderItem({ item, index }))}
+            renderItem={({ item, index, section }) => (typeof item === 'function' ? item() : renderItem({ item, index, section }))}
             renderSectionHeader={renderSectionHeader}
+            ListHeaderComponent={renderHeader}
             // ItemSeparatorComponent={() => <View style={styles.sectionSeparator} />}
             SectionSeparatorComponent={(d) => {
                 if (d.trailingItem) return null;
@@ -157,16 +295,7 @@ export default class list extends Component {
 }
 
 const styles = StyleSheet.create({
-    item: {
-        flex: 1,
-        padding: 8,
-        paddingTop: 12,
-        paddingBottom: 12,
-        borderBottomWidth: 1,
-        borderLeftWidth: 1,
-        borderRightWidth: 1,
-        borderColor: "#CCC",
-    },
+
     title: {
         fontSize: 16,
     },
