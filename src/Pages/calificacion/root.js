@@ -7,6 +7,7 @@ import PBarraFooter from '../../Components/PBarraFooter';
 import CardCalificacionPedido from './Components/CardCalificacionPedido';
 import TopBar from '../../Components/TopBar';
 import Container from '../../Components/Container';
+import FilterDate from '../../Components/FilterDate'
 
 
 class root extends Component {
@@ -28,6 +29,16 @@ class root extends Component {
 
 
     componentDidMount() {
+        SSocket.sendPromise({
+            component: "restaurante",
+            type: "getByKey",
+            key_restaurante: this.key 
+        }).then(resp => {
+            this.setState({ restaurante: resp.data })
+        }).catch(e => {
+            console.log(e.data);
+        })
+
         Model.calificacion.Action.getMediaByRestaurante(this.key).then((resp) => {
             this.setState({ media: resp.data });
         }).catch(e => {
@@ -72,7 +83,6 @@ class root extends Component {
                     <SText color={STheme.color.text} fontSize={50}>
                         {parseFloat(this.state.media?.pedido_star_media ?? 0).toFixed(1).replace('.', ',')}
                     </SText>
-
                 </SView>
 
                 <SView >
@@ -142,14 +152,19 @@ class root extends Component {
             hidden
             onRefresh={() => {
                 Model.calificacion.Action.CLEAR();
-                // this.componentDidMount();
+                this.componentDidMount();
             }}
         >
             <Container center={false}>
+                <FilterDate />
                 <SView>
                     <SHr />
                     <SText font={'Montserrat-ExtraBold'} fontSize={14}>CALIFICACIÓN Y COMENTARIOS</SText>
-                    <SText fontSize={12}>$nombre_restaurante</SText>
+                    {
+                        this.state.restaurante ?
+                        <SText font={"Montserrat-SemiBold"} color={STheme.color.primary} fontSize={12}>{this.state.restaurante.nombre}</SText>
+                        : <SLoad/>
+                    }
                     <SHr />
                 </SView>
 
