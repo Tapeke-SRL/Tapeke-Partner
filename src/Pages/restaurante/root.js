@@ -21,6 +21,7 @@ class index extends Component {
   </>
 
   constructor(props) {
+
     super(props);
     this.state = {
     };
@@ -41,6 +42,31 @@ class index extends Component {
     this.isRun = true;
     this.hilo();
   }
+
+  loadData() {
+    const arrRest = Model.restaurante.Action.getAll({
+      key_partner: Model.usuario.Action.getKey()
+    });
+
+    if (!arrRest) return false;
+    this.data = arrRest[this.pk];
+    if (!this.data) {
+      SNavigation.replace("/");
+      Model.restaurante.Action.select("");
+    }
+
+    this.horario_proximo = Model.horario.Action.getByKeyRestauranteProximo(this.pk);
+    if (!this.horario_proximo) return false;
+
+    if (Object.values(this.horario_proximo).length !== 0) {
+      this.pedidos = Model.pedido.Action.getVendidosData({ fecha: this.horario_proximo.fecha, key_pack: this.horario_proximo.key_pack, key_restaurante: this.pk });
+    }
+
+    if (!this.pedidos) return false;
+
+    return true;
+  }
+
   componentWillUnmount() {
     this.isRun = false;
   }
@@ -49,11 +75,6 @@ class index extends Component {
     new SThread(1000 * 60, "hilo_pedido", true).start(() => {
       this.hilo();
       Model.horario.Action.getByKeyRestauranteProximo(this.pk, true)
-      // if (this.horario_proximo) {
-      // if (new SDate().isAfter(new SDate(this.horario_proximo.fecha_fin, "yyyy-MM-dd hh:mm:ss.S"))) {
-      // Model.horario.Action.getByKeyRestauranteProximo(this.pk, true)
-      // }
-      // }
     })
   }
 
@@ -101,7 +122,7 @@ class index extends Component {
             <SView col={"xs-12"} row >
               <SView center width={70} card height={70} style={{ borderRadius: 8, overflow: 'hidden', }}>
                 <SImage src={`${SSocket.api.root}restaurante/.128_${this.data.key}`} style={{ width: "100%", position: "relative", resizeMode: "cover" }} />
-               </SView>       
+              </SView>
               <SView flex center row >
                 <SView col={"xs-1"}  >
                 </SView>
@@ -136,10 +157,26 @@ class index extends Component {
     )
   }
 
+  tipoDePago(tipo_pago) {
+    if (tipo_pago && tipo_pago?.length > 0) {
+      return !!tipo_pago.find(o => o.type == "efectivo") ? "Efectivo" : `Online - ${tipo_pago[0].type}`;
+    } else {
+      return;
+    }
+  }
+
+  cantidadProductos(pedido_producto) {
+    let cantidad = 0;
+    if (pedido_producto) {
+      pedido_producto.forEach(p => {
+        cantidad += p.cantidad;
+      });
+    }
+    return cantidad;
+  }
+
   cardPedido(dataPackVendidos) {
-    // var dataHorarioCercano = dataPackVendidos
     if (Object.keys(dataPackVendidos).length === 0) return <SView center col><SText>NO HAY PEDIDOS</SText></SView>
-    // if (!dataPackVendidos) return null;
 
     let arr = Object.values(dataPackVendidos).sort((a, b) => {
       let pesoA = 0;
@@ -162,13 +199,14 @@ class index extends Component {
       let error = obj.state == "cancelado" || obj.state == "no_recogido";
 
       let paddingLeftText = 1
-      // TODO card pedido 
+
       return <SView col={"xs-12"}
         style={{
           borderWidth: 1,
           borderColor: STheme.color.lightGray,
           borderRadius: 8,
           padding: 6,
+          marginBottom: 10
         }}
         row backgroundColor={STheme.color.card}
         onPress={() => { SNavigation.navigate("/pedido", { pk: obj.key }); }}
@@ -191,17 +229,24 @@ class index extends Component {
               alignItems: 'center',
             }}
           >
-            {/* TODO VAlidar si no viene tapeke no mostra */}
-            <SView flex center>
-              <SText fontSize={14} color={STheme.color.primary}>TAPEKE</SText>
-              <SText fontSize={12} color={STheme.color.text} bold>x {obj.cantidad}</SText>
-            </SView>
+            {
+              obj.cantidad > 0 ?
+                <SView flex center>
+                  <SText fontSize={14} color={STheme.color.primary}>TAPEKE</SText>
+                  <SText fontSize={12} color={STheme.color.text} bold>x {obj.cantidad}</SText>
+                </SView>
+                : null
+            }
 
-            {/* TODO VAlidar si no viene iteams no mostra */}
-            <SView flex center>
-              <SText fontSize={14} color={STheme.color.primary}>ÍTEMS</SText>
-              <SText fontSize={12} color={STheme.color.text} bold>x FD{/* {obj.cantidad} */}</SText>
-            </SView>
+
+            {obj.pedido_producto ?
+              <SView flex center>
+                <SText fontSize={14} color={STheme.color.primary}>ÍTEMS</SText>
+                <SText fontSize={12} color={STheme.color.text} bold>x {this.cantidadProductos(obj.pedido_producto)}</SText>
+              </SView>
+              : null
+            }
+
           </SView>
         </SView>
 
@@ -246,7 +291,7 @@ class index extends Component {
             <SText font={"Roboto"} fontSize={12} color={STheme.color.primary}>Método de pago:
               <SText font={"Roboto"} fontSize={12} color={STheme.color.text}
                 style={{ paddingLeft: paddingLeftText }}>
-                FD
+                {this.tipoDePago(obj.tipo_pago)}
               </SText>
             </SText>
 
@@ -263,35 +308,24 @@ class index extends Component {
     })
   }
 
-  contenidoBody(horarioProximo, pack, pedido) {
-
-    if (!this.loadData()) return <SLoad />
-    var dataHorarioCercano = horarioProximo
-    if (!dataHorarioCercano) return <SText color={STheme.color.danger}>No tine horarios registrados.</SText>
-
+  contenidoBody(horarioProximo, pedido) {
+    let dataHorarioCercano = horarioProximo;
     let fecha = new SDate(dataHorarioCercano.fecha, "yyyy-MM-dd");
     let label = fecha.toString("DAY");
     if (fecha.isCurDate()) {
       label = "Hoy"
-    }
+    } ``
     label = label + " " + dataHorarioCercano.hora_inicio + " - " + dataHorarioCercano.hora_fin
-    //Pack
-    // var dataPack = pack
-    // if (!dataPack) return < SText color={STheme.color.danger} > No tiene horarios registrados.</SText >
+
     var dataPackVendidos = pedido
-    if (!dataPackVendidos) return <SView />;
+    if (!dataPackVendidos) return <SLoad />;
     var cant = 0;
+
     dataPackVendidos.map(o => cant += parseFloat((o.state == "cancelado" || o.state == "no_recogido") ? 0 : (o.cantidad ?? 0)))
     return <>
       <SHr height={20} />
       <SText font={"Roboto"} center fontSize={24}  >{label.replace(/^\w/, (c) => c.toUpperCase())} Hrs.</SText>
-      {/* <SHr height={10} /> */}
-      {/* <SView col={"xs-11"} row center height={25} backgroundColor={'transparent'}>
-        <SIcon name="Carga" width={270} />
-        <CargaIcon width={270} porcent={(cant + 0.09) / (dataHorarioCercano.cantidad)} />
-      </SView> */}
       <SHr height={10} />
-      {/* <SText font={"Roboto"} fontSize={16}>{dataHorarioCercano.extraData.text},  {new SDate(dataHorarioCercano.fecha, "yyyy-MM-dd").toString("dd de MONTH, yyyy")} </SText> */}
       <SText font={"Roboto"} style={{ fontWeight: "bold" }} fontSize={16}>( {cant} / {dataHorarioCercano.cantidad} )</SText>
       <SHr height={20} />
       <SView col={"xs-11"} style={{ borderBottomWidth: 2, borderColor: STheme.color.primary }}></SView>
@@ -302,34 +336,8 @@ class index extends Component {
     </>
   }
 
-
-
-  loadData() {
-    const arrRest = Model.restaurante.Action.getAll({
-      key_partner: Model.usuario.Action.getKey()
-    });
-
-    this.horario_proximo = Model.horario.Action.getByKeyRestauranteProximo(this.pk);
-    if (!arrRest) return false;
-    if (!this.horario_proximo) return false;
-    this.data = arrRest[this.pk];
-    if (!this.data) {
-      SNavigation.replace("/");
-      Model.restaurante.Action.select("");
-    }
-
-
-    // this.pack = Model.pack.Action.getByKeyHorario(this.horario_proximo.key);
-    // if (!this.pack) return null;
-    this.pedidos = Model.pedido.Action.getVendidosData({ fecha: this.horario_proximo.fecha, key_pack: this.horario_proximo.key_pack, key_restaurante: this.pk });
-
-    if (!this.pedidos) return false;
-    return true;
-  }
-
   aumentar_cantidad_pedidos() {
     if (!this.loadData()) return null
-    // if (new SDate().isAfter(this.horario_proximo.sdate)) return null;
     if (new SDate().isAfter(new SDate(this.horario_proximo.fecha_fin, "yyyy-MM-dd hh:mm:ss.S"))) return null;
     return <SView col={"xs-11"} center
       card row
@@ -361,7 +369,6 @@ class index extends Component {
   }
   modificar_horario() {
     if (!this.loadData()) return null
-    // console.log(this.horario_proximo)
     if (new SDate().isAfter(new SDate(this.horario_proximo.fecha_fin, "yyyy-MM-dd hh:mm:ss.S"))) return null;
     return <SView col={"xs-11"} center
       card row
@@ -380,7 +387,6 @@ class index extends Component {
       }}
     >
       <SView col={"xs-10.8"} style={{ padding: 8 }}>
-        {/* <SText fontSize={15} bold >¿Quieres ampliar el horario actual?</SText> */}
         <SText fontSize={14} bold >¿Deseas modificar el horario de entrega?</SText>
       </SView>
       <SView col={"xs-1.2"} backgroundColor={"#96BE00"}
@@ -402,13 +408,33 @@ class index extends Component {
     return <SView col={"xs-12"} center>
       <SText bold fontSize={18}>EN HORA EXTRA</SText>
       <SHr />
-      {/* <SText fontSize={12}>Espera un tiempo para que puedan </SText> */}
       <BarraCargando />
     </SView>
   }
+
+  renderHorario() {
+    if (!this.horario_proximo) return <SLoad />;
+
+    if (Object.values(this.horario_proximo).length === 0) {
+      return this.noHorario();
+    } else {
+      return <>
+        {this.aumentar_cantidad_pedidos()}
+        <SHr h={8} />
+        {this.modificar_horario()}
+        {this.render_hora_extra()}
+        <SHr h={8} />
+        {this.contenidoBody(this.horario_proximo, this.pedidos)}
+      </>
+    }
+  }
+
+
   render_content() {
     this.loadData();
+
     if (!this.data) return <SLoad />
+
     if (this.data.estado == 2) {
       return <Container center >
         <SHr h={32} />
@@ -433,17 +459,19 @@ class index extends Component {
         <SHr h={32} />
       </Container>
     }
-    // if (!this.loadData()) return <SLoad />
+
     return <Container>
       {this.getCabecera(this.data)}
-      {this.aumentar_cantidad_pedidos()}
-      <SHr h={8} />
-      {this.modificar_horario()}
-      {this.render_hora_extra()}
-      <SHr h={8} />
-      {this.contenidoBody(this.horario_proximo, this.pack, this.pedidos)}
+      {this.renderHorario()}
     </Container>
   }
+
+  noHorario() {
+    return <SView center>
+      <SText color={STheme.color.danger}>No tine horarios registrados.</SText>
+    </SView>
+  }
+
   render() {
     if (!this.state.ready) return <SLoad />
     return (<>
@@ -462,13 +490,9 @@ class index extends Component {
         }}
       >
         <SHr height={20} />
-        {/* <SText onPress={() => {
-          SNavigation.navigate("/test")
-        }}>Test</SText> */}
         {this.render_content()}
       </SPage>
       {(!this.data || this.data?.estado == 2 ? null : <FloatButtomQR />)}
-
     </>
     );
   }

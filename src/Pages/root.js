@@ -21,7 +21,7 @@ class index extends Component {
     }
 
     componentDidMount() {
-        new SThread(200,"asdsa").start(() => {
+        new SThread(200).start(() => {
             this.setState({ ready: true })
         })
     }
@@ -30,17 +30,17 @@ class index extends Component {
 
         return <SView col={"xs-12"} backgroundColor={STheme.color.card} row
             style={{
-                borderWidth: 1, borderColor: STheme.color.lightGray,
-                borderRadius: 8, overflow: 'hidden'
+                borderRadius: 8,
+                padding: 12
             }
-            } center onPress={() => {
+            } center
+            onPress={() => {
                 Model.restaurante.Action.select(obj.key)
                 SNavigation.navigate("/restaurante", { pk: `${obj.key}` });
-                // SNavigation.replace("/restaurante", { pk: `${obj.key}` });
             }}>
             <SView width={58} center row>
                 <SHr height={4} />
-                <SView width={50} height={50} style={{ borderRadius: 4, overflow: 'hidden', backgroundColor: '#eee', }}>
+                <SView width={70} height={70} style={{ borderRadius: 10, overflow: 'hidden', backgroundColor: '#eee', }}>
                     <SImage src={SSocket.api.root + "restaurante/.128_" + obj.key} style={{ resizeMode: "cover", }} />
                 </SView>
                 <SHr height={4} />
@@ -51,9 +51,9 @@ class index extends Component {
                     paddingLeft: 16
                 }}
             >
-                <SText font={"Roboto"} fontSize={16} bold color={STheme.color.primary}>{`${obj.nombre}  `}</SText>
-                {/* <SText font={"Roboto"} fontSize={13}>{`${obj.descripcion}`}</SText> */}
-                {/* <SText font={"Roboto"} fontSize={12} style={{ fontStyle: "italic" }}>{`${obj.direccion}`}</SText> */}
+                <SText font={"Montserrat-ExtraBold"} fontSize={13} color={STheme.color.text}>{`${obj.nombre}  `}</SText>
+                <SText fontSize={11} style={{ fontStyle: "italic" }}>{`${obj.direccion.slice(0, 52)}`}</SText>
+                <SText fontSize={11}>{`${obj.telefono}`}</SText>
             </SView>
         </SView >
     }
@@ -90,17 +90,25 @@ class index extends Component {
                 <SHr h={20} />
                 <PButtom onPress={() => {
                     SNavigation.navigate("/chat");
-                }}>¿Perteneces a un resturante?</PButtom>
+                }}>¿Perteneces a un restaurante?</PButtom>
                 {/* <SText>ya perteneces a un restaurante y no aparece en esta lista? Click aqui.</SText> */}
                 <SHr h={20} />
             </SView>
         }
 
-        return <SList
-            buscador
-            data={arr}
-            render={this.render_item.bind(this)}
-        />
+        return <SView col={"xs-12"}>
+            <SView>
+                <SText font={"Montserrat-ExtraBold"} fontSize={14}>MIS COMERCIOS</SText>
+                <SText font={"Montserrat"} color={STheme.lightGray} fontSize={10}>(Selecciona uno de tus comercios para operar)</SText>
+            </SView>
+            <SHr h={15} />
+            <SList
+                buscador
+                data={arr}
+                order={[{ key: "nombre", order: "asc", peso: 1 }]}
+                render={this.render_item.bind(this)}
+            />
+        </SView>
     }
     render() {
         if (!this.state.ready) return <SLoad />
