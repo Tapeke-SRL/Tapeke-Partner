@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { SHr, SList, SNavigation, SPage, SText, SView, SPopup, STheme, SIcon, SImage, SLoad } from 'servisofts-component';
+import { SHr, SList, SNavigation, SPage, SText, SView, SPopup, STheme, SIcon, SImage, SLoad, SThread, SDate } from 'servisofts-component';
 import Model from '../../Model';
 import SSocket from 'servisofts-socket'
 import PBarraFooter from '../../Components/PBarraFooter';
@@ -27,12 +27,19 @@ class root extends Component {
         this.key = SNavigation.getParam("pk");
     }
 
+    handleDateChange = (fecha_inicio, fecha_fin) => {
+        this.setState({ fecha_inicio, fecha_fin });
+    };
 
     componentDidMount() {
+        new SThread(200).start(() => {
+            this.setState({ ready: true })
+        })
+
         SSocket.sendPromise({
             component: "restaurante",
             type: "getByKey",
-            key_restaurante: this.key 
+            key_restaurante: this.key
         }).then(resp => {
             this.setState({ restaurante: resp.data })
         }).catch(e => {
@@ -139,14 +146,15 @@ class root extends Component {
     }
 
     componetNoComment() {
-        return <>
-            <SText>
+        return <SView center>
+            <SText color={'red'}>
                 No hay comentarios
             </SText>
-        </>
+        </SView>
     }
 
     render() {
+        if (!this.state.ready) return <SLoad />
         if (!this.state.data) return <SLoad />
         return (<SPage
             hidden
@@ -156,31 +164,35 @@ class root extends Component {
             }}
         >
             <Container center={false}>
-                <FilterDate />
                 <SView>
                     <SHr />
                     <SText font={'Montserrat-ExtraBold'} fontSize={14}>CALIFICACIÓN Y COMENTARIOS</SText>
                     {
                         this.state.restaurante ?
-                        <SText font={"Montserrat-SemiBold"} color={STheme.color.primary} fontSize={12}>{this.state.restaurante.nombre}</SText>
-                        : <SLoad/>
+                            <SText font={"Montserrat-SemiBold"} color={STheme.color.primary} fontSize={12}>{this.state.restaurante.nombre}</SText>
+                            : <SLoad />
                     }
                     <SHr />
                 </SView>
-
+                <SHr />
+                <FilterDate onDateChange={this.handleDateChange} />
+                <SHr />
                 <SView center>
                     {this.componentMediaCalificacion()}
-
                     <SHr h={20} />
-
                     <SView center col={"xs-11"}>
                         {
                             !this.isEmptyCommet ?
                                 <SList
                                     data={this.state.data}
                                     limit={10}
+                                    filter={a => a.fecha_on >= this.state.fecha_inicio && a.fecha_on <= this.state.fecha_fin}
                                     order={[{ key: "fecha_on", type: "date", order: "desc" }]}
                                     render={(obj) => {
+                                        // if (obj.fecha_on >= this.state.fecha_inicio && obj.fecha_on <= this.state.fecha_fin) {
+                                        //     return this.componetNoComment();
+                                        // }
+
                                         let usuario = this.state.usuarios ? this.state.usuarios[obj.key_usuario]?.usuario : false;
                                         return <CardCalificacionPedido usuario={usuario} data={obj} />
                                     }}
