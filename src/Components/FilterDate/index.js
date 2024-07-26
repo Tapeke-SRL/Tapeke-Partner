@@ -62,10 +62,10 @@ export default class FilterDate extends Component {
     render() {
         return (
             <>
-                <SView>
+                {/* <SView>
                     <SText>Fecha Inicio: {this.state.fecha_inicio}</SText>
                     <SText>Fecha Fin: {this.state.fecha_fin}</SText>
-                </SView>
+                </SView> */}
                 <SView col={"xs-12"} center row>
                     <SView
                         center flex

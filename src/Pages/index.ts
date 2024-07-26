@@ -28,6 +28,7 @@ import condiciones from './condiciones';
 import chat from './chat';
 import restaurante_cuenta from './restaurante_cuenta';
 import inicioChat from './inicioChat';
+import reporte from './reporte';
 
 export default SPage.combinePages("/", {
     "": carga,
@@ -57,4 +58,5 @@ export default SPage.combinePages("/", {
     ...camara,
     ...chat,
     ...restaurante_cuenta,
+    ...reporte
 });

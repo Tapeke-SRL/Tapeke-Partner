@@ -3,23 +3,12 @@ import { connect } from 'react-redux';
 import { SHr, SList, SNavigation, SPage, SText, SView, SPopup, STheme, SIcon, SImage, SLoad, SThread, SDate } from 'servisofts-component';
 import Model from '../../Model';
 import SSocket from 'servisofts-socket'
-import PBarraFooter from '../../Components/PBarraFooter';
 import CardCalificacionPedido from './Components/CardCalificacionPedido';
-import TopBar from '../../Components/TopBar';
 import Container from '../../Components/Container';
 import FilterDate from '../../Components/FilterDate'
 
 
 class root extends Component {
-    static TOPBAR = <>
-        <TopBar type={"usuario"} />
-        <SView backgroundColor={"#96BE00"} height={20} col={"xs-12"}></SView>
-    </>
-
-    static FOOTER = <>
-        <PBarraFooter url={"calificacion"} />
-    </>
-
     constructor(props) {
         super(props);
         this.state = {
@@ -157,7 +146,6 @@ class root extends Component {
         if (!this.state.ready) return <SLoad />
         if (!this.state.data) return <SLoad />
         return (<SPage
-            hidden
             onRefresh={() => {
                 Model.calificacion.Action.CLEAR();
                 this.componentDidMount();
