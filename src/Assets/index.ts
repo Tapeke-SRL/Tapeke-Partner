@@ -49,6 +49,8 @@ import Message, { ReactComponent as MessageW } from './svg/message.svg';
 import menu, { ReactComponent as menuW } from './svg/menu.svg';
 import iconoRestaurante, { ReactComponent as iconoRestauranteW } from './svg/iconoRestaurante.svg';
 
+import whatsapp, { ReactComponent as whatsappW } from './svg/whatsapp.svg';
+
 
 
 
@@ -99,6 +101,8 @@ const Assets: SAssets = {
 
         "menu": { Native: menu, Web: menuW },
         "iconoRestaurante": { Native: iconoRestaurante, Web: iconoRestauranteW },
+
+        "whatsapp": { Native: whatsapp, Web: whatsappW },
 
 
 
