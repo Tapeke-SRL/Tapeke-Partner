@@ -181,7 +181,7 @@ export default class body extends React.Component {
                     {this.renderIcon({ label: "Historial de pedidos", image: require("../../Assets/img/historial_de_pedido.png"), path: "/reporte/hitorialPedidos", params: { pk: Model.restaurante.Action.getSelect() }, requireUser: true })}
                     
                     {/* TODO Falta componente para navegació Administra usuario */}
-                    {this.renderIcon({ label: "Administra usuarios", image: require("../../Assets/img/administrar_usuarios.png"), path: "/ganancia", requireUser: true })}
+                    {this.renderIcon({ label: "Administra usuarios", image: require("../../Assets/img/administrar_usuarios.png"), path: "/roles", params: { key_restaurante: Model.restaurante.Action.getSelect() }, requireUser: true })}
                     {this.renderIcon({ label: "Cuentas bancarias", icon: "Icuenta", path: "/restaurante_cuenta", requireUser: true })}
                     {this.renderIcon({ label: "Información legal", icon: "mSoporte", path: "/condiciones", requireUser: false })}
                     {this.renderIcon({

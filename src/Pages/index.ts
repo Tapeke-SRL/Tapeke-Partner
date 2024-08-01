@@ -29,13 +29,14 @@ import chat from './chat';
 import restaurante_cuenta from './restaurante_cuenta';
 import inicioChat from './inicioChat';
 import reporte from './reporte';
-
+import roles from './roles';
 export default SPage.combinePages("/", {
     "": carga,
-    "test":test,
+    "test": test,
     "root": Root,
     "welcome": welcome,
     ...login,
+    ...roles,
     "sms": sms,
     "notification": notification,
     version_required,
