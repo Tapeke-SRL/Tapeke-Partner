@@ -114,8 +114,8 @@ export default class root extends Component {
                     <SText fontSize={12} color={STheme.color.gray}>{obj?.usuario?.Telefono}</SText>
                     <SText fontSize={12} color={STheme.color.gray}>{obj?.usuario?.Correo}</SText>
                 </SView>
-                <SView center>
-                    <SView width={30} height={30} onPress={() => {
+                <SView center height={60}>
+                    <SView width={30} height={30}  onPress={() => {
                         SNavigation.navigate("/roles/add", { key_restaurante: this.key_restaurante, key_usuario: obj.key_usuario, key: obj.key })
                     }} >
                         <SImage src={require("../../Assets/img/EDITAR2.png")} />
@@ -189,7 +189,7 @@ export default class root extends Component {
                 <SView col={"xs-12"} row>
                     <SView flex >
                         <SText font={"Montserrat-Medium"}>{"Usuarios"}</SText>
-                        <SText fontSize={12} color={STheme.color.gray}>{"Personal que tiene acceso /control de tu comercio"}</SText>
+                        <SText fontSize={10} color={STheme.color.gray}>{"Personal que tiene acceso /control de tu comercio"}</SText>
                     </SView>
                     <SView width={130} height={26} backgroundColor={STheme.color.primary} borderRadius={8} center onPress={() => {
                         SNavigation.navigate("/roles/add", { key_restaurante: this.key_restaurante })
@@ -197,7 +197,7 @@ export default class root extends Component {
                         <SText color={"#fff"} fontSize={12} >{"+ Agregar usuario"}</SText>
                     </SView>
                 </SView>
-                <SHr h={16} />
+                <SHr h={32} />
                 {this.renderList()}
             </Container>
         </SView>
