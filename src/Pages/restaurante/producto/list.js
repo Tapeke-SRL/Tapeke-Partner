@@ -48,7 +48,7 @@ const hanlePressCrear = (e, key_restaurante) => {
                 onSelect={(e) => {
                     SPopup.close(key_popup)
                     if (e.key == "producto") {
-                        SNavigation.navigate("/restaurante/producto/new", { key_restaurante: key_restaurante })
+                        SNavigation.navigate("/restaurante/producto/edit", { key_restaurante: key_restaurante })
                     }
                     if (e.key == "categoria") {
                         SNavigation.navigate("/restaurante/categoria_producto/new", { key_restaurante: key_restaurante })
@@ -61,15 +61,49 @@ const hanlePressCrear = (e, key_restaurante) => {
 
 export default class list extends Component {
     static TOPBAR = <TopBar type={"default"} title='Productos' />
+    static INSTANCE;
     constructor(props) {
         super(props);
         this.state = {
+            image_time: new Date().getTime(),
             openSections: {}
         };
         this.key_restaurante = SNavigation.getParam("key_restaurante")
-
+        list.INSTANCE = this;
     }
+
+
+    onChangeProducto = (prd) => {
+        console.log("Se abiso que cambio un producto", prd)
+        console.log("Mi estado", this.state)
+        if (prd && this.state.data) {
+            const categoria = this.state.data.find(a => a.key == prd.key_categoria_producto);
+            if (categoria) {
+                const prdIndex = categoria.productos.findIndex(p => p.key == prd.key);
+                if (prdIndex > -1) {
+                    categoria.productos[prdIndex] = {
+                        ...categoria.productos[prdIndex],
+                        ...prd
+                    }
+                    this.setState({ ...this.state })
+
+                } else {
+                    // categoria.productos.push({
+                    //     ...prd
+                    // })
+                    // this.setState({ ...this.state })
+                    this.getData();
+                }
+
+                new SThread(500, "reload_img", true).start(() => {
+                    this.setState({ image_time: new Date().getTime(), })
+                })
+            }
+        }
+    }
+
     componentDidMount() {
+        list.INSTANCE = this;
         if (!this.key_restaurante) {
             SNavigation.goBack();
             return;
@@ -131,9 +165,11 @@ export default class list extends Component {
         if (!this.state.ready) return <SLoad />
         if (!this.state.data) return <SLoad />
         const renderItem = (itemprops) => (
-            <ListItem {...itemprops} key_restaurante={this.key_restaurante} onChange={e => {
-                this.setState({ ...this.state })
-            }} />
+            <ListItem {...itemprops} key_restaurante={this.key_restaurante}
+                image_time={this.state.image_time}
+                onChange={e => {
+                    this.setState({ ...this.state })
+                }} />
         );
 
         const renderHeader = () => (

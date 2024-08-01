@@ -21,3 +21,7 @@ export default SPage.combinePages(Parent.name, {
     ...sub_producto,
     ...categoria_producto,
 })
+
+
+
+

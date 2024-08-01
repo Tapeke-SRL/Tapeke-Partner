@@ -23,7 +23,7 @@ const tiempoHabilitacion = (item) => {
     const horas = Math.floor(minutos / 60);
     // const dias = Math.floor(horas / 24);
 
-    if (!horas  && !minutos) {
+    if (!horas && !minutos) {
         return `No disponible`;
     }
     if (horas <= 0) {
@@ -32,7 +32,7 @@ const tiempoHabilitacion = (item) => {
 
     return `No disponible\npor ${horas % 24} horas`;
 }
-export default ({ item, section, index, key_restaurante, onChange }) => {
+export default ({ item, section, index, key_restaurante, onChange, image_time }) => {
 
     const hanlePress = (e) => {
         Vibration.vibrate(100)
@@ -86,18 +86,21 @@ export default ({ item, section, index, key_restaurante, onChange }) => {
         })
     }
 
+    const spr = item.sub_productos.filter(a => a.estado != 0)
+    const cantidad_sub_productos = spr.length;
+
     return <SView col={"xs-12"} row >
         <View style={styles.item}>
             <SView col={"xs-12"} row>
                 <SView style={{ width: 40, height: 40, borderRadius: 4, overflow: "hidden" }} card>
-                    <SImage src={SSocket.api.root + "producto/.128_" + item.key} style={{
+                    <SImage src={SSocket.api.root + "producto/.128_" + item.key + "?date=" + image_time} style={{
                         resizeMode: "cover"
                     }} />
                 </SView>
                 <SView width={8} />
                 <SView flex style={{ justifyContent: "center" }}>
                     <SText style={{ fontSize: 12, }} >{item?.nombre}</SText>
-                    <SText style={{ fontSize: 10, color: STheme.color.lightGray }} >{item.sub_productos.length <= 0 ? "Sin subproductos" : `${item.sub_productos.length} subproductos`}</SText>
+                    <SText style={{ fontSize: 10, color: STheme.color.lightGray }} >{cantidad_sub_productos <= 0 ? "Sin subproductos" : `${cantidad_sub_productos} subproductos`}</SText>
                 </SView>
                 <SView height style={{ justifyContent: "center", }} onPress={hanlePress}>
                     <SView col={"xs-12"} row style={{

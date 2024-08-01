@@ -64,7 +64,10 @@ export default class SelectHabilitado extends Component {
 
                 }, this.props.style]}>
                 {this.renderItem({ key: "true", color: STheme.color.success, label: "Disponible" })}
+                {this.renderItem({ key: (-1).toFixed(0), color: STheme.color.success, label: "Disponible por 1 minuto" })}
+                {this.renderItem({ key: (-60).toFixed(0), color: STheme.color.success, label: "Disponible por 1 hora" })}
                 {this.renderItem({ key: "false", color: STheme.color.danger, label: "No disponible" })}
+                {this.renderItem({ key: (1).toFixed(0), color: STheme.color.danger, label: "No disponible por 1 minuto" })}
                 {this.renderItem({ key: (60).toFixed(0), color: STheme.color.danger, label: "No disponible por 1 hora" })}
                 {this.renderItem({ key: (60 * 12).toFixed(0), color: STheme.color.danger, label: "No disponible por 12 horas" })}
                 {this.renderItem({ key: (this.minutesUntilEndOfDay()).toFixed(0), color: STheme.color.danger, label: "No disponible por este día" })}

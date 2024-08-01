@@ -9,6 +9,42 @@ import PBarraFooter from '../../Components/PBarraFooter';
 import TopBar from '../../Components/TopBar';
 import CargaIcon from './CargaIcon';
 import BarraCargando from '../../Components/BarraCargando';
+import { Dimensions, Vibration } from 'react-native';
+import SelectHabilitado from './producto/Components/SelectHabilitado';
+
+const tiempoHabilitacion = (item: any) => {
+
+  let label = "No disponible";
+  if (item.habilitado) {
+    label = "Disponible"
+  }
+  const ahora = new SDate();
+  const fechaObjetivo = new SDate(item.fecha_habilitacion_automatica, "yyyy-MM-ddThh:mm:ss");
+
+  const diferencia = fechaObjetivo.getTime() - ahora.getTime();
+  if (diferencia < 0) {
+    return "La fecha y hora ya han pasado";
+  }
+
+  const segundos = Math.floor(diferencia / 1000);
+  const minutos = Math.floor(segundos / 60);
+  const horas = Math.floor(minutos / 60);
+  // const dias = Math.floor(horas / 24);
+
+  if (!horas && !minutos && !segundos) {
+    return `${label}`;
+  }
+  if (minutos <= 0) {
+    return `${label}\npor ${segundos % 60} segundos`;
+  }
+  if (horas <= 0) {
+    return `${label}\npor ${minutos % 60} minutos`;
+  }
+
+  return `${label}\npor ${horas % 24} horas`;
+}
+
+
 
 
 class index extends Component {
@@ -103,6 +139,78 @@ class index extends Component {
     })
   }
 
+
+  hanlePress = (e: any) => {
+    Vibration.vibrate(100)
+    e.currentTarget.measure((x: any, y: any, width: any, height: any, pageX: any, pageY: any) => {
+      const key_popup = "popupkey";
+      const windowheight = Dimensions.get("window").height
+      const itemWidth = 200;
+      const itemHeight = 176;
+      let top = pageY + 16;
+      if (itemHeight + top > windowheight) {
+        top = windowheight - itemHeight;
+      }
+      SPopup.open({
+        key: key_popup,
+        type: "2",
+        content: <SelectHabilitado
+          style={{
+            left: pageX - itemWidth + width + 8,
+            top: top,
+            itemWidth: itemWidth,
+            itemHeight: itemHeight,
+          }}
+          onSelect={(select: any) => {
+            let tipo = false;
+            console.log(select.key)
+            let fecha_habilitacion_automatica = "null"
+            if (select.key != "true" && select.key != "false") {
+              console.log("entro aca")
+              let num = select.key;
+              if (select.key < 0) {
+                tipo = true;
+                num = num * -1;
+              } else {
+                tipo = false;
+              }
+              fecha_habilitacion_automatica = new SDate().addMinute(parseInt(num)).toString("yyyy-MM-ddThh:mm:ss");
+            } else {
+              tipo = (select.key == "true")
+              console.log("entro aca",tipo)
+            }
+            console.log(tipo)
+            SSocket.sendPromise({
+              component: "restaurante",
+              type: "editar",
+              key_usuario: Model.usuario.Action.getKey(),
+              data: {
+                key: this.pk,
+                habilitado: tipo,
+                accion_habilitacion_automatica: (tipo) ? "false" : "true",
+                fecha_habilitacion_automatica: fecha_habilitacion_automatica
+              }
+
+            }).then(f => {
+              this.data.habilitado = f.data.habilitado;
+              this.data.fecha_habilitacion_automatica = f.data.fecha_habilitacion_automatica;
+              // if (onChange) onChange()
+              Model.restaurante.Action._dispatch({
+                ...f,
+                data: this.data
+              });
+              this.setState({ ...this.state })
+              console.log(f);
+            }).catch(e => {
+              console.error(e);
+            })
+            SPopup.close(key_popup)
+          }
+          }
+        />
+      })
+    })
+  }
   getCabecera(data) {
     this.data = data;
     var usuario = Model.usuario.Action.getUsuarioLog();
@@ -145,9 +253,24 @@ class index extends Component {
               <SIcon name={"Ajustes"} width={20} />
             </SView>
             <SHr h={10} />
-            <SView row>
+            {/* <SView row>
               <SText fontSize={14} color={STheme.color.darkGray} >No vender Tapekes:  {this.data.tapeke_deshabilitado} </SText>
               <SSwitch center size={20} loading={this.state.loading} onChange={this.habilitacion_tapeke.bind(this)} value={!!this.data?.tapeke_deshabilitado} />
+            </SView> */}
+            <SView style={{ justifyContent: "center", }} onPress={this.hanlePress.bind(this)}>
+              <SView col={"xs-12"} row style={{
+                alignItems: "center",
+              }} >
+                <SView height={8} width={8} style={{
+                  borderRadius: 100,
+                  backgroundColor: !this.data.habilitado ? STheme.color.danger : STheme.color.success
+                }}>
+
+                </SView>
+                <SView width={4} />
+                <SText color={"#666"} fontSize={10} >{tiempoHabilitacion(this.data)}</SText>
+              </SView>
+              {/* <SText color={"#666"} fontSize={8}>{ }</SText> */}
             </SView>
           </SView>
           <SHr height={18} />
@@ -462,6 +585,8 @@ class index extends Component {
 
     return <Container>
       {this.getCabecera(this.data)}
+
+      <SHr />
       {this.renderHorario()}
     </Container>
   }

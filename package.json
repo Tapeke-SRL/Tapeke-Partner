@@ -11,6 +11,7 @@
   "author": "servisofts",
   "license": "ISC",
   "dependencies": {
+    "@mapbox/geo-viewport": "^0.4.0",
     "@notifee/react-native": "^7.8.2",
     "@react-native-async-storage/async-storage": "1.19.1",
     "@react-native-community/geolocation": "3.1.0",
@@ -55,7 +56,7 @@
     "react-redux": "7.2.9",
     "redux": "^4.1.1",
     "redux-thunk": "^2.3.0",
-    "servisofts-component": "3.0.35",
+    "servisofts-component": "file:../../servisofts-component/dist",
     "servisofts-model": "1.0.3",
     "servisofts-page": "^1.0.12",
     "servisofts-rn-chat": "^1.0.12",
@@ -63,10 +64,9 @@
     "servisofts-rn-roles_permisos": "^1.0.6-b",
     "servisofts-rn-usuario": "1.0.13",
     "servisofts-socket": "4.0.4",
-    "typescript": "4.9.5",
-    "@mapbox/geo-viewport": "^0.4.0",
-    "xlsx": "^0.18.5",
     "supercluster": "^6.0.2",
+    "typescript": "4.9.5",
+    "xlsx": "^0.18.5",
     "xlsx-color": "^0.14.30"
   },
   "resolutions": {
