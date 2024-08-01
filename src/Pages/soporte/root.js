@@ -1,24 +1,60 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { SButtom, SDate, SHr, SIcon, SList, SLoad, SNavigation, SPage, SText, STheme, SView } from 'servisofts-component';
-import Container from '../../Components/Container';
-import PButtom from '../../Components/PButtom';
-import TopBar from '../../Components/TopBar';
+import { STheme, SHr, SIcon, SLoad, SNavigation, SPage, SText, SView, SThread } from 'servisofts-component';
+import SSocket from 'servisofts-socket';
 import Model from '../../Model';
+import { Linking } from 'react-native';
 import AccentBar from '../../Components/AccentBar';
+import Container from '../../Components/Container';
+import Popups from '../../Components/Popups';
+import TopBar from '../../Components/TopBar';
+import PBarraFooter from '../../Components/PBarraFooter';
 
 
 class root extends Component {
+    static TOPBAR = <>
+        <TopBar type={"usuario"} />
+        <SView backgroundColor={"#96BE00"} height={20} col={"xs-12"}></SView>
+    </>
+
+    static FOOTER = <>
+        <PBarraFooter url={"soporte"} />
+    </>
+
     constructor(props) {
         super(props);
         this.state = {
         };
-
     }
 
-    item({ url, label }) {
+    componentDidMount() {
+        new SThread(100, "load").start(() => { this.setState({ ready: true }) })
+
+        SSocket.sendPromise({
+            component: "enviroment",
+            type: "getByKey",
+            key: "support_phone",
+            key_usuario: Model.usuario.Action.getKey(),
+        }).then(res => {
+            this.setState({ telefono: res.data });
+        }).catch(e => {
+            console.error(e);
+        })
+    }
+
+    item({ url, label, requireUser, redirectLink }) {
         return <SView col={"xs-12"} center backgroundColor={STheme.color.card} style={{ borderRadius: 16, borderLeftWidth: 20, borderColor: STheme.color.primary }} onPress={() => {
-            SNavigation.navigate(url)
+            if (requireUser && !Model.usuario.Action.getKey()) {
+                Popups.InicieSession.open();
+                return;
+            }
+            if (url) {
+                SNavigation.navigate(url)
+            }
+
+            if (redirectLink) {
+                Linking.openURL(redirectLink)
+            }
         }}>
             <SHr height={20} />
             <SView col={"xs-12"} row center >
@@ -26,8 +62,8 @@ class root extends Component {
                     <SView width={20}></SView>
                     <SText color={STheme.color.text} fontSize={16}>{label}</SText>
                 </SView>
-                <SView col={"xs-1"}  >
-                    <SIcon name={'AyudaFlecha'} height={20} width={15} fill={STheme.color.card} />
+                <SView col={"xs-1"} style={{}} >
+                    <SIcon name={'Cayudaflecha'} height={20} width={14} fill={STheme.color.card} />
                 </SView>
             </SView>
             <SHr height={20} />
@@ -35,23 +71,27 @@ class root extends Component {
     }
 
     render() {
-        return (<SPage title={"Soporte"}
-        onRefresh={(re) => {
-            Model.horario.Action.CLEAR();
-        }}
-        header={<AccentBar />}
+        if (!this.state.ready) return <SLoad />
+        return (<SPage
+            hidden
+            title={"Soporte"}
+            onRefresh={(re) => {
+                Model.horario.Action.CLEAR();
+            }}
         >
             <Container>
                 <SHr height={35} />
-                {this.item({
+                {/* {this.item({
                     url: "/condiciones",
                     label: "Términos y condiciones"
-                })}
+                })} */}
 
                 <SHr height={15} />
                 {this.item({
-                    url: "/chat",
-                    label: "Chat"
+                    // url: "/chat",
+                    redirectLink: `https://api.whatsapp.com/send?phone=${this?.state?.telefono ?? "59171634228"}`,
+                    label: "Chat",
+                    requireUser: false
                 })}
                 <SHr height={40} />
                 {/* <PButtom onPress={()=>{

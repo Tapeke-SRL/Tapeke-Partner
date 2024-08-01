@@ -1,24 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { SHr, SList, SNavigation, SPage, SText, SView, SPopup, STheme, SIcon, SImage, SLoad } from 'servisofts-component';
+import { SHr, SList, SNavigation, SPage, SText, SView, SPopup, STheme, SIcon, SImage, SLoad, SThread, SDate } from 'servisofts-component';
 import Model from '../../Model';
 import SSocket from 'servisofts-socket'
-import PBarraFooter from '../../Components/PBarraFooter';
 import CardCalificacionPedido from './Components/CardCalificacionPedido';
-import TopBar from '../../Components/TopBar';
 import Container from '../../Components/Container';
+import FilterDate from '../../Components/FilterDate'
 
 
 class root extends Component {
-    static TOPBAR = <>
-        <TopBar type={"usuario"} />
-        <SView backgroundColor={"#96BE00"} height={20} col={"xs-12"}></SView>
-    </>
-
-    static FOOTER = <>
-        <PBarraFooter url={"calificacion"} />
-    </>
-
     constructor(props) {
         super(props);
         this.state = {
@@ -26,8 +16,25 @@ class root extends Component {
         this.key = SNavigation.getParam("pk");
     }
 
+    handleDateChange = (fecha_inicio, fecha_fin) => {
+        this.setState({ fecha_inicio, fecha_fin });
+    };
 
     componentDidMount() {
+        new SThread(200).start(() => {
+            this.setState({ ready: true })
+        })
+
+        SSocket.sendPromise({
+            component: "restaurante",
+            type: "getByKey",
+            key_restaurante: this.key
+        }).then(resp => {
+            this.setState({ restaurante: resp.data })
+        }).catch(e => {
+            console.log(e.data);
+        })
+
         Model.calificacion.Action.getMediaByRestaurante(this.key).then((resp) => {
             this.setState({ media: resp.data });
         }).catch(e => {
@@ -72,7 +79,6 @@ class root extends Component {
                     <SText color={STheme.color.text} fontSize={50}>
                         {parseFloat(this.state.media?.pedido_star_media ?? 0).toFixed(1).replace('.', ',')}
                     </SText>
-
                 </SView>
 
                 <SView >
@@ -129,43 +135,52 @@ class root extends Component {
     }
 
     componetNoComment() {
-        return <>
-            <SText>
+        return <SView center>
+            <SText color={'red'}>
                 No hay comentarios
             </SText>
-        </>
+        </SView>
     }
 
     render() {
+        if (!this.state.ready) return <SLoad />
         if (!this.state.data) return <SLoad />
         return (<SPage
-            hidden
             onRefresh={() => {
                 Model.calificacion.Action.CLEAR();
-                // this.componentDidMount();
+                this.componentDidMount();
             }}
         >
             <Container center={false}>
                 <SView>
                     <SHr />
                     <SText font={'Montserrat-ExtraBold'} fontSize={14}>CALIFICACIÓN Y COMENTARIOS</SText>
-                    <SText fontSize={12}>$nombre_restaurante</SText>
+                    {
+                        this.state.restaurante ?
+                            <SText font={"Montserrat-SemiBold"} color={STheme.color.primary} fontSize={12}>{this.state.restaurante.nombre}</SText>
+                            : <SLoad />
+                    }
                     <SHr />
                 </SView>
-
+                <SHr />
+                <FilterDate onDateChange={this.handleDateChange} />
+                <SHr />
                 <SView center>
                     {this.componentMediaCalificacion()}
-
                     <SHr h={20} />
-
                     <SView center col={"xs-11"}>
                         {
                             !this.isEmptyCommet ?
                                 <SList
                                     data={this.state.data}
                                     limit={10}
+                                    filter={a => a.fecha_on >= this.state.fecha_inicio && a.fecha_on <= this.state.fecha_fin}
                                     order={[{ key: "fecha_on", type: "date", order: "desc" }]}
                                     render={(obj) => {
+                                        // if (obj.fecha_on >= this.state.fecha_inicio && obj.fecha_on <= this.state.fecha_fin) {
+                                        //     return this.componetNoComment();
+                                        // }
+
                                         let usuario = this.state.usuarios ? this.state.usuarios[obj.key_usuario]?.usuario : false;
                                         return <CardCalificacionPedido usuario={usuario} data={obj} />
                                     }}

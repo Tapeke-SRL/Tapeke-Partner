@@ -14,7 +14,6 @@ class login extends Component {
     }
 
     render() {
-
         return (
             <SPage>
                 <SView col={"xs-12"} center>

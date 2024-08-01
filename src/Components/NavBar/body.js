@@ -102,7 +102,9 @@ export default class body extends React.Component {
         </SView>
     }
 
-    renderIcon({ label, path, params, icon, onPress, requireUser, noWithUser }) {
+    renderIcon({ label, path, params, icon, image, onPress, requireUser, noWithUser }) {
+        let color = "#666666";
+        let sizeIcon = 22;
         if (requireUser) {
             if (!Model.usuario.Action.getKey()) {
                 return null;
@@ -128,13 +130,18 @@ export default class body extends React.Component {
             <SView col={"xs-10"} height style={{ justifyContent: 'flex-start', }} row center >
                 {/* <SHr height={17} /> */}
                 {/* <SView width={25} height={25} center> */}
-                <SIcon fill="#666666" width={20} height={20} name={icon} />
+                {icon ? <SIcon fill={color} width={sizeIcon} height={sizeIcon} name={icon} /> : null}
+                {image ?
+                    <SView width={sizeIcon} height={sizeIcon}>
+                        <SImage src={image} />
+                    </SView>
+                    : null}
                 {/* </SView> */}
-                <SText flex style={{ paddingLeft: 5, color: "#666666", fontSize: 14 }} >{label}</SText>
+                <SText flex style={{ paddingLeft: 5, color: color, fontSize: 14 }} >{label}</SText>
                 {/* <SHr height={17} /> */}
             </SView>
             <SView col={"xs-2"} height style={{ alignItems: "flex-end" }} center>
-                <SIcon fill="#666666" name={"Icon1"} width={20} height={14} />
+                <SIcon fill={color} name={"Icon1"} height={sizeIcon} />
             </SView>
         </SView>
     }
@@ -160,31 +167,23 @@ export default class body extends React.Component {
             <SHr height={20} />
             <SScrollView2 disableHorizontal contentContainerStyle={{ width: "100%" }} >
                 <SView col={"xs-12"} center  >
-                    {/* {this.renderIcon({ label: "Inicio", icon: "Inicio", path: "/root" })} */}
-                    {this.renderIcon({ label: "Inicio", icon: "mInicio", path: "/" })}
                     {this.renderIcon({ label: "Productos", icon: "menu", path: "/restaurante/producto", params: { key_restaurante: Model.restaurante.Action.getSelect() } })}
-                    {this.renderIcon({ label: "Ganancias", icon: "mGanancias", path: "/ganancia", requireUser: true })}
+                    {this.renderIcon({ label: "Notificaciones", icon: "mNotification", path: "/notificaciones", requireUser: true })}
                     {this.renderIcon({
-                        label: "Mis restaurantes", icon: "iconoRestaurante", path: "/", onPress: () => {
+                        label: "Mis comercios", image: require("../../Assets/img/comercio.png"), path: "/", onPress: () => {
                             SNavigation.replace("/root")
                             NavBar.close();
 
                         },
                     })}
-                    {this.renderIcon({ label: "Notificaciones", icon: "mNotification", path: "/notificaciones", requireUser: true })}
-                    {this.renderIcon({ label: "Soporte", icon: "mSoporte", path: "/soporte", requireUser: true })}
+                    {this.renderIcon({ label: "Calificación", icon: 'Mcalificacion', path: "/calificacion", params: { pk: Model.restaurante.Action.getSelect() }, requireUser: true })}
+                    {this.renderIcon({ label: "Ganancias", image: require("../../Assets/img/ganancia.png"), path: "/ganancia", requireUser: true })}
+                    {this.renderIcon({ label: "Historial de pedidos", image: require("../../Assets/img/historial_de_pedido.png"), path: "/reporte/hitorialPedidos", params: { pk: Model.restaurante.Action.getSelect() }, requireUser: true })}
+                    
+                    {/* TODO Falta componente para navegació Administra usuario */}
+                    {this.renderIcon({ label: "Administra usuarios", image: require("../../Assets/img/administrar_usuarios.png"), path: "/ganancia", requireUser: true })}
                     {this.renderIcon({ label: "Cuentas bancarias", icon: "Icuenta", path: "/restaurante_cuenta", requireUser: true })}
-                    {/* {this.renderIcon({ label: "Mis direcciones", icon: "Direccion", path: "/direccion", requireUser: true })} */}
-                    {/* {this.renderIcon({ label: "Cupones", icon: "mCupon", path: "/cupones", requireUser: true })} */}
-                    {/* {this.renderIcon({ label: "Mi Billetera Tapeke", icon: "Billetera", path: "/billetera", requireUser: true })} */}
-                    {/* {this.renderIcon({ label: "Soporte", icon: "Soporte", path: "/ayuda" })} */}
-                    {/* {this.renderIcon({ label: "Contactos", icon: "Contacto", path: "/contacto" })} */}
-                    {/* {this.renderIcon({ label: "Información legal", icon: "Legal", path: "/ayuda/terminos_y_condiciones" })} */}
-
-
-
-                    {/* {this.renderIcon({ label: "Mis compras", icon: "Compras", path: "/misCompras", requireUser: true })} */}
-                    {/* {this.renderIcon({ label: "Novedades", icon: "Novedades", path: "/novedades" })} */}
+                    {this.renderIcon({ label: "Información legal", icon: "mSoporte", path: "/condiciones", requireUser: false })}
                     {this.renderIcon({
                         label: "Cerrar sesión", icon: "mSession", requireUser: true,
                         onPress: () => {
@@ -195,13 +194,25 @@ export default class body extends React.Component {
                         }
                     })}
                     {this.renderIcon({ label: "Iniciar Sesión", icon: "mSession", path: "/login", noWithUser: true })}
+
+
+                    {/* {this.renderIcon({ label: "Inicio", icon: "Inicio", path: "/root" })} */}
+                    {/* {this.renderIcon({ label: "Inicio", icon: "mInicio", path: "/" })} */}
+                    {/* {this.renderIcon({ label: "Mis direcciones", icon: "Direccion", path: "/direccion", requireUser: true })} */}
+                    {/* {this.renderIcon({ label: "Cupones", icon: "mCupon", path: "/cupones", requireUser: true })} */}
+                    {/* {this.renderIcon({ label: "Mi Billetera Tapeke", icon: "Billetera", path: "/billetera", requireUser: true })} */}
+                    {/* {this.renderIcon({ label: "Soporte", icon: "Soporte", path: "/ayuda" })} */}
+                    {/* {this.renderIcon({ label: "Contactos", icon: "Contacto", path: "/contacto" })} */}
+                    {/* {this.renderIcon({ label: "Información legal", icon: "Legal", path: "/ayuda/terminos_y_condiciones" })} */}
+                    {/* {this.renderIcon({ label: "Mis compras", icon: "Compras", path: "/misCompras", requireUser: true })} */}
+                    {/* {this.renderIcon({ label: "Novedades", icon: "Novedades", path: "/novedades" })} */}
+
                     <SHr />
                     <SView col={"xs-11"} style={{
                         borderBottomWidth: 1,
                         borderBottomColor: STheme.color.primary,
                     }} />
                     <SHr />
-
 
                     <SHr height={20} />
 
