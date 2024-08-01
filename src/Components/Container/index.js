@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { SView } from 'servisofts-component';
+import { SLoad, SView } from 'servisofts-component';
 
 export default class Container extends Component {
     constructor(props) {
@@ -10,8 +10,8 @@ export default class Container extends Component {
 
     render() {
         // Extraer la propiedad `center` si está presente en las props
-        const { center, ...rest } = this.props;
-
+        const { center, loading, ...rest } = this.props;
+        if (loading) return <SLoad />
         return (
             <SView col={"xs-12"} center {...rest}>
                 <SView
