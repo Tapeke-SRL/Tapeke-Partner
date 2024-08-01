@@ -22,7 +22,7 @@ class root extends Component {
         new SThread(200).start(() => {
             this.setState({ ready: true })
         })
-        if (!Model.restaurante.Action.getSelect()) {
+        if (!Model.restaurante.Action.getSelect()?.key) {
             SNavigation.goBack();
             return;
         }
@@ -35,7 +35,7 @@ class root extends Component {
         SSocket.sendPromise({
             component: "pedido",
             type: "getPendientesConciliacion",
-            key_restaurante: Model.restaurante.Action.getSelect(),
+            key_restaurante: Model.restaurante.Action.getSelect()?.key,
         }).then(resp => {
             this.setState({ data: resp.data })
             this.setState({ ultima_conciliacion: resp.ultima_conciliacion })

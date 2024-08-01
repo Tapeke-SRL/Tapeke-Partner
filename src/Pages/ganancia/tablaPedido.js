@@ -20,7 +20,7 @@ class tablaPedido extends Component {
   }
 
   componentDidMount() {
-    if (!Model.restaurante.Action.getSelect()) {
+    if (!Model.restaurante.Action.getSelect()?.key) {
       SNavigation.goBack();
       return;
     }
@@ -42,7 +42,7 @@ class tablaPedido extends Component {
     SSocket.sendPromise({
       component: component,
       type: type,
-      key_restaurante: Model.restaurante.Action.getSelect(),
+      key_restaurante: Model.restaurante.Action.getSelect()?.key,
       // key_conciliacion_restaurante: this.params.key_conciliacion_restaurante
     }).then(resp => {
 

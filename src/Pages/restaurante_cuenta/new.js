@@ -25,7 +25,7 @@ class index extends DPA.new {
         return inp;
     }
     $onSubmit(data) {
-        data.key_restaurante = Model.restaurante.Action.getSelect()
+        data.key_restaurante = Model.restaurante.Action.getSelect()?.key
         Parent.model.Action.registro({
             data: data,
             key_usuario: Model.usuario.Action.getKey()

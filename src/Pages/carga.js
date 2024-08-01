@@ -35,7 +35,7 @@ navigate=false;
             if (!Model.usuario.Action.getKey()) {
                 SNavigation.reset("/welcome");
             } else {
-                var select = Model.restaurante.Action.getSelect();
+                var select = Model.restaurante.Action.getSelect()?.key;
                 if (!select) {
                     SNavigation.reset("/root");
                 } else {

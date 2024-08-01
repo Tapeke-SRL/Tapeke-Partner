@@ -38,7 +38,7 @@ class historialPedido extends Component {
         SSocket.sendPromise({
             component: "restaurante",
             type: "getByKey",
-            key_restaurante: Model.restaurante.Action.getSelect()
+            key_restaurante: Model.restaurante.Action.getSelect()?.key
         }).then(resp => {
             this.setState({ restaurante: resp.data })
         }).catch(e => {
@@ -48,7 +48,7 @@ class historialPedido extends Component {
         SSocket.sendPromise({
             component: 'pedido',
             type: 'getByRestaurante',
-            key_restaurante: Model.restaurante.Action.getSelect()
+            key_restaurante: Model.restaurante.Action.getSelect()?.key
         }).then(rest => {
             this.getUser(rest.data);
             this.setState({ data: rest.data })

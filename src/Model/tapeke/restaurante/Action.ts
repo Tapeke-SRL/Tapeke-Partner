@@ -25,7 +25,6 @@ export default class Action extends SAction {
     }
     editar(extra?: {}): Promise<unknown> {
         var key = Model.usuario.Action.getUsuarioLog().key
-        console.log("kye", key)
         return super.editar({
             ...extra,
             key_usuario: key,
@@ -33,15 +32,26 @@ export default class Action extends SAction {
         });
     }
 
-    select(key) {
-        SStorage.setItem("rest_select", key);
-        this._getReducer().rest_select = key;
+    select(obj) {
+        SStorage.setItem("rest_select", JSON.stringify(obj));
+        this._getReducer().rest_select = obj;
     }
 
     getSelect() {
         return this._getReducer().rest_select;
     }
-    
+    getSelectKeyRol() {
+        if (this._getReducer().rest_select) {
+            if (this._getReducer().rest_select.usuario_restaurante) {
+                return this._getReducer().rest_select.usuario_restaurante[0].key_rol;
+            }
+        }
+        return null;
+    }
+    getKey() {
+        return this._getReducer().rest_select?.key;
+    }
+
     // getAllRecursive() {
     //     var horarios = this.getAll();
     //     var packs = Model.pack.Action.getAllRecursive();

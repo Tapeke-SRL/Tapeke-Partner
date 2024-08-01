@@ -34,7 +34,7 @@ class index extends Component {
             }
             } center
             onPress={() => {
-                Model.restaurante.Action.select(obj.key)
+                Model.restaurante.Action.select(obj)
                 SNavigation.navigate("/restaurante", { pk: `${obj.key}` });
             }}>
             <SView width={58} center row>

@@ -25,7 +25,7 @@ class historial extends Component {
             type: "getAll",
         }).then(resp => {
             let dataOk = resp.data;
-            this.setState({ data: Object.values(resp.data).filter(items => items.key_restaurante == Model.restaurante.Action.getSelect()) })
+            this.setState({ data: Object.values(resp.data).filter(items => items.key_restaurante == Model.restaurante.Action.getSelect()?.key) })
         }).catch(e => {
             console.error(e)
         })

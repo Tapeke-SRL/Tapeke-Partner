@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, ScrollView, StyleSheet, SectionList, Vibration, Switch, UIManager, Dimensions, RefreshControl } from 'react-native';
-import { SHr, SIcon, SImage, SLoad, SNavigation, SPage, SPopup, SSwitch, SText, STheme, SThread, SView } from 'servisofts-component';
+import { SHr, SIcon, SImage, SLoad, SNavigation, SNotification, SPage, SPopup, SSwitch, SText, STheme, SThread, SView } from 'servisofts-component';
 import TopBar from '../../../Components/TopBar';
 import SSocket from 'servisofts-socket';
 import Model from '../../../Model';
@@ -8,6 +8,8 @@ import restaurante from '..';
 import SelectHabilitado from './Components/SelectHabilitado';
 import ListItem from './Components/ListItem';
 import CrearNuevo from './Components/CrearNuevo';
+import PBarraFooter from '../../../Components/PBarraFooter';
+import Roles from '../../../Roles';
 
 
 
@@ -60,7 +62,14 @@ const hanlePressCrear = (e, key_restaurante) => {
 }
 
 export default class list extends Component {
-    static TOPBAR = <TopBar type={"default"} title='Productos' />
+    static TOPBAR = <>
+        <TopBar type={"usuario"} />
+        <SView backgroundColor={"#96BE00"} height={20} col={"xs-12"}></SView>
+    </>
+    static FOOTER = <>
+        <SView flex />
+        <PBarraFooter url={"menu"} />
+    </>
     static INSTANCE;
     constructor(props) {
         super(props);
@@ -108,10 +117,28 @@ export default class list extends Component {
             SNavigation.goBack();
             return;
         }
-        new SThread(100).start(() => {
+        // new SThread(100).start(() => {
+        //     this.setState({ ready: true })
+        // })
+
+        Roles.getPermiso({
+            key_rol: Model.restaurante.Action.getSelectKeyRol(),
+            url: "/_partner/productos",
+            permiso: "ver"
+        }).then(e => {
             this.setState({ ready: true })
+            console.log(e);
+        }).catch(e => {
+            SNotification.send({
+                title: "Acceso denegado",
+                body: "No tienes permisos para ver esta pagina.",
+                color: STheme.color.danger,
+                time: 5000,
+            })
+            SNavigation.goBack();
         })
         this.getData();
+
     }
 
     async getData() {

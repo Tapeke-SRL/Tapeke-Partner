@@ -61,7 +61,7 @@ class root extends Component {
         }
 
         if (
-            this.data?.restaurante?.key != Model.restaurante.Action.getSelect()
+            this.data?.restaurante?.key != Model.restaurante.Action.getSelect()?.key
         ) {
             SPopup.alert('Este pedido es de otro restaurante.');
             SNavigation.goBack('/');
@@ -921,7 +921,7 @@ class root extends Component {
                             onPress={() => {
                                 if (
                                     this.data?.restaurante?.key !=
-                                    Model.restaurante.Action.getSelect()
+                                    Model.restaurante.Action.getSelect()?.key
                                 ) {
                                     SPopup.alert(
                                         'Este pedido es de otro restaurante.'
