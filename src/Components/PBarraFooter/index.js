@@ -53,7 +53,7 @@ export default class PBarraFooter extends Component {
 			>
 				<SView col={'xs-12'} row height >
 					{this.getItem({ key: "pedido", title: 'Pedidos', image: require('../../Assets/img/icon_pedido.png'), url: '/restaurante', params: { pk: this.key_restaurante } })}
-					{this.getItem({ key: "menu", title: 'Menú', icon: 'tapekeMenu', url: '/restaurante/producto' })}
+					{this.getItem({ key: "menu", title: 'Menú', icon: 'tapekeMenu', url: '/restaurante/producto', params: { key_restaurante: this.key_restaurante } })}
 					{this.getItem({ key: "calendario", title: 'Horarios', icon: 'reloj', url: '/calendario', params: { key_restaurante: this.key_restaurante } })}
 					{this.getItem({ key: "soporte", title: 'Soporte', icon: 'Mcalificacion', url: '/soporte' })}
 					{/* {this.getItem({ key: "calificacion", title: 'Calificación', icon: 'Mcalificacion', url: '/calificacion', params: { pk: this.key_restaurante } })} */}

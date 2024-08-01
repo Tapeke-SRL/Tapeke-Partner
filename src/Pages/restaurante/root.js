@@ -53,6 +53,7 @@ class index extends Component {
   </>
 
   static FOOTER = <>
+    <SView flex/>
     <PBarraFooter url={"pedido"} />
   </>
 
@@ -177,7 +178,7 @@ class index extends Component {
               fecha_habilitacion_automatica = new SDate().addMinute(parseInt(num)).toString("yyyy-MM-ddThh:mm:ss");
             } else {
               tipo = (select.key == "true")
-              console.log("entro aca",tipo)
+              console.log("entro aca", tipo)
             }
             console.log(tipo)
             SSocket.sendPromise({

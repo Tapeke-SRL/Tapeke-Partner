@@ -40,6 +40,14 @@ export default class Action extends SAction {
     getSelect() {
         return this._getReducer().rest_select;
     }
+    getSelectKeyRol() {
+        if (this._getReducer().rest_select) {
+            if (this._getReducer().rest_select.usuario_restaurante) {
+                return this._getReducer().rest_select.usuario_restaurante[0].key_rol;
+            }
+        }
+        return null;
+    }
     getKey() {
         return this._getReducer().rest_select?.key;
     }

@@ -208,12 +208,13 @@ export default class add extends Component {
         })
     }
     render() {
+        const restaurante = Model.restaurante.Action.getSelect();
         return <SView  >
             <Container>
                 <SHr />
                 <SView col={"xs-12"}>
                     <SText font='Montserrat-ExtraBold'>{this.key_usuario ? "EDITAR USUARIO" : "NUEVO USUARIO"}</SText>
-                    <SText font={"Montserrat-Medium"} color={STheme.color.primary}>{"Nombre del restaurante"}</SText>
+                    <SText font={"Montserrat-Medium"} color={STheme.color.primary}>{restaurante?.nombre}</SText>
                 </SView>
                 <SHr h={16} />
                 <Input
