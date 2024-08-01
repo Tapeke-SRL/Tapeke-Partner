@@ -53,7 +53,6 @@ class index extends Component {
   </>
 
   static FOOTER = <>
-    <SView flex />
     <PBarraFooter url={"pedido"} />
   </>
 
@@ -555,6 +554,8 @@ class index extends Component {
 
 
   render_content() {
+    if (!this.state.ready) return <SLoad />
+    
     this.loadData();
 
     if (!this.data) return <SLoad />
@@ -599,7 +600,6 @@ class index extends Component {
   }
 
   render() {
-    if (!this.state.ready) return <SLoad />
     return (<>
       <SPage title={'Pedidos próximos'}
         hidden

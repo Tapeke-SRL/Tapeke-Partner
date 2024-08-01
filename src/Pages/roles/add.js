@@ -72,6 +72,7 @@ export default class add extends Component {
                 keys: keys,
             }).then(resp => {
                 console.log(resp)
+                this.setState({ data: e.data })
                 const usuario_restaurante = e.data[this.key]
                 const usuario = resp.data[this.key_usuario]?.usuario;
                 this._inputs["nombre"].setValue(usuario.Nombres + " " + usuario.Apellidos)
@@ -84,7 +85,7 @@ export default class add extends Component {
                 this._inputs["rol"].setData(rol)
                 // Object.values(e.data).find()
                 // })
-                // this.setState({ data: e.data })
+
             }).catch(e2 => {
                 console.error(e);
             })
@@ -209,6 +210,9 @@ export default class add extends Component {
     }
     render() {
         const restaurante = Model.restaurante.Action.getSelect();
+        if (this.key) {
+            if (!this.state.data) return <SLoad />
+        }
         return <SView  >
             <Container>
                 <SHr />
@@ -333,6 +337,15 @@ export default class add extends Component {
                             }
                             SNavigation.goBack();
                         }).catch(e => {
+                            if (e.error == "existe") {
+                                SNotification.send({
+                                    title: "El usuario ya se encuentra registrado.",
+                                    body: "No puede registrar 2 veces a un mismo usuario.",
+                                    time: 5000,
+                                    color: STheme.color.danger,
+                                })
+                                return;
+                            }
                             SNotification.send({
                                 title: "No pudimos agregar al usuario.",
                                 body: "Ocurrio un error al agregar al usuario, intente nuevamente.",

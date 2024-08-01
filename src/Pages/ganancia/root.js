@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { SPopup, SDate, SHr, SIcon, SList, SLoad, SMath, SNavigation, SPage, SText, STheme, SView, SThread } from 'servisofts-component';
+import { SPopup, SDate, SHr, SIcon, SList, SLoad, SMath, SNavigation, SPage, SText, STheme, SView, SThread, SNotification } from 'servisofts-component';
 import TopBar from '../../Components/TopBar';
 import Model from '../../Model';
 import SSocket from 'servisofts-socket'
 import Pedido_item from './Pedido_item';
 import Container from '../../Components/Container';
+import Roles from '../../Roles';
 class root extends Component {
     static TOPBAR = <><TopBar type={"default"} title={"Ganancias"} />
         <SView backgroundColor={"#96BE00"} height={20} col={"xs-12"}></SView></>
@@ -19,14 +20,33 @@ class root extends Component {
     }
 
     componentDidMount() {
-        new SThread(200).start(() => {
-            this.setState({ ready: true })
-        })
+        // new SThread(200).start(() => {
+        //     this.setState({ ready: true })
+        // })
         if (!Model.restaurante.Action.getSelect()?.key) {
             SNavigation.goBack();
             return;
         }
+
         this.getDatos();
+        this.verifyPermisos();
+    }
+
+    async verifyPermisos() {
+        try {
+            const ver = await Roles.getPermiso({ key_rol: Model.restaurante.Action.getSelectKeyRol(), url: "/_partner/ganancias", permiso: "ver" })
+            const ver_historial_conciliaciones = await Roles.getPermiso({ key_rol: Model.restaurante.Action.getSelectKeyRol(), url: "/_partner/ganancias", permiso: "ver_historial_conciliaciones" })
+            const ver_tabla_pedidos = await Roles.getPermiso({ key_rol: Model.restaurante.Action.getSelectKeyRol(), url: "/_partner/ganancias", permiso: "ver_tabla_pedidos" })
+            this.setState({ ready: true, ver_historial_conciliaciones: !!ver_historial_conciliaciones, ver_tabla_pedidos: !!ver_tabla_pedidos })
+        } catch (error) {
+            SNotification.send({
+                title: "Acceso denegado",
+                body: "No tienes permisos para ver esta pagina.",
+                color: STheme.color.danger,
+                time: 5000,
+            })
+            SNavigation.goBack();
+        }
     }
 
     getDatos() {
@@ -480,7 +500,7 @@ class root extends Component {
                 <SText bold fontSize={20} >Historial de     </SText>
             </SView>
             <SHr height={10} />
-            <SView col={"xs-10"} backgroundColor={STheme.color.primary} center
+            {!this.state.ver_tabla_pedidos ? null : <SView col={"xs-10"} backgroundColor={STheme.color.primary} center
                 height={30}
                 style={{
                     borderRadius: 8
@@ -494,6 +514,7 @@ class root extends Component {
             >
                 <SText fontSize={12} color={STheme.color.white} bold>Ver tabla pedidos por conciliar</SText>
             </SView>
+            }
             <SHr height={10} />
             {this.getListaPedidos()}
             <SHr height={30} />
@@ -521,18 +542,20 @@ class root extends Component {
             <Container>
                 {/* {this.getHeader()} */}
                 {this.getTableDetail(totales)}
-                <SView
-                    style={{
-                        backgroundColor: STheme.color.primary,
-                        borderRadius: 10,
-                        padding: 12
-                    }}
-                    onPress={() => {
-                        SNavigation.navigate('/ganancia/historial')
-                    }}
-                >
-                    <SText color={STheme.color.background} bold>Ver Historial de conciliaciónes</SText>
-                </SView>
+                {!this.state.ver_historial_conciliaciones ? null :
+                    <SView
+                        style={{
+                            backgroundColor: STheme.color.primary,
+                            borderRadius: 10,
+                            padding: 12
+                        }}
+                        onPress={() => {
+                            SNavigation.navigate('/ganancia/historial')
+                        }}
+                    >
+                        <SText color={STheme.color.background} bold>Ver Historial de conciliaciónes</SText>
+                    </SView>
+                }
                 {this.historialPedidos()}
             </Container>
         </SPage>
