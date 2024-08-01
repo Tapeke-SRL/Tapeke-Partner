@@ -14,6 +14,7 @@ type InputProps = {
     placeholder?: string,
     col?: any,
     multiline?: boolean,
+    disabled?: boolean,
     height?: number | string,
     inputStyle?: any,
     onPress?: any,
@@ -23,6 +24,7 @@ type InputProps = {
     defaultData?: any,
     filter?: any,
     renderValue?: (evt: { value: any, data: any }) => any;
+    onChangeText?: (txt: string) => any;
 }
 
 const Input = forwardRef((props: InputProps, ref) => {
@@ -59,6 +61,7 @@ const Input = forwardRef((props: InputProps, ref) => {
                 onChangeText={(e) => {
                     if (props.filter) e = props.filter(e);
                     setValue(e)
+                    if (props.onChangeText) props.onChangeText(e);
                 }}
                 value={props.renderValue ? props.renderValue({ data: data, value: value }) : value}
                 style={[{
@@ -79,7 +82,7 @@ const Input = forwardRef((props: InputProps, ref) => {
                 multiline={props.multiline}
                 onSubmitEditing={props.onSubmitEditing}
                 placeholderTextColor={colorGray2}
-                editable={!props.onPress}
+                editable={!props.onPress && !props.disabled}
                 placeholder={props.placeholder} />
         </SView>
         <SText fontSize={6.5} font={"Montserrat-SemiBold"} color={colorGray2}>{props.info}</SText>
