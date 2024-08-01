@@ -5,12 +5,21 @@ import Container from '../../Components/Container';
 import SSocket from 'servisofts-socket';
 import Model from '../../Model'
 import FilterDate from '../../Components/FilterDate'
-import { FlatList } from 'react-native';
 import CardHistorialPedido from './Components/CardHistorialPedido.js'
-import usuario_app from '../../Model/tapeke/usuario_app';
-
+import TopBar from '../../Components/TopBar';
+import PBarraFooter from '../../Components/PBarraFooter';
 
 class historialPedido extends Component {
+    static TOPBAR = <>
+        <TopBar type={"usuario"} />
+        <SView backgroundColor={"#96BE00"} height={20} col={"xs-12"}></SView>
+    </>
+
+    static FOOTER = <>
+        <SView flex/>
+        <PBarraFooter />
+    </>
+
     constructor(props) {
         super(props);
         this.state = {
@@ -22,7 +31,10 @@ class historialPedido extends Component {
         new SThread(200).start(() => {
             this.setState({ ready: true })
         })
+        this.getData()
+    }
 
+    getData() {
         SSocket.sendPromise({
             component: "restaurante",
             type: "getByKey",
@@ -38,7 +50,7 @@ class historialPedido extends Component {
             type: 'getByRestaurante',
             key_restaurante: Model.restaurante.Action.getSelect()
         }).then(rest => {
-            this.getUserComentario(rest.data);
+            this.getUser(rest.data);
             this.setState({ data: rest.data })
         }).catch(e => {
             console.log(e.data);
@@ -49,7 +61,7 @@ class historialPedido extends Component {
         this.setState({ fecha_inicio, fecha_fin });
     };
 
-    getUserComentario(data) {
+    getUser(data) {
         let keys = [...new Set(Object.values(data).map(a => a.key_usuario).filter(key => key !== null))];
 
         SSocket.sendPromise({
@@ -69,10 +81,15 @@ class historialPedido extends Component {
         if (!this.state.ready) return <SLoad />
         if (!this.state.data) return <SLoad />
 
-        const space = 10;
+        const space = 50;
 
         return (
-            <SPage title={'Historial de Pedidos'}>
+            <SPage
+                hidden
+                onRefresh={() => {
+                    this.getData()
+                }}
+            >
                 <Container center={false}>
                     <SView>
                         <SHr />
@@ -88,31 +105,18 @@ class historialPedido extends Component {
                     <FilterDate onDateChange={this.handleDateChange} />
                     <SHr />
 
-                    <SView center col={"xs-12ß"}>
-                        {/* <SList
+                    <SView center col={"xs-12"}>
+                        <SList
                             data={this.state.data}
                             limit={10}
-                            // filter={a => a.fecha_on >= this.state.fecha_inicio && a.fecha_on <= this.state.fecha_fin}
+                            filter={a => a.fecha_on >= this.state.fecha_inicio && a.fecha_on <= this.state.fecha_fin}
                             order={[{ key: "fecha_on", type: "date", order: "desc" }]}
                             render={(obj) => {
-                                return <SText>{obj.key}</SText>
+                                let usuario = this.state.usuarios ? this.state.usuarios[obj.key_usuario]?.usuario : false;
+                                return <CardHistorialPedido data={obj} usuario={usuario} />
                             }}
-                        /> */}
-
-                        <FlatList
-                            data={this.state.data}
-                            renderItem={obj => {
-                                let usuario = this.state.usuarios ? this.state.usuarios[obj.item.key_usuario]?.usuario : false;
-                                return <CardHistorialPedido data={obj.item} usuario={usuario} />
-                            }}
-                            showsHorizontalScrollIndicator={true}
-                            ListHeaderComponent={() => <SView width={space} />}
-                            ItemSeparatorComponent={() => <SView width={space} />}
-                            ListFooterComponent={() => <SView width={space} />}
-                            style={{ flex: 1 }}
                         />
                     </SView>
-
                 </Container>
             </SPage>
         );
