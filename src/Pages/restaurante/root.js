@@ -53,6 +53,7 @@ class index extends Component {
   </>
 
   static FOOTER = <>
+    <SView flex />
     <PBarraFooter url={"pedido"} />
   </>
 
@@ -177,7 +178,7 @@ class index extends Component {
               fecha_habilitacion_automatica = new SDate().addMinute(parseInt(num)).toString("yyyy-MM-ddThh:mm:ss");
             } else {
               tipo = (select.key == "true")
-              console.log("entro aca",tipo)
+              console.log("entro aca", tipo)
             }
             console.log(tipo)
             SSocket.sendPromise({
@@ -559,10 +560,10 @@ class index extends Component {
     if (!this.data) return <SLoad />
 
     if (this.data.estado == 2) {
-      return <Container center >
+      return <Container center>
         <SHr h={32} />
         <SView width={260}>
-          <SText center bold fontSize={16} >{"Su registro fue realizado correctamente"}</SText>
+          <SText center fontSize={16} >{"Su registro fue realizado correctamente"}</SText>
           <SHr h={16} />
         </SView>
         <SImage src={require("../../Assets/img/registro.png")} style={{
