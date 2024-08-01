@@ -51,6 +51,8 @@ import iconoRestaurante, { ReactComponent as iconoRestauranteW } from './svg/ico
 import reloj, { ReactComponent as relojW } from './svg/reloj.svg';
 import tapekeMenu, { ReactComponent as tapekeMenuW } from './svg/tapekeMenu.svg';
 
+import whatsapp, { ReactComponent as whatsappW } from './svg/whatsapp.svg';
+
 
 
 
@@ -103,6 +105,8 @@ const Assets: SAssets = {
         "iconoRestaurante": { Native: iconoRestaurante, Web: iconoRestauranteW },
         "reloj": { Native: reloj, Web: relojW },
         "tapekeMenu": { Native: tapekeMenu, Web: tapekeMenuW },
+
+        "whatsapp": { Native: whatsapp, Web: whatsappW },
 
 
 
