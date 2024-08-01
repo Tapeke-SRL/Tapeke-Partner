@@ -16,7 +16,7 @@ class historialPedido extends Component {
     </>
 
     static FOOTER = <>
-        <SView flex/>
+        <SView flex />
         <PBarraFooter />
     </>
 
@@ -35,16 +35,6 @@ class historialPedido extends Component {
     }
 
     getData() {
-        SSocket.sendPromise({
-            component: "restaurante",
-            type: "getByKey",
-            key_restaurante: Model.restaurante.Action.getSelect()?.key
-        }).then(resp => {
-            this.setState({ restaurante: resp.data })
-        }).catch(e => {
-            console.log(e.data);
-        })
-
         SSocket.sendPromise({
             component: 'pedido',
             type: 'getByRestaurante',
@@ -81,7 +71,7 @@ class historialPedido extends Component {
         if (!this.state.ready) return <SLoad />
         if (!this.state.data) return <SLoad />
 
-        const space = 50;
+        const restaurante = Model.restaurante.Action.getSelect();
 
         return (
             <SPage
@@ -94,11 +84,7 @@ class historialPedido extends Component {
                     <SView>
                         <SHr />
                         <SText font={'Montserrat-ExtraBold'} fontSize={14}>HISTORIAL DE PEDIDO</SText>
-                        {
-                            this.state.restaurante ?
-                                <SText font={"Montserrat-SemiBold"} color={STheme.color.primary} fontSize={12}>{this.state.restaurante.nombre}</SText>
-                                : <SLoad />
-                        }
+                        <SText font={"Montserrat-SemiBold"} color={STheme.color.primary} fontSize={12}>{restaurante.nombre}</SText>
                         <SHr />
                     </SView>
                     <SHr />

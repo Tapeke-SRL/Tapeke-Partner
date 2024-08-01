@@ -25,16 +25,6 @@ class root extends Component {
             this.setState({ ready: true })
         })
 
-        SSocket.sendPromise({
-            component: "restaurante",
-            type: "getByKey",
-            key_restaurante: this.key
-        }).then(resp => {
-            this.setState({ restaurante: resp.data })
-        }).catch(e => {
-            console.log(e.data);
-        })
-
         Model.calificacion.Action.getMediaByRestaurante(this.key).then((resp) => {
             this.setState({ media: resp.data });
         }).catch(e => {
@@ -145,6 +135,8 @@ class root extends Component {
     render() {
         if (!this.state.ready) return <SLoad />
         if (!this.state.data) return <SLoad />
+
+        const restaurante = Model.restaurante.Action.getSelect();
         return (<SPage
             onRefresh={() => {
                 Model.calificacion.Action.CLEAR();
@@ -155,11 +147,9 @@ class root extends Component {
                 <SView>
                     <SHr />
                     <SText font={'Montserrat-ExtraBold'} fontSize={14}>CALIFICACIÓN Y COMENTARIOS</SText>
-                    {
-                        this.state.restaurante ?
-                            <SText font={"Montserrat-SemiBold"} color={STheme.color.primary} fontSize={12}>{this.state.restaurante.nombre}</SText>
-                            : <SLoad />
-                    }
+
+                    <SText font={"Montserrat-SemiBold"} color={STheme.color.primary} fontSize={12}>{restaurante.nombre}</SText>
+
                     <SHr />
                 </SView>
                 <SHr />
@@ -177,10 +167,6 @@ class root extends Component {
                                     filter={a => a.fecha_on >= this.state.fecha_inicio && a.fecha_on <= this.state.fecha_fin}
                                     order={[{ key: "fecha_on", type: "date", order: "desc" }]}
                                     render={(obj) => {
-                                        // if (obj.fecha_on >= this.state.fecha_inicio && obj.fecha_on <= this.state.fecha_fin) {
-                                        //     return this.componetNoComment();
-                                        // }
-
                                         let usuario = this.state.usuarios ? this.state.usuarios[obj.key_usuario]?.usuario : false;
                                         return <CardCalificacionPedido usuario={usuario} data={obj} />
                                     }}

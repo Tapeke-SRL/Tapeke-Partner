@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { SLoad, SNavigation, SPage, SText, SView, STheme, SImage, SHr, SDate, SIcon, SPopup, SThread, SSwitch } from 'servisofts-component';
+import { SLoad, SNavigation, SPage, SText, SView, STheme, SImage, SHr, SDate, SIcon, SPopup, SThread, SSwitch, SList } from 'servisofts-component';
 import Container from '../../Components/Container';
 import Model from '../../Model';
 import SSocket from 'servisofts-socket'
@@ -53,6 +53,7 @@ class index extends Component {
   </>
 
   static FOOTER = <>
+    <SView flex />
     <PBarraFooter url={"pedido"} />
   </>
 
@@ -298,7 +299,123 @@ class index extends Component {
     return cantidad;
   }
 
-  cardPedido(dataPackVendidos) {
+  cardPedido(obj) {
+    var montoTotal = obj.cantidad * obj.precio;
+    var dataUsuario = { Nombres: "ERROR", Apellidos: "SLOW" } // TODO
+
+    let entregado = obj.state == "entregado" || obj.state == "entregado_conductor" || obj.state == "conductor_llego";
+    let error = obj.state == "cancelado" || obj.state == "no_recogido";
+
+    let paddingLeftText = 1
+
+    return <SView col={"xs-12"}
+      style={{
+        borderWidth: 1,
+        borderColor: STheme.color.lightGray,
+        borderRadius: 8,
+        padding: 6,
+        marginBottom: 10
+      }}
+      row backgroundColor={STheme.color.card}
+      onPress={() => { SNavigation.navigate("/pedido", { pk: obj.key }); }}
+    >
+
+      <SView col={"xs-5"}
+        // backgroundColor="#ff00ff"
+        flex
+        style={{
+          borderRightWidth: 1,
+          borderColor: STheme.color.lightGray
+        }}>
+
+        <SText center h={15} fontSize={10}>#{obj.key.substr(0, 6)}</SText>
+
+        <SView col={"xs-12"}
+          flex row
+          style={{
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+          }}
+        >
+          {
+            obj.cantidad > 0 ?
+              <SView flex center>
+                <SText fontSize={14} color={STheme.color.primary}>TAPEKE</SText>
+                <SText fontSize={12} color={STheme.color.text} bold>x {obj.cantidad}</SText>
+              </SView>
+              : null
+          }
+
+
+          {obj.pedido_producto ?
+            <SView flex center>
+              <SText fontSize={14} color={STheme.color.primary}>ÍTEMS</SText>
+              <SText fontSize={12} color={STheme.color.text} bold>x {this.cantidadProductos(obj.pedido_producto)}</SText>
+            </SView>
+            : null
+          }
+
+        </SView>
+      </SView>
+
+      <SView col={"xs-7"}
+        padding={5}
+      >
+        <SView
+          row
+        >
+          <SView
+            flex
+            col={"xs-10"}
+          >
+            <SView>
+              <SText font={"Roboto"} fontSize={12} color={STheme.color.primary}>Cliente: </SText>
+              <SText font={"Roboto"} fontSize={12} color={STheme.color.text}>{dataUsuario?.Nombres} {dataUsuario?.Apellidos}</SText>
+            </SView>
+
+            <SText font={"Roboto"} fontSize={12} color={STheme.color.primary}>Total:
+              <SText font={"Roboto"} fontSize={12} color={STheme.color.text}
+                style={{ paddingLeft: paddingLeftText }}>
+                Bs. {montoTotal}
+              </SText>
+            </SText>
+          </SView>
+
+          <SView
+            col={"xs-2"}
+            center
+          >
+            <SText flex center fontSize={10}>{new SDate(obj.fecha_on, "yyyy-MM-dd hh:mm:ss.S").toString("hh:mm")}</SText>
+            <SView width={25} height={25}
+              center
+              style={{ borderRadius: 100 }}
+              backgroundColor={!!error ? STheme.color.danger : (!!entregado ? STheme.color.accent : STheme.color.lightGray)} >
+              <SIcon name="Aspa" width={10} height={10}></SIcon>
+            </SView>
+          </SView>
+        </SView>
+        <SHr />
+        <SView>
+          <SText font={"Roboto"} fontSize={12} color={STheme.color.primary}>Método de pago:
+            <SText font={"Roboto"} fontSize={12} color={STheme.color.text}
+              style={{ paddingLeft: paddingLeftText }}>
+              {this.tipoDePago(obj.tipo_pago)}
+            </SText>
+          </SText>
+
+          <SText font={"Roboto"} fontSize={12} color={STheme.color.primary}>Tipo de entrega:
+            <SText font={"Roboto"} fontSize={12} color={STheme.color.text}
+              style={{ paddingLeft: paddingLeftText }}>
+              {obj.delivery && obj.delivery > 0 ? "Delivery" : "Recoger"}
+            </SText>
+          </SText>
+        </SView>
+
+      </SView>
+    </SView>
+  }
+
+  listPedido(dataPackVendidos) {
     if (Object.keys(dataPackVendidos).length === 0) return <SView center col><SText>NO HAY PEDIDOS</SText></SView>
 
     let arr = Object.values(dataPackVendidos).sort((a, b) => {
@@ -312,6 +429,7 @@ class index extends Component {
       if (b.state == "cancelado" || b.state == "no_recogido") pesoB = 1;
       return pesoB - pesoA
     })
+
 
     return arr.map((obj, index) => {
       var montoTotal = obj.cantidad * obj.precio;
@@ -454,7 +572,7 @@ class index extends Component {
       <SView col={"xs-11"} style={{ borderBottomWidth: 2, borderColor: STheme.color.primary }}></SView>
       <SHr height={20} />
       <SView col={"xs-11"} row    >
-        {this.cardPedido(dataPackVendidos)}
+        {this.listPedido(dataPackVendidos)}
       </SView>
     </>
   }
@@ -554,8 +672,6 @@ class index extends Component {
 
 
   render_content() {
-    if (!this.state.ready) return <SLoad />
-    
     this.loadData();
 
     if (!this.data) return <SLoad />
@@ -600,6 +716,7 @@ class index extends Component {
   }
 
   render() {
+    if (!this.state.ready) return <SLoad />
     return (<>
       <SPage title={'Pedidos próximos'}
         hidden
