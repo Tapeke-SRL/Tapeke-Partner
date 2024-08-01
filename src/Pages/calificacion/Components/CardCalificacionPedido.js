@@ -12,7 +12,7 @@ class CardCalificacionPedido extends React.Component {
 
     render() {
         return (
-            <SView key={this.data.key} col={"xs-12"} center
+            <SView key={this.data?.key} col={"xs-12"} center
                 border={STheme.color.lightGray}
                 style={{
                     padding: 14,
@@ -41,8 +41,8 @@ class CardCalificacionPedido extends React.Component {
                             }
                         </SView>
 
-                        <SText fontSize={12}>{new SDate(this.data.fecha_on).toString("yyyy-MM-dd hh:mm")}</SText>
-                        <SText fontSize={12}>Código de pedido: #{this.data.key.slice(0, 6)}</SText>
+                        <SText fontSize={12}>{new SDate(this.data?.fecha_on).toString("yyyy-MM-dd hh:mm")}</SText>
+                        <SText fontSize={12}>Código de pedido: #{this.data?.key.slice(0, 6)}</SText>
                     </SView>
 
                     <SView flex>
@@ -59,11 +59,11 @@ class CardCalificacionPedido extends React.Component {
                             <SText
                                 center
                                 font={'Montserrat-Medium'}
-                                fontSize={this.data.pedido_star ? 40 : 20}
+                                fontSize={this.data?.pedido_star ? 40 : 20}
                                 style={{
                                     paddingLeft: 5
                                 }}
-                            >{this.data.pedido_star ? this.data.pedido_star : "No Califico"}</SText>
+                            >{this.data?.pedido_star ? this.data?.pedido_star : "No Califico"}</SText>
                         </SView>
                     </SView>
                 </SView>
@@ -81,8 +81,8 @@ class CardCalificacionPedido extends React.Component {
                         <SText
                             col={"xs-12"}
                             font={'Montserrat-Medium'}
-                            color={this.data.comentario ? STheme.color.text : STheme.color.gray}
-                        >{this.data.comentario ? this.data.comentario : "Sin Comentario"}</SText>
+                            color={this.data?.comentario ? STheme.color.text : STheme.color.gray}
+                        >{this.data?.comentario ? this.data?.comentario : "Sin Comentario"}</SText>
                     </SView>
                 </SView>
             </SView>

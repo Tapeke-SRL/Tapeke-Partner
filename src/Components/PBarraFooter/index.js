@@ -15,6 +15,7 @@ export default class PBarraFooter extends Component {
 		var color = "#ffffff";
 		var isSelect = (key == this.props.url)
 		let sizeIcon = 23;
+		let fontSize = 10
 		return <SView flex center height onPress={() => {
 			SNavigation.navigate(url, params);
 		}} >
@@ -38,7 +39,7 @@ export default class PBarraFooter extends Component {
 					}
 				</SView>
 				<SView height={2} />
-				<SText font={"Arial"} fontSize={8} center color={color}  >{title}</SText>
+				<SText font={"Arial"} fontSize={fontSize} center color={color}  >{title}</SText>
 			</SView>
 		</SView>
 
@@ -51,8 +52,8 @@ export default class PBarraFooter extends Component {
 			>
 				<SView col={'xs-12'} row height >
 					{this.getItem({ key: "pedido", title: 'Pedidos', image: require('../../Assets/img/icon_pedido.png'), url: '/restaurante', params: { pk: this.key_restaurante } })}
-					{this.getItem({ key: "menu", title: 'Menú', image: require('../../Assets/img/icono_menu.png'), url: '/soporte' })}
-					{this.getItem({ key: "calendario", title: 'Horarios', icon: 'Mcalendario', url: '/restaurante/producto', params: { key_restaurante: this.key_restaurante } })}
+					{this.getItem({ key: "menu", title: 'Menú', icon: 'tapekeMenu', url: '/restaurante/producto' })}
+					{this.getItem({ key: "calendario", title: 'Horarios', icon: 'reloj', url: '/calendario', params: { key_restaurante: this.key_restaurante } })}
 					{this.getItem({ key: "soporte", title: 'Soporte', icon: 'Mcalificacion', url: '/soporte' })}
 					{/* {this.getItem({ key: "calificacion", title: 'Calificación', icon: 'Mcalificacion', url: '/calificacion', params: { pk: this.key_restaurante } })} */}
 				</SView>

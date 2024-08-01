@@ -21,15 +21,6 @@ class root extends Component {
         <PBarraFooter url={"soporte"} />
     </>
 
-static TOPBAR = <>
-<TopBar type={"usuario"} />
-<SView backgroundColor={"#96BE00"} height={20} col={"xs-12"}></SView>
-</>
-
-static FOOTER = <>
-<PBarraFooter url={"calificacion"} />
-</>
-
     constructor(props) {
         super(props);
         this.state = {
@@ -81,7 +72,7 @@ static FOOTER = <>
 
     render() {
         if (!this.state.ready) return <SLoad />
-        return (<SPage 
+        return (<SPage
             hidden
             title={"Soporte"}
             onRefresh={(re) => {

@@ -35,9 +35,10 @@ const theme: SThemeThemes = {
     info: "#96BE00",
     background: "#ffffff",
     card: "#eeeeee99",
-    mapStyle: MapStyle,
     accent: "#96BE00",
+    lightGray: "#EFEFEF",
     font: "Montserrat-Medium",
+    mapStyle: MapStyle,
   }
 }
 // const theme: SThemeThemes = {

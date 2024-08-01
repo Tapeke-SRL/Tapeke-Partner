@@ -48,6 +48,8 @@ import Message, { ReactComponent as MessageW } from './svg/message.svg';
 
 import menu, { ReactComponent as menuW } from './svg/menu.svg';
 import iconoRestaurante, { ReactComponent as iconoRestauranteW } from './svg/iconoRestaurante.svg';
+import reloj, { ReactComponent as relojW } from './svg/reloj.svg';
+import tapekeMenu, { ReactComponent as tapekeMenuW } from './svg/tapekeMenu.svg';
 
 
 
@@ -99,6 +101,8 @@ const Assets: SAssets = {
 
         "menu": { Native: menu, Web: menuW },
         "iconoRestaurante": { Native: iconoRestaurante, Web: iconoRestauranteW },
+        "reloj": { Native: reloj, Web: relojW },
+        "tapekeMenu": { Native: tapekeMenu, Web: tapekeMenuW },
 
 
 
