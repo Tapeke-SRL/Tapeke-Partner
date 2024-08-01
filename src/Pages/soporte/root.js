@@ -18,6 +18,7 @@ class root extends Component {
     </>
 
     static FOOTER = <>
+        <SView flex />
         <PBarraFooter url={"soporte"} />
     </>
 

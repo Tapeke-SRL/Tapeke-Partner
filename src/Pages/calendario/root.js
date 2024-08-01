@@ -13,6 +13,7 @@ import TopBar from '../../Components/TopBar';
 class root extends Component {
     static TOPBAR = <TopBar type={"usuario"} />;
     static FOOTER = <>
+        <SView flex />
         <PBarraFooter url={"calendario"} />
     </>
     constructor(props) {

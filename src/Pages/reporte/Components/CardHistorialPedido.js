@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { SText, SView, SHr, SDate, SImage, SLoad, STheme, STable } from 'servisofts-component';
+import { SText, SView, SHr, SDate, SImage, SLoad, STheme, STable, SNavigation } from 'servisofts-component';
 import DetalleBox2 from './DetalleBox2';
 
 class CardHistorialPedido extends React.Component {
@@ -25,14 +25,13 @@ class CardHistorialPedido extends React.Component {
                     borderRadius: 12
                 }}
             >
-                <SView col={"xs-12"} flex row 
+                <SView col={"xs-12"} row
                     style={{
-                        justifyContent: "space-between",
-                        alignItems: "space-between",
+                        justifyContent: 'space-between'
                     }}
                 >
-                    <SView col={"xs-8"}>
-                        <SView row>
+                    <SView >
+                        <SView row flex>
                             <SText
                                 font={'Montserrat-Regular'}
                                 fontSize={12}
@@ -52,9 +51,9 @@ class CardHistorialPedido extends React.Component {
                             }
                         </SView>
                         <SText fontSize={12}>{new SDate(this.data?.fecha_on, "yyyy-MM-ddThh:mm:ss").toString("dd de MONTH | hh:mm hrs.")}</SText>
-                        <SText fontSize={10} color={this.renderColorState({ state: this.data?.state })}>{(this.data?.state).toUpperCase()}</SText>
+                        <SText fontSize={10} color={this.renderColorState({ state: this.data?.state })}>{(this.data?.state).replace(/_/g, " ").toUpperCase()}</SText>
                     </SView>
-                    <SView col={"xs-4"} center>
+                    <SView center>
                         <SText
                             font={'Montserrat-Regular'}
                             fontSize={12}
@@ -69,10 +68,12 @@ class CardHistorialPedido extends React.Component {
                     <DetalleBox2 data={this.data} interline={0} padding={0} fontSize={10.5} />
 
                     <SHr height={10} />
-                    <SView row
-                        style={{ justifyContent: 'space-between', width: "100%" }}
-                    >
-                        <SText>Ver detalles del pedido</SText>
+                    <SView row center width>
+                        <SText backgroundColor={STheme.color.lightGray} fontSize={12} padding={4} borderRadius={5}
+                            onPress={() => {
+                                SNavigation.navigate('/pedido', { pk: this.data.key })
+                            }}
+                        >Ver detalles del pedido</SText>
                     </SView>
                 </SView>
             </SView>
