@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import { SView, SText, SIcon, SNavigation, SImage } from 'servisofts-component'
+import Model from '../../Model';
 
 export default class PBarraFooter extends Component {
 	constructor(props) {
@@ -8,7 +9,7 @@ export default class PBarraFooter extends Component {
 		this.state = {
 		};
 		this.page = SNavigation.getParam("page");
-		this.key_restaurante = SNavigation.getParam("pk");
+		this.key_restaurante = SNavigation.getParam("pk", Model.restaurante.Action.getKey());
 	}
 
 	getItem({ key, title, icon, image, url, params }) {

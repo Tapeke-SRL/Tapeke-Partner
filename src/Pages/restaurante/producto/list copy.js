@@ -22,7 +22,7 @@ class index extends DPA.list {
     }
 
     componentDidMount() {
-        if (!Model.restaurante.Action.getSelect()) {
+        if (!Model.restaurante.Action.getSelect()?.key) {
             SNavigation.goBack();
             return;
         }

@@ -15,7 +15,7 @@ class index extends DPA.list {
         });
     }
     componentDidMount() {
-        if (!Model.restaurante.Action.getSelect()) {
+        if (!Model.restaurante.Action.getSelect()?.key) {
             SNavigation.goBack();
             return;
         }
@@ -37,7 +37,7 @@ class index extends DPA.list {
     }
 
     $getData() {
-        return Parent.model.Action.getAllBy({ key_restaurante: Model.restaurante.Action.getSelect() });
+        return Parent.model.Action.getAllBy({ key_restaurante: Model.restaurante.Action.getSelect()?.key });
     }
 }
 export default connect(index);

@@ -49,7 +49,7 @@ class root extends Component {
             key_usuario: Model.usuario.Action.getKey()
         }).then(res => {
             let data = res.data
-            if (data?.restaurante?.key != Model.restaurante.Action.getSelect()) {
+            if (data?.restaurante?.key != Model.restaurante.Action.getSelect()?.key) {
                 SPopup.alert('Este pedido es de otro restaurante.');
                 SNavigation.goBack('/');
             }

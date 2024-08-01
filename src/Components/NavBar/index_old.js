@@ -137,7 +137,7 @@ class NavBar extends React.Component {
 					{this.item({ url: "/", label: "Inicio", icon: 'mInicio' })}
 
 					{this.item({
-						url: "/restaurante/producto", params: { key_restaurante: Model.restaurante.Action.getSelect() }, label: "Productos", icon: 'menu',
+						url: "/restaurante/producto", params: { key_restaurante: Model.restaurante.Action.getSelect()?.key }, label: "Productos", icon: 'menu',
 					})}
 
 					{this.item({ url: "/ganancia", label: "Ganancias", icon: 'mGanancias' })}
