@@ -33,11 +33,9 @@ class root extends Component {
     }
 
     async verifyPermisos() {
+        let ver, ver_historial_conciliaciones, ver_tabla_pedidos;
         try {
-            const ver = await Roles.getPermiso({ key_rol: Model.restaurante.Action.getSelectKeyRol(), url: "/_partner/ganancias", permiso: "ver" })
-            const ver_historial_conciliaciones = await Roles.getPermiso({ key_rol: Model.restaurante.Action.getSelectKeyRol(), url: "/_partner/ganancias", permiso: "ver_historial_conciliaciones" })
-            const ver_tabla_pedidos = await Roles.getPermiso({ key_rol: Model.restaurante.Action.getSelectKeyRol(), url: "/_partner/ganancias", permiso: "ver_tabla_pedidos" })
-            this.setState({ ready: true, ver_historial_conciliaciones: !!ver_historial_conciliaciones, ver_tabla_pedidos: !!ver_tabla_pedidos })
+            ver = await Roles.getPermiso({ key_rol: Model.restaurante.Action.getSelectKeyRol(), url: "/_partner/ganancias", permiso: "ver" })
         } catch (error) {
             SNotification.send({
                 title: "Acceso denegado",
@@ -46,7 +44,20 @@ class root extends Component {
                 time: 5000,
             })
             SNavigation.goBack();
+            return;
         }
+        try {
+            ver_historial_conciliaciones = await Roles.getPermiso({ key_rol: Model.restaurante.Action.getSelectKeyRol(), url: "/_partner/ganancias", permiso: "ver_historial_conciliaciones" })
+        } catch (error) {
+
+        }
+        try {
+            ver_tabla_pedidos = await Roles.getPermiso({ key_rol: Model.restaurante.Action.getSelectKeyRol(), url: "/_partner/ganancias", permiso: "ver_tabla_pedidos" })
+        } catch (error) {
+
+        }
+        this.setState({ ready: true, ver_historial_conciliaciones: !!ver_historial_conciliaciones, ver_tabla_pedidos: !!ver_tabla_pedidos })
+
     }
 
     getDatos() {
