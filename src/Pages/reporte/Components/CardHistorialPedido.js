@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { SText, SView, SHr, SDate, SImage, SLoad, STheme, STable, SNavigation } from 'servisofts-component';
+import { SText, SView, SHr, SDate, STheme, SNavigation } from 'servisofts-component';
 import DetalleBox2 from './DetalleBox2';
 
 class CardHistorialPedido extends React.Component {
@@ -47,7 +47,7 @@ class CardHistorialPedido extends React.Component {
                                     fontSize={12}
                                     font={'Montserrat-Regular'}
                                 >{this.props.usuario.Nombres} {this.props.usuario.Apellidos}</SText>
-                                : <SLoad />
+                                : <SText>No se pillo el usuario</SText>
                             }
                         </SView>
                         <SText fontSize={12}>{new SDate(this.data?.fecha_on, "yyyy-MM-ddThh:mm:ss").toString("dd de MONTH | hh:mm hrs.")}</SText>

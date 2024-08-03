@@ -16,7 +16,6 @@ class historialPedido extends Component {
     </>
 
     static FOOTER = <>
-        <SView flex />
         <PBarraFooter />
     </>
 
@@ -67,12 +66,40 @@ class historialPedido extends Component {
         })
     }
 
-    render() {
+
+    renderContenido() {
+        const restaurante = Model.restaurante.Action.getSelect();
+
         if (!this.state.ready) return <SLoad />
         if (!this.state.data) return <SLoad />
 
-        const restaurante = Model.restaurante.Action.getSelect();
+        return <Container center={false}>
+            <SView>
+                <SHr />
+                <SText font={'Montserrat-ExtraBold'} fontSize={16}>HISTORIAL DE PEDIDO</SText>
+                <SText font={"Montserrat-SemiBold"} color={STheme.color.primary} fontSize={14}>{restaurante.nombre}</SText>
+                <SHr />
+            </SView>
+            <SHr />
+            <FilterDate onDateChange={this.handleDateChange} />
+            <SHr />
 
+            <SView center col={"xs-12"}>
+                <SList
+                    data={this.state.data}
+                    limit={10}
+                    filter={a => a.fecha_on >= this.state.fecha_inicio && a.fecha_on <= this.state.fecha_fin}
+                    order={[{ key: "fecha_on", type: "date", order: "desc" }]}
+                    render={(obj) => {
+                        let usuario = this.state.usuarios ? this.state.usuarios[obj.key_usuario]?.usuario : false;
+                        return <CardHistorialPedido data={obj} usuario={usuario} />
+                    }}
+                />
+            </SView>
+        </Container>
+    }
+
+    render() {
         return (
             <SPage
                 hidden
@@ -80,30 +107,7 @@ class historialPedido extends Component {
                     this.getData()
                 }}
             >
-                <Container center={false}>
-                    <SView>
-                        <SHr />
-                        <SText font={'Montserrat-ExtraBold'} fontSize={14}>HISTORIAL DE PEDIDO</SText>
-                        <SText font={"Montserrat-SemiBold"} color={STheme.color.primary} fontSize={12}>{restaurante.nombre}</SText>
-                        <SHr />
-                    </SView>
-                    <SHr />
-                    <FilterDate onDateChange={this.handleDateChange} />
-                    <SHr />
-
-                    <SView center col={"xs-12"}>
-                        <SList
-                            data={this.state.data}
-                            limit={10}
-                            filter={a => a.fecha_on >= this.state.fecha_inicio && a.fecha_on <= this.state.fecha_fin}
-                            order={[{ key: "fecha_on", type: "date", order: "desc" }]}
-                            render={(obj) => {
-                                let usuario = this.state.usuarios ? this.state.usuarios[obj.key_usuario]?.usuario : false;
-                                return <CardHistorialPedido data={obj} usuario={usuario} />
-                            }}
-                        />
-                    </SView>
-                </Container>
+                {this.renderContenido()}
             </SPage>
         );
     }

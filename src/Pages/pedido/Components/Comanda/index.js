@@ -151,22 +151,13 @@ class Comanda extends React.Component {
         totales.totalTapeke = (this.data?.cantidad * this.data?.precio);
 
         if (!!this.data?.pedido_producto) {
-            Object.values(this.data?.pedido_producto).map((prod) => {
+            Object.values(this.data?.pedido_producto).map(prod => {
+                totales.totalSubProducto += prod.monto_total_subproducto_detalle
                 if (prod.precio_sin_descuento) {
                     totales.totalProducto += (prod.cantidad * prod.precio_sin_descuento);
                     totales.totalDescuentoItem += (prod.precio_sin_descuento - prod.precio) * prod.cantidad;
                 } else {
                     totales.totalProducto += (prod.cantidad * prod.precio);
-                }
-
-                if (prod.sub_productos) {
-                    Object.values(prod.sub_productos).map((sub) => {
-                        if (sub.sub_producto_detalle) {
-                            Object.values(sub.sub_producto_detalle).map((subDet) => {
-                                totales.totalSubProducto += (subDet?.precio * subDet?.cantidad) * prod?.cantidad;
-                            });
-                        }
-                    });
                 }
             });
         }
@@ -181,8 +172,8 @@ class Comanda extends React.Component {
         let totalDesc = this.calcularDescuentoCubreTapeke(this.data);
         totales.totalDescCubrePartner = totalDesc.totalDescCubrePartner;
 
-        totales.total = (totales.totalTapeke + totales.totalProducto + totales.totalSubProducto - (totales.totalDescCubrePartner));
-
+        totales.total = (totales.totalTapeke + totales.totalProducto + totales.totalSubProducto);
+        console.log(totales.total);
         return totales;
     }
 
@@ -209,9 +200,10 @@ class Comanda extends React.Component {
         const renderSubProdDet = (sub_producto_detalle) => {
             return Object.values(sub_producto_detalle).map((subDet) => {
                 return <>
-                    <div style={{ ...this.styles.divSpaceBetween }}>
-                        <p style={{ ...this.styles.textClass, marginLeft: 15, width: 25 }}>{`- ${subDet?.cantidad}x`}</p>
+                    <div ke={subDet.key} style={{ ...this.styles.divSpaceBetween }}>
+                        <p style={{ ...this.styles.textClass, marginLeft: 15, width: 50 }}>{`- ${subDet?.cantidad}x`}</p>
                         <p style={{ ...this.styles.textClass }}>{subDet?.nombre}</p>
+                        <p style={{ ...this.styles.textClass }}>{subDet?.precio > 0 ? (subDet?.precio * subDet?.cantidad) + " Bs." : null}</p>
                     </div>
                 </>
             })
@@ -232,18 +224,6 @@ class Comanda extends React.Component {
             }
         }
 
-        const totalSubProductoDetalleIteam = (pedido_producto) => {
-            let totalSub = 0;
-            if (pedido_producto.sub_productos) {
-                Object.values(pedido_producto.sub_productos).map((sub) => {
-                    Object.values(sub.sub_producto_detalle).map((subDet) => {
-                        totalSub += (subDet?.precio * subDet?.cantidad) * pedido_producto.cantidad;
-                    })
-                })
-            }
-            return totalSub;
-        }
-
         if (!!this.data?.pedido_producto) {
             return <>
                 {this.data?.pedido_producto.map((pedido_producto, index) => (
@@ -254,7 +234,7 @@ class Comanda extends React.Component {
                                 {pedido_producto?.cantidad ?? 0}x
                             </p>
                             <p style={{ ...this.styles.textClass, textAlign: 'left' }}>{pedido_producto?.descripcion}</p>
-                            <p style={{ ...this.styles.textClass, textAlign: 'right' }}>Bs. {SMath.formatMoney((pedido_producto?.precio_sin_descuento * pedido_producto.cantidad) + totalSubProductoDetalleIteam(pedido_producto))} </p>
+                            <p style={{ ...this.styles.textClass, textAlign: 'right' }}>Bs. {SMath.formatMoney((pedido_producto?.precio_sin_descuento * pedido_producto.cantidad))} </p>
                         </div>
 
                         {renderSubProd(pedido_producto)}
@@ -368,7 +348,7 @@ class Comanda extends React.Component {
                 <div style={{ width: this.widthGlobal }}>
                     <div style={{ ...this.styles.divSpaceBetween }}>
                         <p style={{ ...this.styles.textClass }}>{`Subtotal:`}</p>
-                        <p style={{ ...this.styles.textClass, textAlign: 'right' }}>{`Bs. ${SMath.formatMoney(total.totalProducto + total.totalSubProducto)}`}</p>
+                        <p style={{ ...this.styles.textClass, textAlign: 'right' }}>{`Bs. ${SMath.formatMoney(total.totalTapeke + total.totalProducto + total.totalSubProducto)}`}</p>
                     </div>
 
                     <div style={{ ...this.styles.divSpaceBetween }}>
