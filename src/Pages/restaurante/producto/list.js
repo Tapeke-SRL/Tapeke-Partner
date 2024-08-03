@@ -10,6 +10,7 @@ import ListItem from './Components/ListItem';
 import CrearNuevo from './Components/CrearNuevo';
 import PBarraFooter from '../../../Components/PBarraFooter';
 import Roles from '../../../Roles';
+import PageTitle from '../../../Components/PageTitle';
 
 
 
@@ -201,8 +202,9 @@ export default class list extends Component {
 
         const renderHeader = () => (
             <SView col={"xs-12"}>
-                <SText font='Montserrat-Bold' fontSize={16}>MENÚ</SText>
-                <SText fontSize={12} font='Montserrat-Bold' color={STheme.color.primary}>{this.state?.restaurante?.nombre}</SText>
+                <PageTitle title={"MENÚ"}/>
+                {/* <SText font='Montserrat-Bold' fontSize={16}>MENÚ</SText> */}
+                {/* <SText fontSize={12} font='Montserrat-Bold' color={STheme.color.primary}>{this.state?.restaurante?.nombre}</SText> */}
                 <SView col={"xs-12"} style={{
                     alignItems: "flex-end"
                 }}>

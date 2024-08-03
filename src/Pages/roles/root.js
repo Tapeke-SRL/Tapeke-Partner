@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { View, Text, FlatList } from 'react-native';
 import TopBar from '../../Components/TopBar';
-import { SHr, SImage, SList, SLoad, SNavigation, SNotification, SPopup, SText, STheme, SView } from 'servisofts-component';
+import { SHr, SImage, SList, SLoad, SNavigation, SNotification, SPage, SPopup, SText, STheme, SView } from 'servisofts-component';
 import PBarraFooter from '../../Components/PBarraFooter';
 import Container from '../../Components/Container';
 import SSocket from 'servisofts-socket';
 import Model from '../../Model';
+import PageTitle from '../../Components/PageTitle';
 
 export default class root extends Component {
 
@@ -16,7 +17,6 @@ export default class root extends Component {
     </>
 
     static FOOTER = <>
-        <SView flex />
         <PBarraFooter url={"pedido"} />
     </>
     constructor(props) {
@@ -115,7 +115,7 @@ export default class root extends Component {
                     <SText fontSize={12} color={STheme.color.gray}>{obj?.usuario?.Correo}</SText>
                 </SView>
                 <SView center height={60}>
-                    <SView width={30} height={30}  onPress={() => {
+                    <SView width={30} height={30} onPress={() => {
                         SNavigation.navigate("/roles/add", { key_restaurante: this.key_restaurante, key_usuario: obj.key_usuario, key: obj.key })
                     }} >
                         <SImage src={require("../../Assets/img/EDITAR2.png")} />
@@ -178,13 +178,10 @@ export default class root extends Component {
     }
     render() {
         const restaurante = Model.restaurante.Action.getSelect();
-        return <SView  >
+        return <SPage hidden >
             <Container>
                 <SHr />
-                <SView col={"xs-12"}>
-                    <SText font='Montserrat-ExtraBold'>{"ADMINISTRADOR DE USUARIOS"}</SText>
-                    <SText font={"Montserrat-Medium"} color={STheme.color.primary}>{restaurante?.nombre}</SText>
-                </SView>
+                <PageTitle title='ADMINISTRADOR DE USUARIOS' />
                 <SHr />
                 <SView col={"xs-12"} row>
                     <SView flex >
@@ -200,6 +197,6 @@ export default class root extends Component {
                 <SHr h={32} />
                 {this.renderList()}
             </Container>
-        </SView>
+        </SPage>
     }
 }

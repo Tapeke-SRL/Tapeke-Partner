@@ -50,8 +50,8 @@ const Input = forwardRef((props: InputProps, ref) => {
         },
     }));
     return <SView col={props.col}>
-        <SText fontSize={10} font={"Montserrat-Bold"} color={color}>{props.label}</SText>
-        <SHr h={3} />
+        {/* <SText fontSize={10} font={"Montserrat-Bold"} color={color}>{props.label}</SText> */}
+        {/* <SHr h={3} /> */}
         <SView style={{
             width: "100%",
             height: props.height ?? 34,
@@ -71,7 +71,7 @@ const Input = forwardRef((props: InputProps, ref) => {
                     borderWidth: 0.5,
                     color: "#000",
                     borderColor: "#CCC",
-                    backgroundColor: colorCard,
+                    // backgroundColor: colorCard,
                     padding: 0,
                     paddingStart: 8,
                     fontFamily: "Montserrat",
@@ -85,7 +85,7 @@ const Input = forwardRef((props: InputProps, ref) => {
                 editable={!props.onPress && !props.disabled}
                 placeholder={props.placeholder} />
         </SView>
-        <SText fontSize={6.5} font={"Montserrat-SemiBold"} color={colorGray2}>{props.info}</SText>
+        {/* <SText fontSize={6.5} font={"Montserrat-SemiBold"} color={colorGray2}>{props.info}</SText> */}
     </SView>
 })
 

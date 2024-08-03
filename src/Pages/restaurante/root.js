@@ -53,7 +53,6 @@ class index extends Component {
   </>
 
   static FOOTER = <>
-    <SView flex />
     <PBarraFooter url={"pedido"} />
   </>
 
@@ -718,8 +717,15 @@ class index extends Component {
     </SView>
   }
 
-  render() {
+  renderContenido() {
     if (!this.state.ready) return <SLoad />
+    return <>
+      <SHr height={20} />
+      {this.render_content()}
+    </>
+  }
+  render() {
+
     return (<>
       <SPage title={'Pedidos próximos'}
         hidden
@@ -735,10 +741,10 @@ class index extends Component {
           if (resolve) resolve();
         }}
       >
-        <SHr height={20} />
-        {this.render_content()}
+        {this.renderContenido()}
+        {(!this.data || this.data?.estado == 2 ? null : <FloatButtomQR />)}
       </SPage>
-      {(!this.data || this.data?.estado == 2 ? null : <FloatButtomQR />)}
+
     </>
     );
   }
