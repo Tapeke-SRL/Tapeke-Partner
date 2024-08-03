@@ -13,9 +13,7 @@ import {
     SThread,
     SImage
 } from 'servisofts-component';
-import Model from '../../../../Model';
 import SSocket from 'servisofts-socket';
-import AccentBar from '../../../../Components/AccentBar';
 import { Platform } from 'react-native';
 import html2canvas from 'html2canvas';
 import jspdf from 'jspdf';

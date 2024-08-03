@@ -251,12 +251,13 @@ class root extends Component {
                 title: prod.descripcion,
                 cantidad: prod.cantidad,
                 precio: (prod.precio * prod.cantidad),
-                detalle: prod.sub_productos
+                detalle: prod.sub_productos,
+                descuento: prod?.precio_sin_descuento ? prod?.precio_sin_descuento - prod?.precio : 0
             })
         })
     }
 
-    cardProducto({ key, image, title, cantidad, precio, detalle }) {
+    cardProducto({ key, image, title, cantidad, precio, detalle, descuento }) {
         const cardDetalle = () => {
             let det = Object.values(detalle);
             if (det.length == 0) {
@@ -287,7 +288,7 @@ class root extends Component {
                         marginLeft: 10
                     }}
                 >
-                    <SText >{title}</SText>
+                    <SText >{`${title} ${descuento}`}</SText>
                     {cardDetalle()}
                 </SView>
 
@@ -352,7 +353,7 @@ class root extends Component {
             <SHr h={20} />
             {this.componentUsuario()}
             <SHr h={20} />
-            {this.componentDatosPedido()}d
+            {this.componentDatosPedido()}
             <SHr h={20} />
             {this.componentDetallePedido()}
             <SHr h={20} />
