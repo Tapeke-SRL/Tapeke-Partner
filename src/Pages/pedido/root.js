@@ -25,8 +25,6 @@ import PedidoState from './Components/PedidoState';
 import Popups from '../../Components/Popups';
 
 import { Parent } from '.';
-import producto from '../restaurante/producto';
-
 
 class root extends Component {
     constructor(props) {
