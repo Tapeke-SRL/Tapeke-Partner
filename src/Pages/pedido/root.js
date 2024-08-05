@@ -96,14 +96,8 @@ class root extends Component {
                         usuario ?
                             <>
                                 <SView width={40} height={40}>
-                                    <SImage src={SSocket.api.root + "usuario/" + usuario?.key}
-                                        style={{
-                                            resizeMode: 'cover',
-                                            marginRight: 10,
-                                            borderRadius: 5
-                                        }}
-                                    />
-
+                                    <SImage src={require("../../Assets/img/no_image.jpeg")} style={{ borderRadius: 10 }} />
+                                    <SImage src={SSocket.api.root + "usuario/" + usuario?.key} style={{ borderRadius: 10, position: 'absolute', resizeMode: "cover" }} />
                                 </SView>
 
                                 <SText fontSize={16} style={{ paddingLeft: 5 }}>{`${usuario?.Nombres} ${usuario?.Apellidos}`}</SText>
