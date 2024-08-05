@@ -12,7 +12,7 @@ export default class PBarraFooter extends Component {
 		this.key_restaurante = SNavigation.getParam("pk", Model.restaurante.Action.getKey());
 	}
 
-	getItem({ key, title, icon, image, url, params }) {
+	getItem({ key, title, icon, image, url, params, width }) {
 		var color = "#ffffff";
 		var isSelect = (key == this.props.url)
 		let sizeIcon = 23;
@@ -23,7 +23,7 @@ export default class PBarraFooter extends Component {
 			<SView style={{
 				borderRadius: 16,
 				backgroundColor: (isSelect ? "#ffffff44" : ""),
-				width: 55,
+				width: width ? width : 55,
 				height: 45,
 			}} center>
 				<SView height={sizeIcon} colSquare center >
@@ -54,8 +54,8 @@ export default class PBarraFooter extends Component {
 				<SView col={'xs-12'} row height >
 					{this.getItem({ key: "pedido", title: 'Pedidos', image: require('../../Assets/img/icon_pedido.png'), url: '/restaurante', params: { pk: this.key_restaurante } })}
 					{this.getItem({ key: "menu", title: 'Menú', icon: 'tapekeMenu', url: '/restaurante/producto', params: { key_restaurante: this.key_restaurante } })}
-					{this.getItem({ key: "calendario", title: 'Horarios', icon: 'reloj', url: '/calendario', params: { key_restaurante: this.key_restaurante } })}
-					{this.getItem({ key: "soporte", title: 'Soporte', icon: 'Mcalificacion', url: '/soporte' })}
+					{this.getItem({ key: "calendario", title: 'Programar Tapekes', icon: 'Calendario', url: '/calendario', width: 100, params: { key_restaurante: this.key_restaurante } })}
+					{this.getItem({ key: "soporte", title: 'Soporte', icon: 'Soporte', url: '/soporte' })}
 					{/* {this.getItem({ key: "calificacion", title: 'Calificación', icon: 'Mcalificacion', url: '/calificacion', params: { pk: this.key_restaurante } })} */}
 				</SView>
 			</SView >

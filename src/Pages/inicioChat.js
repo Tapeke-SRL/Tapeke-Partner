@@ -41,7 +41,7 @@ class inicioChat extends Component {
             zIndex: -1,
             // opacity:"70%"
         }}>
-            <SIcon name={"Soporte"} />
+            <SIcon name={"SoporteBanner"} />
         </SView>
     }
 

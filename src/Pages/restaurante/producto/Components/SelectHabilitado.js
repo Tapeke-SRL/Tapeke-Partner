@@ -50,7 +50,7 @@ export default class SelectHabilitado extends Component {
             <SView
                 withoutFeedback
                 style={[{
-                    width: 200,
+                    width: 220,
                     height: 176,
                     // padding: 8,
                     justifyContent: "center",

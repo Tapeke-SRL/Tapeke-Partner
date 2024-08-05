@@ -100,7 +100,7 @@ export default ({ item, section, index, key_restaurante, onChange, image_time })
                 <SView width={8} />
                 <SView flex style={{ justifyContent: "center" }}>
                     <SText style={{ fontSize: 12, }} >{item?.nombre}</SText>
-                    <SText style={{ fontSize: 10, color: STheme.color.lightGray }} >{cantidad_sub_productos <= 0 ? "Sin subproductos" : `${cantidad_sub_productos} subproductos`}</SText>
+                    <SText style={{ fontSize: 10, color: STheme.color.gray }} >{cantidad_sub_productos <= 0 ? "Sin subproductos" : `${cantidad_sub_productos} subproductos`}</SText>
                 </SView>
                 <SView height style={{ justifyContent: "center", }} onPress={hanlePress}>
                     <SView col={"xs-12"} row style={{

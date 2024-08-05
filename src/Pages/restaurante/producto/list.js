@@ -202,7 +202,7 @@ export default class list extends Component {
 
         const renderHeader = () => (
             <SView col={"xs-12"}>
-                <PageTitle title={"MENÚ"}/>
+                <PageTitle title={"MENÚ"} />
                 {/* <SText font='Montserrat-Bold' fontSize={16}>MENÚ</SText> */}
                 {/* <SText fontSize={12} font='Montserrat-Bold' color={STheme.color.primary}>{this.state?.restaurante?.nombre}</SText> */}
                 <SView col={"xs-12"} style={{
@@ -241,7 +241,7 @@ export default class list extends Component {
                 }} row>
                     <SView flex>
                         <SText style={{ fontSize: 14, }} font='Montserrat-Bold'>{section?.nombre}</SText>
-                        <SText color={STheme.color.lightGray} fontSize={12}>{section.cantidad > 0 ? section.cantidad + " productos" : "Sin productos"}</SText>
+                        <SText color={STheme.color.gray} fontSize={12}>{section.cantidad > 0 ? section.cantidad + " productos" : "Sin productos"}</SText>
                     </SView>
                     <SView height center row width={60}>
                         <SView height center >
@@ -255,8 +255,8 @@ export default class list extends Component {
                                     size={16}
                                     onChange={e => {
                                         SPopup.confirm({
-                                            title: habilitado ? "Se desabilitaran todos los productos" : "Se habilitaran todos los pruductos",
-                                            message: "Confirmar",
+                                            title: habilitado ? "Se deshabilitaran todos los productos" : "Se habilitaran todos los pruductos",
+                                            message: "",
                                             onPress: () => {
                                                 let dataToSend = [];
                                                 let configToSend = {}
@@ -311,7 +311,7 @@ export default class list extends Component {
                                     { rotate: this.state.openSections[section.key] ? "90deg" : "270deg" }
                                 ]
                             }}>
-                                <SIcon name='Back' fill={STheme.color.lightGray} />
+                                <SIcon name='Back' fill={STheme.color.gray} />
                             </SView>
                         </SView>
                     </SView>

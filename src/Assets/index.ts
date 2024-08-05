@@ -21,6 +21,7 @@ import AyudaFlecha, { ReactComponent as AyudaFlechaW } from './svg/ayudaFlecha.s
 import Idelivery, { ReactComponent as IdeliveryW } from './svg/idelivery.svg';
 import Irecoger, { ReactComponent as IrecogerW } from './svg/irecoger.svg';
 import Soporte, { ReactComponent as SoporteW } from './svg/soporte.svg';
+import SoporteBanner, { ReactComponent as SoporteBannerW } from './svg/soporteBanner.svg';
 
 import mInicio, { ReactComponent as mInicioW } from './svg/mInicio.svg';
 import mGanancias, { ReactComponent as mGananciasW } from './svg/mGanancias.svg';
@@ -53,10 +54,7 @@ import tapekeMenu, { ReactComponent as tapekeMenuW } from './svg/tapekeMenu.svg'
 
 import whatsapp, { ReactComponent as whatsappW } from './svg/whatsapp.svg';
 
-
-
-
-
+import Calendario, { ReactComponent as CalendarioW } from './svg/calendario.svg';
 
 const Assets: SAssets = {
     svg: {
@@ -81,6 +79,7 @@ const Assets: SAssets = {
         "Idelivery": { Native: Idelivery, Web: IdeliveryW },
         "Irecoger": { Native: Irecoger, Web: IrecogerW },
         "Soporte": { Native: Soporte, Web: SoporteW },
+        "SoporteBanner": { Native: SoporteBanner, Web: SoporteBannerW },
 
         "mInicio": { Native: mInicio, Web: mInicioW },
         "mGanancias": { Native: mGanancias, Web: mGananciasW },
@@ -107,6 +106,7 @@ const Assets: SAssets = {
         "tapekeMenu": { Native: tapekeMenu, Web: tapekeMenuW },
 
         "whatsapp": { Native: whatsapp, Web: whatsappW },
+        "Calendario": { Native: Calendario, Web: CalendarioW },
 
 
 

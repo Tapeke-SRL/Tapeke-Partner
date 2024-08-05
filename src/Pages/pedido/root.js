@@ -13,7 +13,6 @@ import {
     SDate,
     SIcon,
     SThread,
-    SList
 } from 'servisofts-component';
 import SSocket from 'servisofts-socket';
 import Container from '../../Components/Container';
@@ -21,8 +20,7 @@ import Model from '../../Model';
 import AccentBar from '../../Components/AccentBar';
 import { Linking } from 'react-native';
 import { Platform } from 'react-native';
-import PedidoState from './Components/PedidoState';
-import Popups from '../../Components/Popups';
+
 
 import { Parent } from '.';
 
@@ -54,16 +52,35 @@ class root extends Component {
                 SPopup.alert('Este pedido es de otro restaurante.');
                 SNavigation.goBack('/');
             }
-
             this.setState({ data: res.data })
+
+            this.getUser(res.data)
         }).catch(err => {
             console.error(err.data)
+        })
+    }
+
+    getUser(data) {
+        let keys = [data.key_usuario];
+        console.log(keys);
+
+        SSocket.sendPromise({
+            version: "2.0",
+            service: "usuario",
+            component: "usuario",
+            type: "getAllKeys",
+            keys: keys,
+        }).then(resp => {
+            this.setState({ usuarios: resp.data })
+        }).catch(e2 => {
+            SPopup.alert(e2.error)
         })
     }
 
     componentUsuario() {
         let borderRadius = 5;
         let redirectLink = `https://api.whatsapp.com/send?phone=${this?.state?.data?.factura?.phone.slice(5)}`
+        let usuario = this.state.usuarios ? this.state.usuarios[this.state?.data?.key_usuario].usuario : null
         return <>
             <SText font={'Montserrat-ExtraBold'} fontSize={16}>DATOS DEL CLIENTE</SText>
             <SText fontSize={11} color={STheme.color.gray}>(Si te falta algún item, para salvar el pedido, puedes comunicarte con el cliente presionando en el número de teléfono y ofrecer un producto equivalente al precio)</SText>
@@ -76,19 +93,20 @@ class root extends Component {
                     }}
                 >
                     {
-                        this.usuario ?
+                        usuario ?
                             <>
-                                <SImage src={SSocket.api.root + "usuario/" + this.usuario?.key}
-                                    style={{
-                                        resizeMode: 'cover',
-                                        width: 40,
-                                        height: 40,
-                                        marginRight: 10,
-                                        borderRadius: 5
-                                    }}
-                                />
+                                <SView width={40} height={40}>
+                                    <SImage src={SSocket.api.root + "usuario/" + usuario?.key}
+                                        style={{
+                                            resizeMode: 'cover',
+                                            marginRight: 10,
+                                            borderRadius: 5
+                                        }}
+                                    />
 
-                                <SText fontSize={16}>{`${this.usuario?.Nombres} ${this.usuario?.Apellidos}`}</SText>
+                                </SView>
+
+                                <SText fontSize={16} style={{ paddingLeft: 5 }}>{`${usuario?.Nombres} ${usuario?.Apellidos}`}</SText>
                             </>
                             : <SLoad />
                     }
@@ -250,9 +268,9 @@ class root extends Component {
                 image: SSocket.api.root + "producto/.128_" + prod.key + "?date=" + new Date().getTime(),
                 title: prod.descripcion,
                 cantidad: prod.cantidad,
-                precio: (prod.precio * prod.cantidad),
+                precio: prod?.precio_sin_descuento ? (prod?.precio_sin_descuento * prod.cantidad) : (prod.precio * prod.cantidad),
                 detalle: prod.sub_productos,
-                descuento: prod?.precio_sin_descuento ? prod?.precio_sin_descuento - prod?.precio : 0
+                descuento: prod?.precio_sin_descuento ? (prod.cantidad * prod.precio_sin_descuento) - (prod.cantidad * prod.precio) : 0
             })
         })
     }
@@ -265,7 +283,7 @@ class root extends Component {
             }
             return det.map(det => {
                 return Object.values(det.sub_producto_detalle).map(subdet => {
-                    return <SText color={STheme.color.gray} fontSize={10} key={det.key}>{`${subdet.cantidad}x ${subdet.nombre} ${subdet.precio > 0 ? "- " + (subdet.precio * subdet.cantidad) + " Bs." : ""}`}</SText>
+                    return <SText color={STheme.color.gray} fontSize={10} key={det.key}>{`${subdet.cantidad ? subdet.cantidad + "x" : ""} ${subdet.nombre} ${subdet.precio > 0 ? "- " + (subdet.precio * subdet.cantidad) + " Bs." : ""}`}</SText>
                 })
             })
         };
@@ -288,7 +306,7 @@ class root extends Component {
                         marginLeft: 10
                     }}
                 >
-                    <SText >{`${title} ${descuento}`}</SText>
+                    <SText col={"xs-12"}>{`${title}`}</SText>
                     {cardDetalle()}
                 </SView>
 
@@ -297,6 +315,14 @@ class root extends Component {
                     <SText>{cantidad}</SText>
                     <SText color={STheme.color.primary}>Precio</SText>
                     <SText> Bs. {parseFloat(precio).toFixed(2)}</SText>
+                    {
+                        descuento > 0 ?
+                            <>
+                                <SText color={STheme.color.danger}>Descuento</SText>
+                                <SText> Bs. {parseFloat(descuento).toFixed(2)}</SText>
+                            </>
+                            : null
+                    }
                 </SView>
             </SView>
             <SHr />
@@ -320,6 +346,20 @@ class root extends Component {
         </SView>
     }
 
+    totalProducto() {
+        let total = 0
+
+        Object.values(this.state.data.pedido_producto).map(prod => {
+            if (prod.precio_sin_descuento) {
+                total += (prod.cantidad * prod.precio_sin_descuento)
+            } else {
+                total += (prod.cantidad * prod.precio)
+            }
+        })
+
+        return total;
+    }
+
     totalSubProductoDetalle() {
         let total = 0
 
@@ -329,18 +369,34 @@ class root extends Component {
 
         return total;
     }
+
+    totalDescuentoIteamCubrePartner() {
+        let total = 0
+
+        Object.values(this.state.data.pedido_producto).map(prod => {
+            if (prod.precio_sin_descuento) {
+                total += (prod.cantidad * prod.precio_sin_descuento) - (prod.cantidad * prod.precio)
+            }
+        })
+
+        return total;
+    }
+
     detallePedido() {
         let data = this.state.data
+        let totalTapeke = (data.cantidad * data.precio)
+        let totalProducto = this.totalProducto()
         let totalSubProd = this.totalSubProductoDetalle();
 
-        let descuento = 0;
+        let descuento = this.totalDescuentoIteamCubrePartner();
 
-        let total = (data.cantidad * data.precio) + data.total_productos - (descuento)
+        let total = totalTapeke
+            + totalProducto + totalSubProd - (descuento)
         return <>
             <SText font={"Montserrat-SemiBold"}>DETALLE DE COMPRA</SText>
             {this.labelDetallePedido({ label: "Método de pago", value: "Online", color: STheme.color.text, font: 'Montserrat-SemiBold' })}
-            {this.labelDetallePedido({ label: "Total Tapekes", value: (data.cantidad * data.precio) ?? 0 })}
-            {this.labelDetallePedido({ label: "Total Producto", value: data.total_productos - totalSubProd ?? 0 })}
+            {this.labelDetallePedido({ label: "Total Tapekes", value: totalTapeke ?? 0 })}
+            {this.labelDetallePedido({ label: "Total Producto", value: totalProducto ?? 0 })}
             {this.labelDetallePedido({ label: "Total SubProducto", value: totalSubProd ?? 0 })}
             {this.labelDetallePedido({ label: "Descuento cubre Partner", value: descuento, color: STheme.color.danger, simbol: "-" })}
             <SHr color={STheme.color.gray} h={1} />
@@ -348,7 +404,26 @@ class root extends Component {
         </>
     }
 
+    componentSoporte() {
+        return <SView>
+            <SText center fontSize={9} color={STheme.color.gray}>*El cliente puede pasar a recoger su pedido durante tu horario de atención, por lo tanto deberás reservarlo. En caso de que no pase, contactate con soporte.</SText>
+            <SHr h={20} />
+            <SView center row
+                onPress={() => {
+                    SNavigation.navigate("/soporte");
+                }}
+            >
+                <SView height={30} width={30}>
+                    <SImage src={require('../../Assets/img/contacto.png')} />
+                </SView>
+                <SText font={'Montserrat-SemiBold'} fontSize={15} style={{ paddingLeft: 10 }}>Contactar a Soporte</SText>
+            </SView>
+        </SView>
+    }
+
     renderContent() {
+        if (!this.state.data) return <SLoad />;
+
         return <Container center={false}>
             <SHr h={20} />
             {this.componentUsuario()}
@@ -365,14 +440,18 @@ class root extends Component {
             <SHr h={20} />
             {this.detallePedido()}
             <SHr h={20} />
+            {/* TODO componente Mapas */}
+            <SView center border={"#FF00FF"}>
+                <SText font={'Montserrat-Bold'}>Aca va el componente mapa para el rastreo y botónes de cambio de estados</SText>
+            </SView>
+            <SHr h={20} />
+            {this.componentSoporte()}
+            <SHr h={20} />
         </Container>;
     }
 
     render() {
         if (!this.state.ready) return <SLoad />;
-        if (!this.state.data) return <SLoad />;
-
-        this.usuario = Model.usuario.Action.getByKey(this.state.data.key_usuario);
 
         return (
             <SPage

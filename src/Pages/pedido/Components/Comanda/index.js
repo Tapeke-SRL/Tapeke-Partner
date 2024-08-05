@@ -130,6 +130,14 @@ class Comanda extends React.Component {
             });
         }
 
+        if (obj?.pedido_producto) {
+            Object.values(obj?.pedido_producto).map(prod => {
+                if (prod.precio_sin_descuento) {
+                    totalDesc.totalDescCubrePartner += (prod.cantidad * prod.precio_sin_descuento) - (prod.cantidad * prod.precio)
+                }
+            })
+        }
+
         return totalDesc;
     }
 
@@ -153,25 +161,23 @@ class Comanda extends React.Component {
                 totales.totalSubProducto += prod.monto_total_subproducto_detalle
                 if (prod.precio_sin_descuento) {
                     totales.totalProducto += (prod.cantidad * prod.precio_sin_descuento);
-                    totales.totalDescuentoItem += (prod.precio_sin_descuento - prod.precio) * prod.cantidad;
                 } else {
                     totales.totalProducto += (prod.cantidad * prod.precio);
                 }
             });
         }
-        if (!!this.data?.descuentos) {
-            Object.values(this.data?.descuentos).map((desc) => {
-                totales.totalDescuentoProducto += desc?.total_descuento_producto;
-            });
-        }
+        // if (!!this.data?.descuentos) {
+        //     Object.values(this.data?.descuentos).map((desc) => {
+        //         totales.totalDescuentoProducto += desc?.total_descuento_producto;
+        //     });
+        // }
 
-        totales.totalDescuentoProducto += totales.totalDescuentoItem;
+        // totales.totalDescuentoProducto += totales.totalDescuentoItem;
 
         let totalDesc = this.calcularDescuentoCubreTapeke(this.data);
         totales.totalDescCubrePartner = totalDesc.totalDescCubrePartner;
 
-        totales.total = (totales.totalTapeke + totales.totalProducto + totales.totalSubProducto);
-        console.log(totales.total);
+        totales.total = (totales.totalTapeke + totales.totalProducto + totales.totalSubProducto) - totales.totalDescCubrePartner;
         return totales;
     }
 
@@ -327,12 +333,19 @@ class Comanda extends React.Component {
                 <hr style={{ ...this.styles.separadorGuiones }} />
 
                 <div style={{ ...this.styles.divLeft }}>
-                    <p style={{ ...this.styles.textClass, fontWeight: 'bold' }}>TAPEKES</p>
+                    {
+                        this.data.cantidad > 0 ?
+                            <>
+                                <p style={{ ...this.styles.textClass, fontWeight: 'bold' }}>TAPEKES</p>
 
-                    <div style={{ ...this.styles.divSpaceBetween }}>
-                        <p style={{ ...this.styles.textClass }}>{this.data.cantidad} x     -</p>
-                        <p style={{ ...this.styles.textClass, textAlign: 'right' }}>Bs. {SMath.formatMoney(this.data.precio * this.data.cantidad)}</p>
-                    </div>
+                                <div style={{ ...this.styles.divSpaceBetween }}>
+                                    <p style={{ ...this.styles.textClass }}>{this.data.cantidad} x     -</p>
+                                    <p style={{ ...this.styles.textClass, textAlign: 'right' }}>Bs. {SMath.formatMoney(this.data.precio * this.data.cantidad)}</p>
+                                </div>
+                            </>
+                            : null
+                    }
+
 
                     {
                         !!this.data?.pedido_producto ? <>

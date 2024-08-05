@@ -167,7 +167,7 @@ export default class body extends React.Component {
             <SHr height={20} />
             <SScrollView2 disableHorizontal contentContainerStyle={{ width: "100%" }} >
                 <SView col={"xs-12"} center  >
-                    {this.renderIcon({ label: "Productos", icon: "menu", path: "/restaurante/producto", params: { key_restaurante: Model.restaurante.Action.getSelect()?.key } })}
+                    {/* {this.renderIcon({ label: "Productos", icon: "menu", path: "/restaurante/producto", params: { key_restaurante: Model.restaurante.Action.getSelect()?.key } })} */}
                     {this.renderIcon({ label: "Notificaciones", icon: "mNotification", path: "/notificaciones", requireUser: true })}
                     {this.renderIcon({
                         label: "Mis comercios", image: require("../../Assets/img/comercio.png"), path: "/", onPress: () => {

@@ -254,30 +254,35 @@ class index extends Component {
               <SIcon name={"Ajustes"} width={20} />
             </SView>
             <SHr h={10} />
-            {/* <SView row>
-              <SText fontSize={14} color={STheme.color.darkGray} >No vender Tapekes:  {this.data.tapeke_deshabilitado} </SText>
-              <SSwitch center size={20} loading={this.state.loading} onChange={this.habilitacion_tapeke.bind(this)} value={!!this.data?.tapeke_deshabilitado} />
-            </SView> */}
-            <SView style={{ justifyContent: "center", }} onPress={this.hanlePress.bind(this)}>
-              <SView col={"xs-12"} row style={{
-                alignItems: "center",
-              }} >
-                <SView height={8} width={8} style={{
-                  borderRadius: 100,
-                  backgroundColor: !this.data.habilitado ? STheme.color.danger : STheme.color.success
-                }}>
+            <SView center >
+              <SView row onPress={this.hanlePress.bind(this)}>
+                <SText>Cerrar restaurante: </SText>
+                <SView>
+                  <SView col={"xs-12"} row style={{
+                    alignItems: "center",
+                  }} >
+                    <SView height={8} width={8} style={{
+                      borderRadius: 100,
+                      backgroundColor: !this.data.habilitado ? STheme.color.danger : STheme.color.success
+                    }}>
 
+                    </SView>
+                    <SView width={4} />
+                    <SText color={"#666"} fontSize={10} >{tiempoHabilitacion(this.data)}</SText>
+                  </SView>
                 </SView>
-                <SView width={4} />
-                <SText color={"#666"} fontSize={10} >{tiempoHabilitacion(this.data)}</SText>
               </SView>
-              {/* <SText color={"#666"} fontSize={8}>{ }</SText> */}
+              <SHr h={30} />
+              <SView row >
+                <SText fontSize={14} color={STheme.color.darkGray} >No vender Tapekes:  {this.data.tapeke_deshabilitado} </SText>
+                <SSwitch center size={20} loading={this.state.loading} onChange={this.habilitacion_tapeke.bind(this)} value={!!this.data?.tapeke_deshabilitado} />
+              </SView>
             </SView>
           </SView>
           <SHr height={18} />
         </SView>
         {/* <SHr height={8} /> */}
-      </SView>
+      </SView >
     )
   }
 
