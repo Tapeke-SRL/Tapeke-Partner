@@ -86,6 +86,7 @@ class index extends Component {
 
     if (!arrRest) return false;
     this.data = arrRest[this.pk];
+
     if (!this.data) {
       SNavigation.replace("/");
       Model.restaurante.Action.select("");
@@ -99,6 +100,22 @@ class index extends Component {
       this.pedidos = Model.pedido.Action.getVendidosData({ fecha: this.horario_proximo.fecha, key_pack: this.horario_proximo.key_pack, key_restaurante: this.pk });
     }
 
+    if (this.pedidos?.length > 0) {
+      let keys = [...new Set(Object.values(this.pedidos).map(a => a.key_usuario).filter(key => key !== null))];
+
+      // SSocket.sendPromise({
+      //   version: "2.0",
+      //   service: "usuario",
+      //   component: "usuario",
+      //   type: "getAllKeys",
+      //   keys: keys,
+      // }).then(resp => {
+      //   this.setState({ usuarios: resp.data })
+      // }).catch(e2 => {
+      //   SPopup.alert(e2.error)
+      // })
+    }
+
     if (!this.pedidos) return false;
 
     return true;
@@ -107,6 +124,7 @@ class index extends Component {
   componentWillUnmount() {
     this.isRun = false;
   }
+
   hilo() {
     if (!this.isRun) return;
     new SThread(1000 * 60, "hilo_pedido", true).start(() => {
@@ -306,7 +324,6 @@ class index extends Component {
 
   cardPedido(obj) {
     var montoTotal = obj.cantidad * obj.precio;
-    var dataUsuario = { Nombres: "ERROR", Apellidos: "SLOW" } // TODO
 
     let entregado = obj.state == "entregado" || obj.state == "entregado_conductor" || obj.state == "conductor_llego";
     let error = obj.state == "cancelado" || obj.state == "no_recogido";

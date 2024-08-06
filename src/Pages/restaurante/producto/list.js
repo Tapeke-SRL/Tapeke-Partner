@@ -84,8 +84,6 @@ export default class list extends Component {
 
 
     onChangeProducto = (prd) => {
-        console.log("Se abiso que cambio un producto", prd)
-        console.log("Mi estado", this.state)
         if (prd && this.state.data) {
             const categoria = this.state.data.find(a => a.key == prd.key_categoria_producto);
             if (categoria) {
