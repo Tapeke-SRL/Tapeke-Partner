@@ -13,6 +13,7 @@ import {
     SDate,
     SIcon,
     SThread,
+    SButtom,
 } from 'servisofts-component';
 import SSocket from 'servisofts-socket';
 import Container from '../../Components/Container';
@@ -23,6 +24,9 @@ import { Platform } from 'react-native';
 
 
 import { Parent } from '.';
+import MapaRastreo from './Components/MapaRastreo';
+import Popups from '../../Components/Popups';
+import PedidoState from './Components/PedidoState';
 
 class root extends Component {
     constructor(props) {
@@ -421,6 +425,104 @@ class root extends Component {
         </SView>
     }
 
+    renderButtomAcceptar() {
+        const data = this.state.data;
+        return <SView
+            col={'xs-12'}
+            center
+        >
+            <SHr height={40} />
+            {data.state == 'en_camino' ||
+                data.state == 'entregado' ||
+                data.state == 'no_recogido' ? (
+                <SView
+                    col={'xs-11'}
+                    center
+                    backgroundColor={'#96BE00'}
+                    style={{ borderRadius: 4, overflow: 'hidden' }}
+                >
+                    <SHr height={20} />
+                    <SView col={'xs-11'}>
+                        <PedidoState data={data} />
+                    </SView>
+                    <SHr height={20} />
+                </SView>
+            ) : (
+                <SButtom
+                    style={{
+                        backgroundColor: STheme.color.primary,
+                        width: 300,
+                        fontSize: 40,
+                        borderRadius: 8,
+                    }}
+                    onPress={() => {
+                        if (
+                            data?.restaurante?.key !=
+                            Model.restaurante.Action.getSelect()?.key
+                        ) {
+                            SPopup.alert(
+                                'Este pedido es de otro restaurante.'
+                            );
+                            SNavigation.reset('/');
+                            return;
+                        }
+                        var mensaje = '';
+                        if (
+                            data.state != 'listo' &&
+                            data.state != 'esperando_conductor'
+                        ) {
+                            switch (data.state) {
+                                case 'buscando_conductor':
+                                    Popups.Alert.open({
+                                        title: 'No se puede entregar el pedido.',
+                                        label: 'No puede entregar porque seguimos buscando Driver para este pedido',
+                                    });
+                                    break;
+                                case 'pagado':
+                                    Popups.Alert.open({
+                                        title: 'No se puede entregar el pedido.',
+                                        label: 'No puede entregar porque aun no se encuentra listo o es para otro horario.',
+                                    });
+                                    break;
+                                case 'entregado_conductor':
+                                    Popups.Alert.open({
+                                        title: 'No se puede entregar el pedido.',
+                                        label: 'No puede entregar porque este pedido ya fue entregado a un driver.',
+                                    });
+                                    break;
+                                default:
+                                    Popups.Alert.open({
+                                        title: 'No se puede entregar el pedido.',
+                                        label:
+                                            'No puedes entregar el pedido cuando se encuentra en estado ' +
+                                            data.state,
+                                    });
+                                    break;
+                            }
+                        } else {
+                            Model.pedido.Action.entregar(
+                                this.pk,
+                                this.props
+                            )
+                                .then(e => {
+                                    Model.pedido.Action.CLEAR();
+                                    SNavigation.goBack();
+                                })
+                                .catch(e => {
+                                    Popups.Alert.open({
+                                        title: 'No se puede entregar el pedido.',
+                                        label: e.error,
+                                    });
+                                });
+                        }
+                    }}
+                >
+                    <SText color={'#fff'}>ENTREGAR</SText>
+                </SButtom>
+            )}
+            <SHr height={40} />
+        </SView>
+    }
     renderContent() {
         if (!this.state.data) return <SLoad />;
 
@@ -441,9 +543,12 @@ class root extends Component {
             {this.detallePedido()}
             <SHr h={20} />
             {/* TODO componente Mapas */}
-            <SView center border={"#FF00FF"}>
+            <MapaRastreo key_pedido={this.pk} data={this.state.data} />
+            {/* <SView center border={"#FF00FF"}>
                 <SText font={'Montserrat-Bold'}>Aca va el componente mapa para el rastreo y botónes de cambio de estados</SText>
-            </SView>
+            </SView> */}
+            <SHr h={20} />
+            {this.renderButtomAcceptar()}
             <SHr h={20} />
             {this.componentSoporte()}
             <SHr h={20} />
@@ -454,11 +559,9 @@ class root extends Component {
         if (!this.state.ready) return <SLoad />;
 
         return (
-            <SPage
-                id="recibo"
-                onRefresh={() => {
-                    this.loadData()
-                }}
+            <SPage onRefresh={() => {
+                this.loadData()
+            }}
                 header={<AccentBar />}
             >
                 {this.renderContent()}

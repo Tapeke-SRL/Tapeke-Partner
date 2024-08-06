@@ -438,8 +438,8 @@ class index extends Component {
 
     return arr.map((obj, index) => {
       var montoTotal = obj.cantidad * obj.precio;
-      // var dataUsuario = Model.usuario.Action.getByKey(obj.key_usuario);
-      var dataUsuario = { Nombres: "ERROR", Apellidos: "SLOW" } // TODO
+      var dataUsuario = Model.usuario.Action.getByKey(obj.key_usuario);
+      // var dataUsuario = { Nombres: "ERROR", Apellidos: "SLOW" } // TODO
 
       let entregado = obj.state == "entregado" || obj.state == "entregado_conductor" || obj.state == "conductor_llego";
       let error = obj.state == "cancelado" || obj.state == "no_recogido";
@@ -742,7 +742,7 @@ class index extends Component {
           Model.pack.Action.CLEAR();
           Model.pedido.Action.CLEAR();
           Model.pack_extra.Action.CLEAR();
-          Model.usuario.Action.CLEAR();
+          // Model.usuario.Action.CLEAR();
           if (resolve) resolve();
         }}
       >
