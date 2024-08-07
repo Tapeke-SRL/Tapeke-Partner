@@ -207,7 +207,7 @@ class root extends Component {
 
         if (obj?.pedido_producto) {
             // TODO aca va que este tipo de descuento lo cuebre el partner.
-            const exclude = ['pollos campeón', 'sakura brasas']
+            // const exclude = ['pollos campeón', 'sakura brasas']
             Object.values(obj.pedido_producto).map((prod) => {
                 if (prod.descuento_monto) {
                     let coberturaTapeke = 0.50;
