@@ -82,6 +82,30 @@ class root extends Component {
             totalPorConciliar: 0
         }
 
+        const calcularTotalProdYSub = (obj) => {
+            let totalProd = 0;
+            if (obj.pedido_producto) {
+                Object.values(obj.pedido_producto).map((prod) => {
+                    if (prod.precio_sin_descuento) {
+                        totalProd += (prod.cantidad * prod.precio_sin_descuento)
+                    } else {
+                        totalProd += (prod.cantidad * prod.precio)
+                    }
+
+                    if (prod.sub_productos) {
+                        Object.values(prod.sub_productos).map((sub) => {
+                            if (sub.sub_producto_detalle) {
+                                Object.values(sub.sub_producto_detalle).map((subDet) => {
+                                    totalProd += (subDet.cantidad * subDet.precio)
+                                })
+                            }
+                        })
+                    }
+                })
+            }
+            return totalProd;
+        }
+
         let keysPedidos = [];
         const calcularTotalProd = (obj) => {
             let totalProd = 0;
@@ -108,13 +132,13 @@ class root extends Component {
             return totalProd;
         }
 
-        const calcularTotalDescuento = (obj) => {
-            let totalDesc = 0;
-            if (obj) {
-                totalDesc = obj.total_descuento_producto - obj.total_descuento_delivery
-            }
-            return parseFloat(totalDesc, 2);
-        }
+        // const calcularTotalDescuento = (obj) => {
+        //     let totalDesc = 0;
+        //     if (obj) {
+        //         totalDesc = obj.total_descuento_producto - obj.total_descuento_delivery
+        //     }
+        //     return parseFloat(totalDesc, 2);
+        // }
 
         const contadorProd = (obj) => {
             let cantidad = 0;
@@ -140,25 +164,27 @@ class root extends Component {
                 total.montoIngTapDel += obj.cantidad * obj.precio;
 
                 total.cantProdDel += contadorProd(obj);
-                total.montoIngProdDel += calcularTotalProd(obj) - (calcularTotalDescuento(obj));
+                total.montoIngProdDel += calcularTotalProdYSub(obj);
             } else {
                 total.cantTapRecoger += obj.cantidad;
                 total.montoIngTapRecoger += obj.cantidad * obj.precio;
 
                 total.cantProdRecoger = contadorProd(obj);
-                total.montoIngProdRecoger += calcularTotalProd(obj) - (calcularTotalDescuento(obj));
+                total.montoIngProdRecoger += calcularTotalProdYSub(obj);
             }
 
             if (!obj.tipo_pago) return;
 
             if (obj.tipo_pago.find(a => a.type == "efectivo")) {
-                total.efectivo += ((obj.cantidad * obj.precio) + calcularTotalProd(obj) - (calcularTotalDescuento(obj)));
+                total.efectivo += ((obj.cantidad * obj.precio) + calcularTotalProdYSub(obj));
                 total.comision_efectivo += obj.comision_restaurante;
                 totalDesc = this.calcularDescuentoCobertura(obj);
                 total.totalDescEfectivo += (totalDesc.totalDescCubreTapeke ?? 0) + (totalDesc.totalDescCubrePartner ?? 0);
                 total.totalComisionEfectivo += obj.comision_restaurante;
             } else {
-                total.linea += ((obj.cantidad * obj.precio) + calcularTotalProd(obj) - (calcularTotalDescuento(obj)));
+                // total.linea += ((obj.cantidad * obj.precio) + calcularTotalProd(obj) - (calcularTotalDescuento(obj)));
+
+                total.linea += ((obj.cantidad * obj.precio) + calcularTotalProdYSub(obj));
                 total.comision_linea += obj.comision_restaurante;
                 totalDesc = this.calcularDescuentoCobertura(obj);
                 total.totalDescLinea += totalDesc.totalDescCubreTapeke + totalDesc.totalDescCubrePartner;
@@ -169,14 +195,14 @@ class root extends Component {
             total.totalDescDelivery += obj.total_descuento_delivery;
             total.totalDescuento = total.totalDescProducto + total.totalDescDelivery;
 
-            total.total += ((obj.cantidad * obj.precio) + calcularTotalProd(obj));
+            total.total += ((obj.cantidad * obj.precio) + calcularTotalProdYSub(obj));
         })
 
         total.totalDescCubrePartner = total.totalDescCubrePartner - (total.totalDescEfectivo * totalDesc.porcentajeCubrePartner);
 
+        // TODO falta definir esté metodo
         total.totalPorConciliar = (total.linea - (total.comision_linea + total.comision_efectivo) - total.totalDescCubreTapeke);
 
-        total.total = (total.total) - (total.totalDescuento);
         return total;
     }
 
@@ -208,6 +234,7 @@ class root extends Component {
         if (obj?.pedido_producto) {
             // TODO aca va que este tipo de descuento lo cuebre el partner.
             // const exclude = ['pollos campeón', 'sakura brasas']
+            const exclude = []
             Object.values(obj.pedido_producto).map((prod) => {
                 if (prod.descuento_monto) {
                     let coberturaTapeke = 0.50;
