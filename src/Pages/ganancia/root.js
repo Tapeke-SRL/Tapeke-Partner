@@ -174,7 +174,7 @@ class root extends Component {
 
         total.totalDescCubrePartner = total.totalDescCubrePartner - (total.totalDescEfectivo * totalDesc.porcentajeCubrePartner);
 
-        total.totalPorConciliar = total.linea + total.totalDescCubreTapeke - total.totalDescCubrePartner - (total.comision_linea + total.comision_efectivo);
+        total.totalPorConciliar = (total.linea - (total.comision_linea + total.comision_efectivo) - total.totalDescCubreTapeke);
 
         total.total = (total.total) - (total.totalDescuento);
         return total;
