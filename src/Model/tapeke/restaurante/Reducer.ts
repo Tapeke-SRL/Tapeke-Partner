@@ -7,7 +7,11 @@ export default class Reducer extends SReducer {
         var initState = super.initialState(extra);
         SStorage.getItem("rest_select", (itm) => {
             if (!itm) return;
-            initState.rest_select = JSON.parse(itm);
+            try {
+                initState.rest_select = JSON.parse(itm);
+            } catch (error) {
+                console.log("sin rest")
+            }
         });
         return initState;
     }

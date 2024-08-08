@@ -27,11 +27,13 @@ import { Parent } from '.';
 import MapaRastreo from './Components/MapaRastreo';
 import Popups from '../../Components/Popups';
 import PedidoState from './Components/PedidoState';
+import Roles from '../../Roles';
 
 class root extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            usuarios: {}
         };
         this.pk = SNavigation.getParam('pk');
     }
@@ -41,7 +43,32 @@ class root extends Component {
             this.setState({ ready: true });
         });
 
+        Roles.getPermiso({
+            key_rol: Model.restaurante.Action.getSelectKeyRol(),
+            url: "/_partner/pedido",
+            permiso: "entregar"
+        }).then(e => {
+            this.setState({ entregar: true })
+            console.log(e);
+        }).catch(e => {
+        })
+
+        // this.loadData()
+        this.isRun = true
+        this.hilo();
+    }
+
+
+    componentWillUnmount() {
+        this.isRun = false;
+    }
+    hilo() {
+        if (!this.isRun) return;
         this.loadData()
+        new SThread(15 * 1000, "esperar_hilo_pedido").start(() => {
+            if (!this.isRun) return;
+            this.hilo();
+        })
     }
 
     loadData() {
@@ -56,7 +83,8 @@ class root extends Component {
                 SPopup.alert('Este pedido es de otro restaurante.');
                 SNavigation.goBack('/');
             }
-            this.setState({ data: res.data })
+
+            this.setState({ data: res.data, })
 
             this.getUser(res.data)
         }).catch(err => {
@@ -66,8 +94,8 @@ class root extends Component {
 
     getUser(data) {
         let keys = [data.key_usuario];
-        console.log(keys);
-
+        // console.log("asdasdas", !!this.state?.usuarios[data?.key_usuario])
+        if (!!this.state?.usuarios[data?.key_usuario]) return;
         SSocket.sendPromise({
             version: "2.0",
             service: "usuario",
@@ -84,7 +112,7 @@ class root extends Component {
     componentUsuario() {
         let borderRadius = 5;
         let redirectLink = `https://api.whatsapp.com/send?phone=${this?.state?.data?.factura?.phone.slice(5)}`
-        let usuario = this.state.usuarios ? this.state.usuarios[this.state?.data?.key_usuario].usuario : null
+        let usuario = this.state.usuarios ? this.state.usuarios[this.state?.data?.key_usuario]?.usuario : null
         return <>
             <SText font={'Montserrat-ExtraBold'} fontSize={16}>DATOS DEL CLIENTE</SText>
             <SText fontSize={11} color={STheme.color.gray}>(Si te falta algún item, para salvar el pedido, puedes comunicarte con el cliente presionando en el número de teléfono y ofrecer un producto equivalente al precio)</SText>
@@ -421,6 +449,10 @@ class root extends Component {
 
     renderButtomAcceptar() {
         const data = this.state.data;
+        if (!this.state.entregar) return null;
+        if (data.delivery > 0 && data?.state != "esperando_conductor") return null;
+        if (data.delivery <= 0 && data?.state != "listo") return null;
+
         return <SView
             col={'xs-12'}
             center
