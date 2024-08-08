@@ -347,16 +347,16 @@ class root extends Component {
     totalProducto() {
         let total = 0
 
-        if(this.state?.data?.pedido_producto){
-
+        if (this.state?.data?.pedido_producto) {
+            Object.values(this.state?.data?.pedido_producto).map(prod => {
+                if (prod.precio_sin_descuento) {
+                    total += (prod.cantidad * prod.precio_sin_descuento)
+                } else {
+                    total += (prod.cantidad * prod.precio)
+                }
+            })
         }
-        Object.values(this.state?.data?.pedido_producto).map(prod => {
-            if (prod.precio_sin_descuento) {
-                total += (prod.cantidad * prod.precio_sin_descuento)
-            } else {
-                total += (prod.cantidad * prod.precio)
-            }
-        })
+
 
         return total;
     }
@@ -364,9 +364,12 @@ class root extends Component {
     totalSubProductoDetalle() {
         let total = 0
 
-        Object.values(this.state.data.pedido_producto).map(pp => {
-            total += pp.monto_total_subproducto_detalle
-        })
+        if (this.state.data.pedido_producto) {
+            Object.values(this.state.data.pedido_producto).map(pp => {
+                total += pp.monto_total_subproducto_detalle
+            })
+        }
+
 
         return total;
     }
@@ -374,11 +377,13 @@ class root extends Component {
     totalDescuentoIteamCubrePartner() {
         let total = 0
 
-        Object.values(this.state.data.pedido_producto).map(prod => {
-            if (prod.precio_sin_descuento) {
-                total += (prod.cantidad * prod.precio_sin_descuento) - (prod.cantidad * prod.precio)
-            }
-        })
+        if (this.state.data.pedido_producto) {
+            Object.values(this.state.data.pedido_producto).map(prod => {
+                if (prod.precio_sin_descuento) {
+                    total += (prod.cantidad * prod.precio_sin_descuento) - (prod.cantidad * prod.precio)
+                }
+            })
+        }
 
         return total;
     }
