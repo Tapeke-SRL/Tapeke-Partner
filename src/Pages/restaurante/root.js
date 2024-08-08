@@ -159,76 +159,68 @@ class index extends Component {
   }
 
 
-  hanlePress = (e: any) => {
+  handlerPress = (e: any) => {
     Vibration.vibrate(100)
-    e.currentTarget.measure((x: any, y: any, width: any, height: any, pageX: any, pageY: any) => {
-      const key_popup = "popupkey";
-      const windowheight = Dimensions.get("window").height
-      const itemWidth = 200;
-      const itemHeight = 176;
-      let top = pageY + 16;
-      if (itemHeight + top > windowheight) {
-        top = windowheight - itemHeight;
-      }
-      SPopup.open({
-        key: key_popup,
-        type: "2",
-        content: <SelectHabilitado
-          style={{
-            left: pageX - itemWidth + width + 8,
-            top: top,
-            itemWidth: itemWidth,
-            itemHeight: itemHeight,
-          }}
-          onSelect={(select: any) => {
-            let tipo = false;
-            console.log(select.key)
-            let fecha_habilitacion_automatica = "null"
-            if (select.key != "true" && select.key != "false") {
-              console.log("entro aca")
-              let num = select.key;
-              if (select.key < 0) {
-                tipo = true;
-                num = num * -1;
-              } else {
-                tipo = false;
-              }
-              fecha_habilitacion_automatica = new SDate().addMinute(parseInt(num)).toString("yyyy-MM-ddThh:mm:ss");
+    const key_popup = "popupkey";
+    let top = 225;
+    let left = 1000;
+    SPopup.open({
+      key: key_popup,
+      type: "2",
+      content: <SelectHabilitado
+        style={{
+          top: top,
+          left: left,
+        }}
+        onSelect={(select: any) => {
+          let tipo = false;
+          console.log(select.key)
+          let fecha_habilitacion_automatica = "null"
+          if (select.key != "true" && select.key != "false") {
+            console.log("entro aca")
+            let num = select.key;
+            if (select.key < 0) {
+              tipo = true;
+              num = num * -1;
             } else {
-              tipo = (select.key == "true")
-              console.log("entro aca", tipo)
+              tipo = false;
             }
-            console.log(tipo)
-            SSocket.sendPromise({
-              component: "restaurante",
-              type: "editar",
-              key_usuario: Model.usuario.Action.getKey(),
-              data: {
-                key: this.pk,
-                habilitado: tipo,
-                accion_habilitacion_automatica: (tipo) ? "false" : "true",
-                fecha_habilitacion_automatica: fecha_habilitacion_automatica
-              }
+            fecha_habilitacion_automatica = new SDate().addMinute(parseInt(num)).toString("yyyy-MM-ddThh:mm:ss");
+          } else {
+            tipo = (select.key == "true")
+            console.log("entro aca", tipo)
+          }
+          console.log(tipo)
+          SSocket.sendPromise({
+            component: "restaurante",
+            type: "editar",
+            key_usuario: Model.usuario.Action.getKey(),
+            data: {
+              key: this.pk,
+              habilitado: tipo,
+              accion_habilitacion_automatica: (tipo) ? "false" : "true",
+              fecha_habilitacion_automatica: fecha_habilitacion_automatica
+            }
 
-            }).then(f => {
-              this.data.habilitado = f.data.habilitado;
-              this.data.fecha_habilitacion_automatica = f.data.fecha_habilitacion_automatica;
-              // if (onChange) onChange()
-              Model.restaurante.Action._dispatch({
-                ...f,
-                data: this.data
-              });
-              this.setState({ ...this.state })
-              console.log(f);
-            }).catch(e => {
-              console.error(e);
-            })
-            SPopup.close(key_popup)
-          }
-          }
-        />
-      })
+          }).then(f => {
+            this.data.habilitado = f.data.habilitado;
+            this.data.fecha_habilitacion_automatica = f.data.fecha_habilitacion_automatica;
+
+            Model.restaurante.Action._dispatch({
+              ...f,
+              data: this.data
+            });
+            this.setState({ ...this.state })
+            console.log(f);
+          }).catch(e => {
+            console.error(e);
+          })
+          SPopup.close(key_popup)
+        }
+        }
+      />
     })
+    // })
   }
   getCabecera(data) {
     this.data = data;
@@ -273,9 +265,13 @@ class index extends Component {
             </SView>
             <SHr h={10} />
             <SView center >
-              <SView row onPress={this.hanlePress.bind(this)}>
-                <SText>Cerrar restaurante: </SText>
-                <SView>
+
+
+              <SView row /* onPress={this.handlerPress.bind(this)} */>
+                <SText>Cerrar Restaurante: </SText>
+                <SSwitch center size={20} loading={this.state.loading} onChange={() => { this.handlerPress() }} value={!!this.data?.habilitado} />
+
+                {/* <SView>
                   <SView col={"xs-12"} row style={{
                     alignItems: "center",
                   }} >
@@ -288,12 +284,13 @@ class index extends Component {
                     <SView width={4} />
                     <SText color={"#666"} fontSize={10} >{tiempoHabilitacion(this.data)}</SText>
                   </SView>
-                </SView>
+                </SView> */}
+
               </SView>
               <SHr h={30} />
               <SView row >
-                <SText fontSize={14} color={STheme.color.darkGray} >No vender Tapekes:  {this.data.tapeke_deshabilitado} </SText>
-                <SSwitch center size={20} loading={this.state.loading} onChange={this.habilitacion_tapeke.bind(this)} value={!!this.data?.tapeke_deshabilitado} />
+                <SText fontSize={14} color={STheme.color.darkGray} >Vender Tapekes:  {this.data.tapeke_deshabilitado} </SText>
+                <SSwitch center size={20} loading={this.state.loading} onChange={this.habilitacion_tapeke.bind(this)} value={!this.data?.tapeke_deshabilitado} />
               </SView>
             </SView>
           </SView>

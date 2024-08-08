@@ -347,7 +347,10 @@ class root extends Component {
     totalProducto() {
         let total = 0
 
-        Object.values(this.state.data.pedido_producto).map(prod => {
+        if(this.state?.data?.pedido_producto){
+
+        }
+        Object.values(this.state?.data?.pedido_producto).map(prod => {
             if (prod.precio_sin_descuento) {
                 total += (prod.cantidad * prod.precio_sin_descuento)
             } else {
