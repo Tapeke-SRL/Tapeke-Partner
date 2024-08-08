@@ -283,7 +283,9 @@ class root extends Component {
                     totalDesc.totalDescCubreTapeke += monto * coberturaTapeke;
                     totalDesc.totalDescCubrePartner += monto * coberturaPartner
                 } else {
-                    totalDesc.totalDescCubreTapeke += (prod.cantidad * (prod.precio_sin_descuento - prod.precio))
+                    if (prod.precio_sin_descuento) {
+                        totalDesc.totalDescCubreTapeke += (prod.cantidad * (prod.precio_sin_descuento - prod.precio))
+                    }
                 }
             })
         }
