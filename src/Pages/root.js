@@ -25,7 +25,7 @@ class index extends Component {
         })
     }
     render_item(data) {
-        let obj = data.restaurante ?? {};
+        let obj = data ?? {};
 
         return <SView col={"xs-12"} backgroundColor={STheme.color.card} row
             style={{
@@ -61,17 +61,14 @@ class index extends Component {
         if (!Model.usuario.Action.getUsuarioLog()) {
             return <SView />;
         }
-        var data = Model.usuario_restaurante.Action.getAllBy({ key_usuario: Model.usuario.Action.getKey() })
+        // var data = Model.usuario_restaurante.Action.getAllBy({ key_usuario: Model.usuario.Action.getKey() })
         var restaurantes = Model.restaurante.Action.getAll({
             key_partner: Model.usuario.Action.getKey()
         });
-        if (!data || !restaurantes) return <SLoad />
+        if (!restaurantes) return <SLoad />
 
-        let arr = Object.values(data).map(obj => {
-            obj.restaurante = restaurantes[obj.key_restaurante];
-            return obj
-        })
-        arr = arr.filter((a) => a.estado != 0 && a?.restaurante?.estado > 0);
+        let arr = Object.values(restaurantes)
+        arr = arr.filter((a) => a.estado != 0);
 
 
         if (arr.length <= 0) {

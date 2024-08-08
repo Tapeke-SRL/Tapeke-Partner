@@ -87,11 +87,11 @@ class index extends Component {
     if (!arrRest) return false;
     this.data = arrRest[this.pk];
 
-    if (!this.data) {
-      SNavigation.replace("/");
-      Model.restaurante.Action.select("");
-    }
-    Model.restaurante.Action.select(this.data);
+    // if (!this.data) {
+    //   SNavigation.replace("/");
+    //   Model.restaurante.Action.select("");
+    // }
+    // Model.restaurante.Action.select(this.data);
 
     this.horario_proximo = Model.horario.Action.getByKeyRestauranteProximo(this.pk);
     if (!this.horario_proximo) return false;
