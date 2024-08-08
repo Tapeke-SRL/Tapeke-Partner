@@ -167,9 +167,21 @@ class tablaPedido extends Component {
       });
     }
 
-    if (obj.pedido_producto) {
+    if (obj?.pedido_producto) {
+      // TODO aca va que este tipo de descuento lo cuebre el partner.
+      const exclude = ['pollos campeón', 'sakura brasas']
       Object.values(obj.pedido_producto).map((prod) => {
-        if (prod.precio_sin_descuento) {
+        if (prod.descuento_monto) {
+          let coberturaTapeke = 0.50;
+          if (exclude.some(nombre => obj.restaurante.nombre.toLowerCase().includes(nombre.toLowerCase()))) {
+            coberturaTapeke = 1;
+          }
+          let coberturaPartner = 1 - coberturaTapeke;
+          let monto = (prod.cantidad * (prod.precio_sin_descuento - prod.precio))
+
+          totalDesc.totalDescCubreTapeke += monto * coberturaTapeke;
+          totalDesc.totalDescCubrePartner += monto * coberturaPartner
+        } else {
           totalDesc.totalDescCubreTapeke += (prod.cantidad * (prod.precio_sin_descuento - prod.precio))
         }
       })

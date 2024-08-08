@@ -113,8 +113,8 @@ class index extends Component {
             </SView>
             <SHr h={10} />
             <SView row>
-              <SText fontSize={14} color={STheme.color.darkGray} >No vender Tapekes:  {this.data.tapeke_deshabilitado} </SText>
-              <SSwitch center size={20} loading={this.state.loading} onChange={this.habilitacion_tapeke.bind(this)} value={!!this.data?.tapeke_deshabilitado} />
+              <SText fontSize={14} color={STheme.color.darkGray} >Vender Tapekes:  {this.data.tapeke_deshabilitado} </SText>
+              <SSwitch center size={20} loading={this.state.loading} onChange={this.habilitacion_tapeke.bind(this)} value={!this.data?.tapeke_deshabilitado} />
             </SView>
           </SView>
           <SHr height={18} />
