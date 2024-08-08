@@ -238,16 +238,18 @@ class root extends Component {
             Object.values(obj.pedido_producto).map((prod) => {
                 if (prod.descuento_monto) {
                     let coberturaTapeke = 0.50;
-                    if (exclude.some(nombre => obj.restaurante.nombre.toLowerCase().includes(nombre.toLowerCase()))) {
-                        coberturaTapeke = 1;
-                    }
+                    // if (exclude.some(nombre => obj.restaurante.nombre.toLowerCase().includes(nombre.toLowerCase()))) {
+                    //     coberturaTapeke = 1;
+                    // }
                     let coberturaPartner = 1 - coberturaTapeke;
                     let monto = (prod.cantidad * (prod.precio_sin_descuento - prod.precio))
 
                     totalDesc.totalDescCubreTapeke += monto * coberturaTapeke;
                     totalDesc.totalDescCubrePartner += monto * coberturaPartner
                 } else {
-                    totalDesc.totalDescCubreTapeke += (prod.cantidad * (prod.precio_sin_descuento - prod.precio))
+                    if (prod.precio_sin_descuento) {
+                        totalDesc.totalDescCubreTapeke += (prod.cantidad * (prod.precio_sin_descuento - prod.precio))
+                    }
                 }
             })
         }
