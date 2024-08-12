@@ -231,7 +231,8 @@ class root extends Component {
             total.totalDescDelivery += obj.total_descuento_delivery;
             total.totalDescuento = total.totalDescProducto + total.totalDescDelivery;
 
-            total.total += ((obj.cantidad * obj.precio) + calcularTotalProdYSub(obj));
+            total.totalPorConciliar = total.linea /* + total.totalDescCubreTapeke */ - (total.totalDescCubrePartner + total.comision_linea + total.comision_efectivo);
+
         })
 
         total.totalDescCubrePartner = total.totalDescCubrePartner - (total.totalDescEfectivo * totalDesc.porcentajeCubrePartner);
@@ -476,7 +477,7 @@ class root extends Component {
 
             {this.labelGanancia({ label: `Comisión Tapeke Linea`, value: comision_tapeke_linea/* , color: STheme.color.danger, simbolo: "-" */ })}
 
-            {this.labelGanancia({ label: `Total`, value: (total_por_conciliar * -1) })}
+            {this.labelGanancia({ label: `Total`, value: (total_por_conciliar) })}
 
             <SHr height={15} />
         </SView>
