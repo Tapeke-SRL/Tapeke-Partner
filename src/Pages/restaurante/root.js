@@ -243,32 +243,30 @@ class index extends Component {
                 <SImage src={`${SSocket.api.root}restaurante/.128_${this.data.key}`} style={{ width: "100%", position: "relative", resizeMode: "cover" }} />
               </SView>
               <SView flex center row >
-                <SView col={"xs-1"}  >
-                </SView>
-                <SView col={"xs-11"} row >
-                  <SView col={"xs-12"} >
-                    <SText font={"Roboto"} color={STheme.color.text} fontSize={16} style={{ fontWeight: "bold" }}  >{this.data.nombre + " "}</SText>
+                <SView col={"xs-11"} >
+                  <SView row center col={"xs-12"} style={{ justifyContent: "space-between" }}>
+                    <SText font={"Montserrat-Bold"} color={STheme.color.text} fontSize={14} >{this.data.nombre + " "}</SText>
+
+                    <SView width={35} height={35} center onPress={() => {
+                      SNavigation.navigate("/restaurante/edit", { pk: this.pk })
+                    }}>
+                      <SImage src={require("../../Assets/img/EDITAR2.png")} />
+                    </SView>
                   </SView>
-                  <SHr height={10} />
                   <SView col={"xs-12"} style={{ justifyContent: 'flex-start', }}>
                     <SText color={STheme.color.darkGray} fontSize={14} font={"Roboto"}>Telf: {this.data.telefono}</SText>
-                    <SText color={STheme.color.darkGray} fontSize={14} font={"Roboto"}>{this.data.descripcion}</SText>
                   </SView>
                 </SView>
                 <SHr height={5} />
               </SView>
             </SView>
-            <SView width={40} height={40} style={{ position: "absolute", top: 8, right: 8, padding: 4 }} center onPress={() => {
-              SNavigation.navigate("/restaurante/edit", { pk: this.pk })
-            }}>
-              <SIcon name={"Ajustes"} width={20} />
-            </SView>
+
             <SHr h={10} />
             <SView center >
 
 
               <SView row /* onPress={this.handlerPress.bind(this)} */>
-                <SText>Cerrar Restaurante: </SText>
+                <SText>Cerrar Comercio: </SText>
                 <SSwitch center size={20} loading={this.state.loading} onChange={() => { this.handlerPress() }} value={!!this.data?.habilitado} />
 
                 {/* <SView>
@@ -584,9 +582,9 @@ class index extends Component {
     dataPackVendidos.map(o => cant += parseFloat((o.state == "cancelado" || o.state == "no_recogido") ? 0 : (o.cantidad ?? 0)))
     return <>
       <SHr height={20} />
-      <SText font={"Roboto"} center fontSize={24}  >{label.replace(/^\w/, (c) => c.toUpperCase())} Hrs.</SText>
+      <SText  center fontSize={24}  >{label.replace(/^\w/, (c) => c.toUpperCase())} Hrs.</SText>
       <SHr height={10} />
-      <SText font={"Roboto"} style={{ fontWeight: "bold" }} fontSize={16}>( {cant} / {dataHorarioCercano.cantidad} )</SText>
+      <SText  style={{ fontWeight: "bold" }} fontSize={16}>( {cant} / {dataHorarioCercano.cantidad} )</SText>
       <SHr height={20} />
       <SView col={"xs-11"} style={{ borderBottomWidth: 2, borderColor: STheme.color.primary }}></SView>
       <SHr height={20} />
@@ -614,7 +612,7 @@ class index extends Component {
       }}
     >
       <SView col={"xs-10.8"} style={{ padding: 8 }} >
-        <SText fontSize={14} bold >¿Quieres vender más tapekes?</SText>
+        <SText font={"Montserrat-SemiBold"} fontSize={14} >¿Quieres vender más tapekes?</SText>
       </SView>
       <SView col={"xs-1.2"} backgroundColor={STheme.color.primary}
         height center
@@ -627,6 +625,7 @@ class index extends Component {
       </SView>
     </SView>
   }
+
   modificar_horario() {
     if (!this.loadData()) return null
     if (new SDate().isAfter(new SDate(this.horario_proximo.fecha_fin, "yyyy-MM-dd hh:mm:ss.S"))) return null;
@@ -647,7 +646,7 @@ class index extends Component {
       }}
     >
       <SView col={"xs-10.8"} style={{ padding: 8 }}>
-        <SText fontSize={14} bold >¿Deseas modificar el horario de entrega?</SText>
+        <SText font={"Montserrat-SemiBold"} fontSize={14} >¿Deseas modificar el horario de entrega?</SText>
       </SView>
       <SView col={"xs-1.2"} backgroundColor={"#96BE00"}
         height center
@@ -681,7 +680,7 @@ class index extends Component {
       return <>
         {this.aumentar_cantidad_pedidos()}
         <SHr h={8} />
-        {this.modificar_horario()}
+        {/* {this.modificar_horario()} */}
         {this.render_hora_extra()}
         <SHr h={8} />
         {this.contenidoBody(this.horario_proximo, this.pedidos)}

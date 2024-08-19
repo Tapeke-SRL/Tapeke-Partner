@@ -61,17 +61,16 @@ class root extends Component {
             <SView flex center
                 col={"xs-10"}
             >
-                <SView row
-                >
-                    <SView height={65} width={120}>
+                <SView row>
+                    <SView height={85} width={140}>
                         <SImage src={require('../../Assets/img/estrella_calificaciones_promedio.png')} /* style={{resizeMode: "cover"}} */ />
                     </SView>
-                    <SText color={STheme.color.text} fontSize={50}>
+                    <SText color={STheme.color.text} fontSize={60} style={{paddingLeft: 5}}>
                         {parseFloat(this.state.media?.pedido_star_media ?? 0).toFixed(1).replace('.', ',')}
                     </SText>
                 </SView>
 
-                <SView >
+                <SView center>
                     <SText font={'Montserrat-Regular'} fontSize={14}>Tu calificación promedio actual</SText>
                 </SView>
             </SView>
@@ -126,8 +125,8 @@ class root extends Component {
 
     componetNoComment() {
         return <SView center>
-            <SText color={'red'}>
-                No hay comentarios
+            <SText color={STheme.color.gray}>
+                No hay calificaciones para mostrar
             </SText>
         </SView>
     }
@@ -156,6 +155,7 @@ class root extends Component {
                 <FilterDate onDateChange={this.handleDateChange} />
                 <SHr />
                 <SView center>
+                    <SHr h={20} />
                     {this.componentMediaCalificacion()}
                     <SHr h={20} />
                     <SView center col={"xs-11"}>

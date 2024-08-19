@@ -141,7 +141,8 @@ export default class body extends React.Component {
                 {/* <SHr height={17} /> */}
             </SView>
             <SView col={"xs-2"} height style={{ alignItems: "flex-end" }} center>
-                <SIcon fill={color} name={"Icon1"} height={sizeIcon} />
+                {/* <SIcon fill={color} name={"Icon1"} height={sizeIcon} /> */}
+                <SText fontSize={20}>{">"}</SText>
             </SView>
         </SView>
     }
@@ -179,13 +180,13 @@ export default class body extends React.Component {
                     {this.renderIcon({ label: "Calificación", icon: 'Mcalificacion', path: "/calificacion", params: { pk: Model.restaurante.Action.getSelect()?.key }, requireUser: true })}
                     {this.renderIcon({ label: "Ganancias", image: require("../../Assets/img/ganancia.png"), path: "/ganancia", requireUser: true })}
                     {this.renderIcon({ label: "Historial de pedidos", image: require("../../Assets/img/historial_de_pedido.png"), path: "/reporte/hitorialPedidos", params: { pk: Model.restaurante.Action.getSelect()?.key }, requireUser: true })}
-                    
+
                     {/* TODO Falta componente para navegació Administra usuario */}
-                    {this.renderIcon({ label: "Administra usuarios", image: require("../../Assets/img/administrar_usuarios.png"), path: "/roles", params: { key_restaurante: Model.restaurante.Action.getSelect()?.key }, requireUser: true })}
+                    {this.renderIcon({ label: "Administrar usuarios", image: require("../../Assets/img/administrar_usuarios.png"), path: "/roles", params: { key_restaurante: Model.restaurante.Action.getSelect()?.key }, requireUser: true })}
                     {this.renderIcon({ label: "Cuentas bancarias", icon: "Icuenta", path: "/restaurante_cuenta", requireUser: true })}
                     {this.renderIcon({ label: "Información legal", icon: "mSoporte", path: "/condiciones", requireUser: false })}
                     {this.renderIcon({
-                        label: "Cerrar sesión", icon: "mSession", requireUser: true,
+                        label: "Cerrar sesión", image: require("../../Assets/img/cerrar_sesion.png"), requireUser: true,
                         onPress: () => {
                             // Model._events.CLEAR();
                             Model.usuario.Action.unlogin();
