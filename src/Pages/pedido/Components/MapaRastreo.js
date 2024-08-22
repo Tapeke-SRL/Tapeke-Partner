@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
-import { SMapView, SMapView2, SText, SThread, SView } from 'servisofts-component';
-import Model from '../../../Model';
+import { } from 'react-native';
+import { SMapView, SText, SThread, SView } from 'servisofts-component';
+import MarkerRestaurante from './MarkerRestaurante'
+
+
 import SSocket from 'servisofts-socket';
 
 export default class MapaRastreo extends Component {
@@ -27,6 +29,7 @@ export default class MapaRastreo extends Component {
             this.hilo();
         })
     }
+
     buscarPosicionUsuario(key_usuario) {
         if (!key_usuario) return;
         SSocket.sendPromise({
@@ -54,16 +57,6 @@ export default class MapaRastreo extends Component {
                         latitudeDelta: 0.03,
                         longitudeDelta: 0.03
                     })
-                    // this.mapa.fitToCoordinates([
-                    //     { latitude: restaurante.latitude, longitude: restaurante.longitude },
-                    // ], {
-                    //     edgePadding: {
-                    //         top: 10,
-                    //         bottom: 10,
-                    //         left: 100,
-                    //         right: 100
-                    //     }
-                    // })
                 }
             }
             this.setState({ position: resp.data })
@@ -73,11 +66,10 @@ export default class MapaRastreo extends Component {
         })
     }
 
+    getMapa() {
+        const { restaurante } = this.props.data
+        let size = 50
 
-    renderContent() {
-        const { direccion, restaurante, key_conductor, delivery } = this.props.data
-        if (delivery <= 0) return <SText>{"Recoger del lugar"}</SText>
-        // if (!key_conductor) return <SText>{"Sin conductor "}</SText>
         return <SMapView
             ref={ref => this.mapa = ref}
             initialRegion={{
@@ -87,9 +79,22 @@ export default class MapaRastreo extends Component {
                 longitudeDelta: 0.03
             }}>
             {/* <SMapView.SMarker latitude={direccion.latitude} longitude={direccion.longitude} /> */}
-            <SMapView.SMarker latitude={restaurante.latitude} longitude={restaurante.longitude} />
+            <SMapView.SMarker width={size} height={size} latitude={restaurante.latitude} longitude={restaurante.longitude} >
+                <MarkerRestaurante data={this.props.data?.restaurante} size={size} />
+            </SMapView.SMarker>
             {this.state.position ? <SMapView.SMarker latitude={this.state?.position?.latitude} longitude={this.state?.position?.longitude} /> : null}
         </SMapView>
+    }
+
+    renderContent() {
+        const { direccion, key_conductor, delivery } = this.props.data
+
+
+        if (delivery <= 0) return <SText>{"Recoger del lugar"}</SText>
+        // if (!key_conductor) return <SText>{"Sin conductor "}</SText>
+        return <>
+            {this.getMapa()}
+        </>
     }
     render() {
 

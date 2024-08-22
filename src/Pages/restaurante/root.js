@@ -73,8 +73,9 @@ class index extends Component {
     })
 
     if (!this.pk) {
-      SNavigation.goBack()
+      SNavigation.navigate("/root")
     }
+
     this.isRun = true;
     this.hilo();
   }
@@ -170,7 +171,7 @@ class index extends Component {
       content: <SelectHabilitado
         style={{
           top: top,
-          left: left,
+          // left: left,
         }}
         onSelect={(select: any) => {
           let tipo = false;
@@ -233,11 +234,11 @@ class index extends Component {
         <SView col={"xs-12"} center style={{ backgroundColor: STheme.color.white }}>
           <SHr height={20} />
           <SView col={"xs-11"} row center>
-            {/* <SView col={"xs-12"}>
-                            <SHr height={15} />
-                            <SText fontSize={18} font={"Roboto"} style={{ fontWeight: "bold" }} color={STheme.color.darkGray}>Cliente</SText>
-                            <S  Hr height={15} />
-                        </SView> */}
+            {/* <SView col={"xs-12"}> */}
+            {/* <SHr height={15} /> */}
+            {/* <SText fontSize={18} font={"Roboto"} style={{ fontWeight: "bold" }} color={STheme.color.darkGray}>Cliente</SText> */}
+            {/* <S Hr height={15} /> */}
+            {/* </SView> */}
             <SView col={"xs-12"} row >
               <SView center width={70} card height={70} style={{ borderRadius: 8, overflow: 'hidden', }}>
                 <SImage src={`${SSocket.api.root}restaurante/.128_${this.data.key}`} style={{ width: "100%", position: "relative", resizeMode: "cover" }} />
@@ -267,7 +268,7 @@ class index extends Component {
 
               <SView row /* onPress={this.handlerPress.bind(this)} */>
                 <SText>Cerrar Comercio: </SText>
-                <SSwitch center size={20} loading={this.state.loading} onChange={() => { this.handlerPress() }} value={!!this.data?.habilitado} />
+                <SSwitch center size={20} loading={this.state.loading} onChange={() => { this.handlerPress() }} value={!this.data?.habilitado} />
 
                 {/* <SView>
                   <SView col={"xs-12"} row style={{
@@ -582,9 +583,9 @@ class index extends Component {
     dataPackVendidos.map(o => cant += parseFloat((o.state == "cancelado" || o.state == "no_recogido") ? 0 : (o.cantidad ?? 0)))
     return <>
       <SHr height={20} />
-      <SText  center fontSize={24}  >{label.replace(/^\w/, (c) => c.toUpperCase())} Hrs.</SText>
+      <SText center fontSize={24}  >{label.replace(/^\w/, (c) => c.toUpperCase())} Hrs.</SText>
       <SHr height={10} />
-      <SText  style={{ fontWeight: "bold" }} fontSize={16}>( {cant} / {dataHorarioCercano.cantidad} )</SText>
+      <SText style={{ fontWeight: "bold" }} fontSize={16}>( {cant} / {dataHorarioCercano.cantidad} )</SText>
       <SHr height={20} />
       <SView col={"xs-11"} style={{ borderBottomWidth: 2, borderColor: STheme.color.primary }}></SView>
       <SHr height={20} />
