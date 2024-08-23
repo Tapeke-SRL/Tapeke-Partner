@@ -4,7 +4,7 @@ import { SDate, SHr, SIFechaAlert, SImage, SLoad, SNotification, SPage, SPopup, 
 import SSocket from "servisofts-socket";
 import Model from "../../../Model";
 
-export default class CierreProgramado extends React.Component<{ key_restaurante: string }> {
+export default class CierreProgramado extends React.Component<{ key_restaurante: string, add_cierre?: any }> {
     state: any = {
         fecha_select: "",
         data: null
@@ -24,6 +24,7 @@ export default class CierreProgramado extends React.Component<{ key_restaurante:
         })
     }
     renderAddCierre() {
+        if(!this.props.add_cierre) return null;
         return <SText font={"Montserrat-Bold"} color={STheme.color.primary} onPress={() => {
             SPopup.open({
                 key: "popupadd",

@@ -15,7 +15,7 @@ const Dias = [
     { label: "Sabado", dia: "5" },
     { label: "Domingo", dia: "6" },
 ]
-export default class ListaDeHorarios extends React.Component<{ key_restaurante: string }> {
+export default class ListaDeHorarios extends React.Component<{ key_restaurante: string, edit?: any }> {
     state: any = {}
     componentDidMount(): void {
         SSocket.sendPromise({
@@ -48,7 +48,7 @@ export default class ListaDeHorarios extends React.Component<{ key_restaurante: 
         const dataDia = this.state.data[item.dia];
         // console.log(dataDia)
         if (dataDia.length <= 0) return <SText fontSize={12} font={"Montserrat-Medium"} >{"Cerrado"}</SText>
-        return dataDia.map((obj: any) => {
+        return dataDia.sort((a:any, b:any) => (a.hora_inicio > b.hora_inicio) ? 1 : -1).map((obj: any) => {
             return <SText fontSize={12} font={"Montserrat-Medium"}>{obj.hora_inicio} - {obj.hora_fin}</SText>
         })
         {/* {!dataDia ? <SLoad /> : this.renderHorarios()} */ }
@@ -81,12 +81,14 @@ export default class ListaDeHorarios extends React.Component<{ key_restaurante: 
                         {this.renderHorarios(item)}
                     </SView>
                     <SView width={8} />
-                    <SView width={30} padding={2} onPress={() => {
-                        this.setState({ onEdit: item })
-                    }}>
-                        <SImage src={require("../../../Assets/img/EDITAR2.png")} />
-                    </SView>
-                </SView >
+                    {!this.props.edit ? null :
+                        < SView width={30} padding={2} onPress={() => {
+                            this.setState({ onEdit: item })
+                        }}>
+                            <SImage src={require("../../../Assets/img/EDITAR2.png")} />
+                        </SView>
+                    }
+                </ SView >
             }}
             ListFooterComponent={() => {
                 const item = this.state.onEdit;

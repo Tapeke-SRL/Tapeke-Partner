@@ -88,6 +88,9 @@ class root extends Component {
             this.setState({ data: res.data, })
 
             this.getUser(res.data)
+            if (res.data.key_conductor) {
+                this.getUser({ key_usuario: res.data.key_conductor });
+            }
         }).catch(err => {
             console.error(err.data)
         })
@@ -104,7 +107,12 @@ class root extends Component {
             type: "getAllKeys",
             keys: keys,
         }).then(resp => {
-            this.setState({ usuarios: resp.data })
+            if (!this.state?.usuarios) this.state.usuarios = {};
+            this.state.usuarios = {
+                ...this.state.usuarios,
+                ...resp.data
+            }
+            this.setState({ ...this.state })
         }).catch(e2 => {
             SPopup.alert(e2.error)
         })
@@ -112,7 +120,10 @@ class root extends Component {
 
     componentUsuario() {
         let borderRadius = 5;
-        let redirectLink = `https://api.whatsapp.com/send?phone=${this?.state?.data?.factura?.phone.slice(5)}`
+
+        let phoneWp = this?.state?.data?.factura?.phone.replace(/\+| /g, '');
+        let redirectLink = `https://api.whatsapp.com/send?phone=${phoneWp}`
+
         let usuario = this.state.usuarios ? this.state.usuarios[this.state?.data?.key_usuario]?.usuario : null
         return <>
             <SText font={'Montserrat-ExtraBold'} fontSize={16}>DATOS DEL CLIENTE</SText>
@@ -143,7 +154,6 @@ class root extends Component {
                     // col={"xs-6"}
                     onPress={() => {
                         Linking.openURL(redirectLink)
-
                     }}
                 >
                     <SView
@@ -156,7 +166,7 @@ class root extends Component {
                             borderBottomLeftRadius: borderRadius
                         }}
                     >
-                        <SIcon name={'whatsapp'} height={30} width={30} />
+                        <SIcon name={'whatsapp'} fill={"#fff"} height={30} width={30} />
                     </SView>
                     <SView
                         center
@@ -573,8 +583,45 @@ class root extends Component {
             <SHr height={40} />
         </SView>
     }
+    renderConductor() {
+        if (!this.state.data) return null;
+        if (!this.state.data.key_conductor) return null;
+        if (!this.state.usuarios) return null;
+        const usuario = this.state.usuarios[this.state.data.key_conductor];
+        if (!usuario) return null;
+        const { Nombres, Apellidos, Telefono } = usuario.usuario;
+
+        let phoneWp = Telefono.replace(/\+| /g, '');
+        let redirectLink = `https://api.whatsapp.com/send?phone=${phoneWp}`
+
+        return <SView col={"xs-12"} height={40} row center>
+            <SView flex height style={{
+                alignItems: "center"
+            }} row>
+                <SIcon name={"iconoDelivery"} fill={STheme.color.primary} width={50} height={50} />
+                <SView width={8} />
+                <SText font='Montserrat-Medium'>{Nombres} {Apellidos}</SText>
+            </SView>
+            <SView width={150} center row
+                onPress={() => {
+                    Linking.openURL(redirectLink)
+                }}
+            >
+                <SView width={20} height={20}>
+                    <SIcon name={"whatsapp"} fill={"#7dcc00"} />
+                </SView>
+                <SView width={8} />
+                <SText font='Montserrat-Medium'>{Telefono}</SText>
+            </SView>
+        </SView>
+    }
     renderContent() {
         if (!this.state.data) return <SLoad />;
+
+        const validateState = () => {
+            let state = this.state.data.state;
+            if (state == "buscando_conductor" || state == "confirmando_conductor" || state == "esperando_conductor") return true;
+        }
 
         return <Container center={false}>
             <SHr h={20} />
@@ -594,10 +641,22 @@ class root extends Component {
             <SHr h={20} />
             {/* TODO componente Mapas */}
             {
-                this.state.data.delivery > 0 ?
-                    <MapaRastreo key_pedido={this.pk} data={this.state.data} />
+                this.state.data.delivery > 0 && validateState() ?
+                    <>
+                        <MapaRastreo key_pedido={this.pk} data={this.state.data} />
+                        {this.renderConductor()}
+                    </>
                     : null
             }
+
+            {
+                this.state.data.state == "entregado_conductor" ?
+                    <SView center card padding={15}>
+                        <SText font={"Montserrat-SemiBold"} color={STheme.color.primary}>El pedido ya se entrego al conducto</SText>
+                    </SView>
+                    : null
+            }
+
             {/* <SView center border={"#FF00FF"}>
                 <SText font={'Montserrat-Bold'}>Aca va el componente mapa para el rastreo y botónes de cambio de estados</SText>
             </SView> */}

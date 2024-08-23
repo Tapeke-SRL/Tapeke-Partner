@@ -49,7 +49,7 @@ const Input = forwardRef((props: InputProps, ref) => {
             setData(e)
         },
     }));
-    return <SView col={props.col}>
+    return <SView flex>
         {/* <SText fontSize={10} font={"Montserrat-Bold"} color={color}>{props.label}</SText> */}
         {/* <SHr h={3} /> */}
         <SView style={{

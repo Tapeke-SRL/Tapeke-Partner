@@ -55,7 +55,7 @@ export default class SelectRol extends Component {
                     borderRadius: 8
 
                 }, this.props.style]}>
-                {this.props.roles.map((rol) => {
+                {this.props.roles.sort((a, b) => (a.index ?? 0) > (b.index ?? 0) ? 1 : -1).map((rol) => {
                     return this.renderItem(rol)
                 })}
             </SView>

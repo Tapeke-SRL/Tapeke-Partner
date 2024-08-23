@@ -60,9 +60,11 @@ class index extends Component {
 
     super(props);
     this.state = {
+      usuarios: {}
     };
     this.pk = SNavigation.getParam("pk");
     this.isRun = false;
+    this.remplasoElRol = false;
 
   }
 
@@ -88,6 +90,24 @@ class index extends Component {
     if (!arrRest) return false;
     this.data = arrRest[this.pk];
 
+
+    const restSelect = Model.restaurante.Action.getSelect();
+    const restSelectRol = Model.restaurante.Action.getSelectKeyRol();
+    if (restSelect && this.data) {
+      if (restSelect.key == this.data.key) {
+        const usuarios_restaurante = this.data.usuario_restaurante;
+        if (usuarios_restaurante) {
+          const user_rest = usuarios_restaurante[0];
+          if (user_rest.key_rol != restSelectRol || !this.remplasoElRol) {
+            this.remplasoElRol = true;
+            Model.restaurante.Action.select(this.data);
+
+          }
+        }
+
+      }
+    }
+    // console.log("Mi rol", restSelectRol);
     // if (!this.data) {
     //   SNavigation.replace("/");
     //   Model.restaurante.Action.select("");
@@ -101,25 +121,40 @@ class index extends Component {
       this.pedidos = Model.pedido.Action.getVendidosData({ fecha: this.horario_proximo.fecha, key_pack: this.horario_proximo.key_pack, key_restaurante: this.pk });
     }
 
-    if (this.pedidos?.length > 0) {
-      let keys = [...new Set(Object.values(this.pedidos).map(a => a.key_usuario).filter(key => key !== null))];
-
-      // SSocket.sendPromise({
-      //   version: "2.0",
-      //   service: "usuario",
-      //   component: "usuario",
-      //   type: "getAllKeys",
-      //   keys: keys,
-      // }).then(resp => {
-      //   this.setState({ usuarios: resp.data })
-      // }).catch(e2 => {
-      //   SPopup.alert(e2.error)
-      // })
-    }
 
     if (!this.pedidos) return false;
 
+    this.loadUsers();
     return true;
+  }
+
+  loadUsers() {
+
+    if (this.pedidos?.length > 0) {
+      let keys = [...new Set(Object.values(this.pedidos).map(a => a.key_usuario).filter(key => key !== null))];
+      keys = keys.filter(e => !this.state.usuarios[e]);
+      if (keys.length <= 0) return;
+      if (this.loading) return;
+      this.loading = true;
+      SSocket.sendPromise({
+        version: "2.0",
+        service: "usuario",
+        component: "usuario",
+        type: "getAllKeys",
+        keys: keys,
+      }).then(resp => {
+        this.loading = false;
+        this.state.usuarios = {
+          ...(this.state.usuarios ?? {}),
+          ...resp.data
+        }
+        this.setState({ ...this.state })
+      }).catch(e2 => {
+        this.loading = false;
+        SPopup.alert(e2.error)
+      })
+    }
+
   }
 
   componentWillUnmount() {
@@ -451,8 +486,8 @@ class index extends Component {
 
     return arr.map((obj, index) => {
       var montoTotal = obj.cantidad * obj.precio;
-      var dataUsuario = Model.usuario.Action.getByKey(obj.key_usuario);
-      // var dataUsuario = { Nombres: "ERROR", Apellidos: "SLOW" } // TODO
+      // var dataUsuario = Model.usuario.Action.getByKey(obj.key_usuario);
+      var dataUsuario = this.state.usuarios[obj.key_usuario]?.usuario ?? {}
 
       let entregado = obj.state == "entregado" || obj.state == "entregado_conductor" || obj.state == "conductor_llego";
       let error = obj.state == "cancelado" || obj.state == "no_recogido";
@@ -751,6 +786,7 @@ class index extends Component {
         // footer={(!this.data || this.data?.estado == 2 ? null : <PBarraFooter url={"pedido"} />)}
         onRefresh={(resolve) => {
           this.data = null;
+          this.state.usuarios = {};
           Model.restaurante.Action.CLEAR();
           Model.horario.Action.CLEAR();
           Model.pack.Action.CLEAR();

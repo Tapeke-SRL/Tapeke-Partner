@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { } from 'react-native';
-import { SMapView, SText, SThread, SView } from 'servisofts-component';
+import { SMapView, SText, STheme, SThread, SView } from 'servisofts-component';
 import MarkerRestaurante from './MarkerRestaurante'
 
 
 import SSocket from 'servisofts-socket';
+import MarkerDriver from './MarkerDriver';
 
 export default class MapaRastreo extends Component {
     constructor(props) {
@@ -45,10 +46,10 @@ export default class MapaRastreo extends Component {
                         { latitude: resp?.data?.latitude, longitude: resp?.data?.longitude },
                     ], {
                         edgePadding: {
-                            top: 10,
-                            bottom: 10,
-                            left: 100,
-                            right: 100
+                            top: 100,
+                            bottom: 100,
+                            left: 20,
+                            right: 20
                         }
                     })
                 } else {
@@ -82,12 +83,14 @@ export default class MapaRastreo extends Component {
             <SMapView.SMarker width={size} height={size} latitude={restaurante.latitude} longitude={restaurante.longitude} >
                 <MarkerRestaurante data={this.props.data?.restaurante} size={size} />
             </SMapView.SMarker>
-            {this.state.position ? <SMapView.SMarker latitude={this.state?.position?.latitude} longitude={this.state?.position?.longitude} /> : null}
+            {this.state.position ? <SMapView.SMarker width={size} height={size} latitude={this.state?.position?.latitude} longitude={this.state?.position?.longitude} >
+                <MarkerDriver data={{ key: this.props.data.key_conductor }} size={size} />
+            </SMapView.SMarker> : null}
         </SMapView>
     }
 
     renderContent() {
-        const { direccion, key_conductor, delivery } = this.props.data
+        const { direccion, key_conductor, delivery, state } = this.props.data
 
 
         if (delivery <= 0) return <SText>{"Recoger del lugar"}</SText>
@@ -96,9 +99,28 @@ export default class MapaRastreo extends Component {
             {this.getMapa()}
         </>
     }
+
+    renderMensage() {
+        switch (this.props?.data?.state) {
+            case "buscando_conductor": return "Buscando conductor...";
+            case "confirmando_conductor": return "Confirmando conductor...";
+            case "esperando_conductor": return "Conductor en camino a tu comercio";
+            default: return this.props?.data?.state;
+        }
+    }
     render() {
 
-        return <SView col={"xs-12"} height={200} border={"#000"} center>
+        return <SView col={"xs-12"} height={270} style={{
+            borderRadius: 16,
+            overflow: "hidden"
+        }} center>
+            <SView style={{
+                width: "100%",
+                height: 35,
+                backgroundColor: STheme.color.primary
+            }} center>
+                <SText color={STheme.color.white} fontSize={16} font='Montserrat-Medium'>{this.renderMensage()}</SText>
+            </SView>
             {this.renderContent()}
         </SView>
     }

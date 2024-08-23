@@ -1,6 +1,6 @@
 import React from 'react';
 import { Platform } from 'react-native'
-import { SComponentContainer, SNavigation, SText, STheme } from 'servisofts-component';
+import { SComponentContainer, SNavigation, SText, STheme, SMapView } from 'servisofts-component';
 import SSocket, { setProps } from 'servisofts-socket';
 import Redux, { store } from './Redux';
 import Config from "./Config";
@@ -13,6 +13,7 @@ import Firebase from './Firebase';
 import DeviceKey from './Firebase/DeviceKey';
 import ErrorBoundary from './Components/ErrorBoundary';
 
+SMapView.bootstrapURLKeys.key = "AIzaSyC4rcy6GRVM5_i9ZF0vGFmb1HRc0mXsAdk"
 setProps(Config.socket);
 try {
     if (Platform.OS == "web") {

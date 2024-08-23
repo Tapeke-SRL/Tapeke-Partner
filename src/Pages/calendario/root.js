@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
-import { SHr, SIcon, SImage, SPage, SText, STheme, SView } from 'servisofts-component';
+import { SHr, SIcon, SImage, SNavigation, SNotification, SPage, SText, STheme, SView } from 'servisofts-component';
 import TopBar from '../../Components/TopBar';
 import PBarraFooter from '../../Components/PBarraFooter';
 import PageTitle from '../../Components/PageTitle';
@@ -8,6 +8,7 @@ import Container from '../../Components/Container';
 import ListaDeHorarios from './Components/ListaDeHorarios';
 import Model from '../../Model';
 import CierreProgramado from './Components/CierreProgramado';
+import Roles from '../../Roles';
 
 export default class root extends Component {
     static TOPBAR = <>
@@ -25,6 +26,56 @@ export default class root extends Component {
         };
     }
 
+    componentDidMount() {
+        this.getPermisoVer()
+    }
+
+
+    getPermisoVer() {
+        Roles.getPermiso({
+            key_rol: Model.restaurante.Action.getSelectKeyRol(),
+            url: "/_partner/calendario",
+            permiso: "ver"
+        }).then(e => {
+            this.setState({ ver: e })
+            this.getPermisoEditar();
+            this.getPermisoAgregarCierre()
+        }).catch(e => {
+            SNotification.send({
+                title: "Acceso denegado",
+                body: "No tienes permisos para ver esta pagina.",
+                color: STheme.color.danger,
+                time: 5000,
+            })
+            SNavigation.goBack();
+
+            // this.getPermisoEditar();
+            // this.getPermisoEliminar();
+
+        })
+    }
+    getPermisoEditar() {
+        Roles.getPermiso({
+            key_rol: Model.restaurante.Action.getSelectKeyRol(),
+            url: "/_partner/calendario",
+            permiso: "edit"
+        }).then(e => {
+            this.setState({ edit: e })
+        }).catch(e => {
+
+        })
+    }
+    getPermisoAgregarCierre() {
+        Roles.getPermiso({
+            key_rol: Model.restaurante.Action.getSelectKeyRol(),
+            url: "/_partner/calendario",
+            permiso: "add_cierre"
+        }).then(e => {
+            this.setState({ add_cierre: e })
+        }).catch(e => {
+
+        })
+    }
     render() {
         const restaurante = Model.restaurante.Action.getSelect();
 
@@ -62,7 +113,7 @@ export default class root extends Component {
                     </SView>
                 </SView>
                 <SHr h={36} />
-                {this.state.type == "cierre" ? <CierreProgramado key_restaurante={restaurante.key} /> : <ListaDeHorarios key_restaurante={restaurante.key} />}
+                {this.state.type == "cierre" ? <CierreProgramado key_restaurante={restaurante.key} add_cierre={this.state.add_cierre} /> : <ListaDeHorarios key_restaurante={restaurante.key} edit={this.state.edit} />}
             </Container>
         </SPage>
     }

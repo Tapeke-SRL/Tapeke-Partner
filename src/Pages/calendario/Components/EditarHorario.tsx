@@ -41,11 +41,12 @@ export default class EditarHorario extends React.Component<{ dia: any, data: any
 
 
     renderInput(obj: any) {
-        return <SView col={"xs-12"} row center>
+        return <SView col={"xs-12"} row center key={obj.key}>
             <SText>De</SText>
             <SView width={4} />
             <Input inputStyle={{
-                width: 140,
+                // width: 140,
+                flex: 1,
                 textAlign: "center",
                 fontSize: 14,
                 height: 34
@@ -62,7 +63,8 @@ export default class EditarHorario extends React.Component<{ dia: any, data: any
             <SText>Hasta</SText>
             <SView width={4} />
             <Input inputStyle={{
-                width: 140,
+                // width: 140,
+                flex: 1,
                 textAlign: "center",
                 fontSize: 14,
                 height: 34
@@ -95,7 +97,7 @@ export default class EditarHorario extends React.Component<{ dia: any, data: any
     }
     renderData() {
         if (this.state.data.length <= 0) return <SText col={"xs-12"} center fontSize={14} color={STheme.color.gray}>Cerrado por hoy</SText>
-        return this.state.data.map((da) => {
+        return this.state.data.sort((a, b) => (a.hora_inicio > b.hora_inicio) || !a.hora_inicio ? 1 : -1).map((da) => {
             return <>
                 {this.renderInput(da)}
                 <SHr />
@@ -210,10 +212,11 @@ export default class EditarHorario extends React.Component<{ dia: any, data: any
                 </SView>
             </SView>
             {this.renderData()}
-            <SHr />
-            <SText col={"xs-12"} color={STheme.color.primary} font={"Montserrat-Bold"} onPress={() => {
+            <SHr h={16}/>
+            <SText col={"xs-12"} color={STheme.color.primary} style={{ textAlign:"right"}} font={"Montserrat-Bold"} onPress={() => {
                 this.addNew()
             }}>{"+ Agregar turno"}</SText>
+            <SHr h={20}/>
             <SText color={STheme.color.primary} font={"Montserrat-Bold"} onPress={() => {
                 this.guardar()
             }}>{"Guardar"}</SText>

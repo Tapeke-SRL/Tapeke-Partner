@@ -46,9 +46,13 @@ export default class add extends Component {
             component: "rol",
             type: "getAll",
         }).then(e => {
-            const roles_partner = Object.values(e.data).filter(e => e.tipo == "partner");
+            let roles_partner = Object.values(e.data).filter(e => e.tipo == "partner");
+            const mirolkey = Model.restaurante.Action.getSelectKeyRol();
+            const miRol = roles_partner.find(a => a.key == mirolkey);
+            // roles_partner = roles_partner.filter(a => (a.index ?? 0) >= (miRol.index ?? 0))
+            this.state.miRol = miRol;
             this.state.roles = roles_partner;
-            this.setState({ roles: roles_partner })
+            this.setState({ ...this.state })
             this.getUsuarioRestaurante();
 
         }).catch(e => {
@@ -81,8 +85,10 @@ export default class add extends Component {
                 this._inputs["telefono"].setValue(usuario.Telefono)
 
                 const rol = this.state.roles.find(a => a.key == usuario_restaurante.key_rol)
+                this.state.rol_usuario = rol;
                 this._inputs["rol"].setValue(rol?.descripcion)
                 this._inputs["rol"].setData(rol)
+                // this.setState({ ...this.state })
                 // Object.values(e.data).find()
                 // })
 
@@ -115,6 +121,14 @@ export default class add extends Component {
     }
 
     hanlePress = (e) => {
+        console.log(this.state)
+        if (this.state.rol_usuario) {
+            if (this.state.miRol.index > this.state.rol_usuario.index) {
+                SPopup.alert("No puedes cambiar el rol de un usuario con una jerarquía superior.")
+                return;
+            }
+        }
+
         // Vibration.vibrate(100)
         e.currentTarget.measure((x, y, width, height, pageX, pageY) => {
             const key_popup = "popupkey";
@@ -125,11 +139,12 @@ export default class add extends Component {
             if (itemHeight + top > windowheight) {
                 top = windowheight - itemHeight;
             }
+            console.log(this.state.miRol)
             SPopup.open({
                 key: key_popup,
                 type: "2",
                 content: <SelectRol
-                    roles={this.state.roles}
+                    roles={this.state.roles.filter(a => (a.index ?? 0) >= (this.state.miRol.index ?? 0))}
                     style={{
                         left: pageX,
                         top: top,
@@ -137,6 +152,8 @@ export default class add extends Component {
                         itemHeight: itemHeight,
                     }}
                     onSelect={(e) => {
+
+
                         const inp = this._inputs.rol
                         if (inp) {
                             inp.setValue(e.descripcion)
@@ -289,7 +306,7 @@ export default class add extends Component {
                     label={"Rol"}
                     // info={""}
                     placeholder={"Selecciona un rol"}
-                    onPress={this.hanlePress}
+                    onPress={this.hanlePress.bind(this)}
                 // onSubmitEditing={() => this._inputs["index"].focus()}
                 />
                 <SHr h={64} />

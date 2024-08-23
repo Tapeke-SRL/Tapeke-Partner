@@ -22,6 +22,7 @@ export default class Roles {
         const page = data[props.url];
         if (page) {
             const permiso = page.permisos[props.permiso];
+            if(!permiso) throw "Sin permiso"
             return permiso;
         }
        throw "Sin permiso"

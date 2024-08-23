@@ -7,6 +7,7 @@ import Container from '../../Components/Container';
 import SSocket from 'servisofts-socket';
 import Model from '../../Model';
 import PageTitle from '../../Components/PageTitle';
+import Roles from '../../Roles';
 
 export default class root extends Component {
 
@@ -35,6 +36,51 @@ export default class root extends Component {
         root.INSTANCE = this;
         this.getUsuarioRestaurante();
         this.getRoles();
+        this.getPermisoAgregar();
+
+
+
+    }
+
+    getPermisoAgregar() {
+        Roles.getPermiso({
+            key_rol: Model.restaurante.Action.getSelectKeyRol(),
+            url: "/_partner/roles",
+            permiso: "add"
+        }).then(e => {
+            this.getPermisoEditar();
+            this.getPermisoEliminar();
+            this.setState({ add: e })
+            console.log(e);
+        }).catch(e => {
+            this.getPermisoEditar();
+            this.getPermisoEliminar();
+
+        })
+    }
+    getPermisoEditar() {
+        Roles.getPermiso({
+            key_rol: Model.restaurante.Action.getSelectKeyRol(),
+            url: "/_partner/roles",
+            permiso: "edit"
+        }).then(e => {
+            this.setState({ edit: e })
+            console.log(e);
+        }).catch(e => {
+
+        })
+    }
+    getPermisoEliminar() {
+        Roles.getPermiso({
+            key_rol: Model.restaurante.Action.getSelectKeyRol(),
+            url: "/_partner/roles",
+            permiso: "delete"
+        }).then(e => {
+            this.setState({ delete: e })
+            console.log(e);
+        }).catch(e => {
+
+        })
     }
 
     getRoles() {
@@ -114,52 +160,56 @@ export default class root extends Component {
                     <SText fontSize={12} color={STheme.color.gray}>{obj?.usuario?.Telefono}</SText>
                     <SText fontSize={12} color={STheme.color.gray}>{obj?.usuario?.Correo}</SText>
                 </SView>
-                <SView center height={60}>
-                    <SView width={30} height={30} onPress={() => {
-                        SNavigation.navigate("/roles/add", { key_restaurante: this.key_restaurante, key_usuario: obj.key_usuario, key: obj.key })
-                    }} >
-                        <SImage src={require("../../Assets/img/EDITAR2.png")} />
+                {!this.state.edit ? null :
+                    <SView center height={60}>
+                        <SView width={30} height={30} onPress={() => {
+                            SNavigation.navigate("/roles/add", { key_restaurante: this.key_restaurante, key_usuario: obj.key_usuario, key: obj.key })
+                        }} >
+                            <SImage src={require("../../Assets/img/EDITAR2.png")} />
+                        </SView>
                     </SView>
+                }
+            </SView>
+            {!this.state.delete ? null :
+                <SView width={40} center height={30} onPress={() => {
+                    SPopup.confirm({
+                        title: "Seguro de eliminar?",
+                        onPress: () => {
+                            SSocket.sendPromise({
+                                component: "usuario_restaurante",
+                                type: "editar",
+                                key_usuario: Model.usuario.Action.getKey(),
+                                data: {
+                                    key: obj.key,
+                                    estado: 0,
+                                }
+                            }).then(e => {
+                                this.setState((prevState) => {
+                                    let newState = { ...prevState }
+                                    delete newState.data[obj.key]
+                                    return newState;
+                                })
+                                SNotification.send({
+                                    title: "Usuario eliminado",
+                                    body: "El usuario fue eliminado con exito.",
+                                    time: 5000,
+                                    color: STheme.color.success,
+                                })
+                            }).catch(e => {
+                                SNotification.send({
+                                    title: "No pudimos eliminar el usuario.",
+                                    body: "Ocurrio un error al eliminar el usuario, intente nuevamente.",
+                                    time: 5000,
+                                    color: STheme.color.danger,
+                                })
+                            })
+                        }
+                    })
+                    // SNavigation.navigate("/roles/add", {key_restaurante: this.key_restaurante, key_usuario: obj.key_usuario, })
+                }} padding={4}>
+                    <SImage src={require("../../Assets/img/borrar.png")} />
                 </SView>
-            </SView>
-            <SView width={40} center height={30} onPress={() => {
-                SPopup.confirm({
-                    title: "Seguro de eliminar?",
-                    onPress: () => {
-                        SSocket.sendPromise({
-                            component: "usuario_restaurante",
-                            type: "editar",
-                            key_usuario: Model.usuario.Action.getKey(),
-                            data: {
-                                key: obj.key,
-                                estado: 0,
-                            }
-                        }).then(e => {
-                            this.setState((prevState) => {
-                                let newState = { ...prevState }
-                                delete newState.data[obj.key]
-                                return newState;
-                            })
-                            SNotification.send({
-                                title: "Usuario eliminado",
-                                body: "El usuario fue eliminado con exito.",
-                                time: 5000,
-                                color: STheme.color.success,
-                            })
-                        }).catch(e => {
-                            SNotification.send({
-                                title: "No pudimos eliminar el usuario.",
-                                body: "Ocurrio un error al eliminar el usuario, intente nuevamente.",
-                                time: 5000,
-                                color: STheme.color.danger,
-                            })
-                        })
-                    }
-                })
-                // SNavigation.navigate("/roles/add", {key_restaurante: this.key_restaurante, key_usuario: obj.key_usuario, })
-            }} padding={4}>
-                <SImage src={require("../../Assets/img/borrar.png")} />
-            </SView>
+            }
         </SView >
     }
     renderList() {
@@ -188,11 +238,12 @@ export default class root extends Component {
                         <SText font={"Montserrat-Medium"}>{"Usuarios"}</SText>
                         <SText fontSize={10} color={STheme.color.gray}>{"Personal que tiene acceso / control de tu comercio"}</SText>
                     </SView>
-                    <SView width={130} height={26} backgroundColor={STheme.color.primary} borderRadius={8} center onPress={() => {
+                    {this.state.add ? <SView width={130} height={26} backgroundColor={STheme.color.primary} borderRadius={8} center onPress={() => {
                         SNavigation.navigate("/roles/add", { key_restaurante: this.key_restaurante })
                     }}>
                         <SText color={"#fff"} fontSize={12} >{"+ Agregar usuario"}</SText>
-                    </SView>
+                    </SView> : null}
+
                 </SView>
                 <SHr h={32} />
                 {this.renderList()}

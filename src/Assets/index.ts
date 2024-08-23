@@ -55,6 +55,7 @@ import tapekeMenu, { ReactComponent as tapekeMenuW } from './svg/tapekeMenu.svg'
 import whatsapp, { ReactComponent as whatsappW } from './svg/whatsapp.svg';
 
 import Calendario, { ReactComponent as CalendarioW } from './svg/calendario.svg';
+import iconoDelivery, { ReactComponent as iconoDeliveryW } from './svg/iconoDelivery.svg';
 
 const Assets: SAssets = {
     svg: {
@@ -107,6 +108,7 @@ const Assets: SAssets = {
 
         "whatsapp": { Native: whatsapp, Web: whatsappW },
         "Calendario": { Native: Calendario, Web: CalendarioW },
+        "iconoDelivery": { Native: iconoDelivery, Web: iconoDeliveryW },
 
 
 
