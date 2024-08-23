@@ -94,7 +94,8 @@ export default class EditarHorario extends React.Component<{ dia: any, data: any
         </SView >
     }
     renderData() {
-        if (this.state.data.length <= 0) return <SText col={"xs-12"} center fontSize={14} color={STheme.color.gray}>Cerrado por hoy</SText>
+        // if (this.state.data.length <= 0) return <SText col={"xs-12"} center fontSize={14} color={STheme.color.gray}>Cerrado por hoy</SText>
+        if (this.state.data.length <= 0) return <SText col={"xs-12"} center fontSize={14} color={STheme.color.gray}>Eliminar todos los horarios</SText>
         return this.state.data.map((da) => {
             return <>
                 {this.renderInput(da)}
