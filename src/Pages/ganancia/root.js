@@ -37,8 +37,7 @@ class root extends Component {
         try {
             ver = await Roles.getPermiso({ key_rol: Model.restaurante.Action.getSelectKeyRol(), url: "/_partner/ganancias", permiso: "ver" })
         } catch (error) {
-            SNotification.send({
-                title: "Acceso denegado",
+            SNotification.send({                title: "Acceso denegado",
                 body: "No tienes permisos para ver esta pagina.",
                 color: STheme.color.danger,
                 time: 5000,
@@ -153,7 +152,8 @@ class root extends Component {
         this.keys_pedidos = [];
         let totalDesc = this.calcularDescuentoCobertura(null);
 
-        this.pedidoPorConciliarFilterDate?.map(obj => {
+        // this.pedidoPorConciliarFilterDate?.map(obj => {
+        Object.values(this.state?.data).map(obj => {
 
             totalDesc = this.calcularDescuentoCobertura(obj);
             total.totalDescCubreTapeke += totalDesc.totalDescCubreTapeke;
@@ -538,8 +538,10 @@ class root extends Component {
     }
 
     render() {
-        let totales = this.calcularMontos();
         if (!this.state.ready) return <SLoad />
+        if (!this.state.data) return <SLoad />
+
+        let totales = this.calcularMontos();
         return (<SPage hidden
             onRefresh={(resolve) => {
                 this.getDatos();
