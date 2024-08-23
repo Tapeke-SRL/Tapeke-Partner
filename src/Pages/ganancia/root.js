@@ -76,8 +76,6 @@ class root extends Component {
     }
 
     calcularMontos() {
-        if (!this.state.data) return;
-
         let total = {
             efectivo: 0,
             linea: 0,
@@ -142,40 +140,6 @@ class root extends Component {
             return totalProd;
         }
 
-        let keysPedidos = [];
-        const calcularTotalProd = (obj) => {
-            let totalProd = 0;
-            // total += obj.cantidad * obj.precio;
-            if (obj.pedido_producto) {
-                Object.values(obj.pedido_producto).map((prod) => {
-                    if (prod.precio_sin_descuento) {
-                        totalProd += (prod.cantidad * prod.precio_sin_descuento)
-                    } else {
-                        totalProd += (prod.cantidad * prod.precio)
-                    }
-
-                    if (prod.sub_productos) {
-                        Object.values(prod.sub_productos).map((sub) => {
-                            if (sub.sub_producto_detalle) {
-                                Object.values(sub.sub_producto_detalle).map((subDet) => {
-                                    totalProd += (subDet.cantidad * subDet.precio)
-                                })
-                            }
-                        })
-                    }
-                })
-            }
-            return totalProd;
-        }
-
-        // const calcularTotalDescuento = (obj) => {
-        //     let totalDesc = 0;
-        //     if (obj) {
-        //         totalDesc = obj.total_descuento_producto - obj.total_descuento_delivery
-        //     }
-        //     return parseFloat(totalDesc, 2);
-        // }
-
         const contadorProd = (obj) => {
             let cantidad = 0;
             if (obj.pedido_producto) {
@@ -188,8 +152,8 @@ class root extends Component {
 
         this.keys_pedidos = [];
         let totalDesc = this.calcularDescuentoCobertura(null);
-        Object.values(this.state.data).map(obj => {
-            this.keys_pedidos.push(obj.key);
+
+        this.pedidoPorConciliarFilterDate?.map(obj => {
 
             totalDesc = this.calcularDescuentoCobertura(obj);
             total.totalDescCubreTapeke += totalDesc.totalDescCubreTapeke;
@@ -218,8 +182,6 @@ class root extends Component {
                 total.totalDescEfectivo += (totalDesc.totalDescCubreTapeke ?? 0) + (totalDesc.totalDescCubrePartner ?? 0);
                 total.totalComisionEfectivo += obj.comision_restaurante;
             } else {
-                // total.linea += ((obj.cantidad * obj.precio) + calcularTotalProd(obj) - (calcularTotalDescuento(obj)));
-
                 total.linea += ((obj.cantidad * obj.precio) + calcularTotalProdYSub(obj));
                 total.comision_linea += obj.comision_restaurante;
                 totalDesc = this.calcularDescuentoCobertura(obj);
@@ -230,14 +192,16 @@ class root extends Component {
             total.totalDescProducto += obj.total_descuento_producto;
             total.totalDescDelivery += obj.total_descuento_delivery;
             total.totalDescuento = total.totalDescProducto + total.totalDescDelivery;
-
             total.total += ((obj.cantidad * obj.precio) + calcularTotalProdYSub(obj));
+
+            this.keys_pedidos.push(obj.key);
         })
 
         total.totalDescCubrePartner = total.totalDescCubrePartner - (total.totalDescEfectivo * totalDesc.porcentajeCubrePartner);
 
+
         // TODO falta definir esté metodo
-        total.totalPorConciliar = (total.linea - (total.comision_linea + total.comision_efectivo) - total.totalDescCubreTapeke);
+        total.totalPorConciliar = total.linea + total.totalDescCubreTapeke - (total.totalDescCubrePartner + total.comision_linea + total.comision_efectivo);
 
         return total;
     }
@@ -273,7 +237,7 @@ class root extends Component {
             const exclude = []
             Object.values(obj.pedido_producto).map((prod) => {
                 if (prod.descuento_monto) {
-                    let coberturaTapeke = 0.50;
+                    let coberturaTapeke = 0;
                     if (exclude.some(nombre => obj.restaurante.nombre.toLowerCase().includes(nombre.toLowerCase()))) {
                         coberturaTapeke = 1;
                     }
@@ -476,7 +440,7 @@ class root extends Component {
 
             {this.labelGanancia({ label: `Comisión Tapeke Linea`, value: comision_tapeke_linea/* , color: STheme.color.danger, simbolo: "-" */ })}
 
-            {this.labelGanancia({ label: `Total`, value: (total_por_conciliar * -1) })}
+            {this.labelGanancia({ label: `Total`, value: (total_por_conciliar) })}
 
             <SHr height={15} />
         </SView>
@@ -603,6 +567,7 @@ class root extends Component {
         );
     }
 }
+
 const initStates = (state) => {
     return { state }
 };

@@ -33,7 +33,8 @@ class root extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            usuarios: {}
+            usuarios: {},
+            timeImage: new Date().getTime()
         };
         this.pk = SNavigation.getParam('pk');
     }
@@ -128,11 +129,11 @@ class root extends Component {
                         usuario ?
                             <>
                                 <SView width={40} height={40}>
-                                    <SImage src={require("../../Assets/img/no_image.jpeg")} style={{ borderRadius: 10 }} />
-                                    <SImage src={SSocket.api.root + "usuario/" + usuario?.key} style={{ borderRadius: 10, position: 'absolute', resizeMode: "cover" }} />
+                                    <SImage src={require("../../Assets/img/no_foto_user.png")} style={{ borderRadius: 10 }} />
+                                    <SImage src={SSocket.api.root + "usuario/" + usuario?.key + "?date=" + this.state.timeImage} style={{ borderRadius: 10, position: 'absolute', resizeMode: "cover" }} />
                                 </SView>
 
-                                <SText fontSize={16} style={{ paddingLeft: 5 }}>{`${usuario?.Nombres} ${usuario?.Apellidos}`}</SText>
+                                <SText flex fontSize={16} style={{ paddingLeft: 5, paddingRight: 5 }}>{`${usuario?.Nombres} ${usuario?.Apellidos}`}</SText>
                             </>
                             : <SLoad />
                     }
@@ -207,23 +208,19 @@ class root extends Component {
 
     componentDatosPedido() {
         let data = this.state.data;
-        return <SView row
-            style={{
-                justifyContent: "space-between"
-            }}
-        >
-            <SView>
+        return <SView row>
+            <SView flex>
                 <SText font={'Montserrat-ExtraBold'}>Datos de Facturación:</SText>
-                <SText>RS: {data?.factura?.razon_social || data?.factura?.razon_social != '' ? data?.factura?.razon_social : "usuario no puso RS"}</SText>
-                <SText>NIT: {data?.factura?.nit || data?.factura?.nit != '' ? data?.factura?.nit : "usuario no puso nit"}</SText>
+                <SText color={data?.factura?.razon_social ? STheme.color.text : STheme.color.gray}>RS: {data?.factura?.razon_social || data?.factura?.razon_social != '' ? data?.factura?.razon_social : "* usuario no puso RS"}</SText>
+                <SText color={data?.factura?.nit ? STheme.color.text : STheme.color.gray}>NIT: {data?.factura?.nit || data?.factura?.nit != '' ? data?.factura?.nit : "* usuario no puso nit"}</SText>
                 <SHr />
                 <SText font={'Montserrat-ExtraBold'}>Nota del cliente:</SText>
-                <SText>{data?.nota_cliente}</SText>
+                <SText color={data?.nota_cliente ? STheme.color.text : STheme.color.gray}>{data?.nota_cliente ? data?.nota_cliente : "* El cliente no puso nota"}</SText>
             </SView>
 
             <SView>
                 <SText font={'Montserrat-Bold'}>Hora del Pedido</SText>
-                <SText font={'Montserrat-Bold'} fontSize={30}
+                <SText font={'Montserrat-Bold'} fontSize={20}
                     style={{
                         alignItems: "center"
                     }}
@@ -261,10 +258,10 @@ class root extends Component {
                     justifyContent: "space-between"
                 }}
             >
-                <SText font={'Montserrat-Bold'}>DETALLE DEL PEDIDO</SText>
+                <SText font={'Montserrat-ExtraBold'}>DETALLE DEL PEDIDO</SText>
                 <SView center>
                     <SText font={'Montserrat-Bold'}>#{data.key.slice(0, 6)}</SText>
-                    <SText color={STheme.color.gray} fontSize={10}>Código del pedido</SText>
+                    <SText fontSize={10}>Código del pedido</SText>
                 </SView>
             </SView>
 
@@ -291,7 +288,7 @@ class root extends Component {
         return pedido_producto?.map(prod => {
             return this.cardProducto({
                 key: prod.key,
-                image: SSocket.api.root + "producto/.128_" + prod.key + "?date=" + new Date().getTime(),
+                image: SSocket.api.root + "producto/.128_" + prod.key_producto + "?date=" + this.state.timeImage,
                 title: prod.descripcion,
                 cantidad: prod.cantidad,
                 precio: prod?.precio_sin_descuento ? (prod?.precio_sin_descuento * prod.cantidad) : (prod.precio * prod.cantidad),
@@ -323,7 +320,7 @@ class root extends Component {
             >
                 <SView height={60} width={60}>
                     <SImage src={require("../../Assets/img/no_image.jpeg")} style={{ borderRadius: 10 }} />
-                    <SImage src={image} style={{ borderRadius: 10, position: 'absolute' }} />
+                    <SImage src={image} style={{ borderRadius: 10, position: 'absolute', resizeMode: "cover" }} />
                 </SView>
 
                 <SView
@@ -332,19 +329,19 @@ class root extends Component {
                         marginLeft: 10
                     }}
                 >
-                    <SText col={"xs-12"}>{`${title}`}</SText>
+                    <SText font={"Montserrat-Bold"} col={"xs-12"}>{`${title}`}</SText>
                     {cardDetalle()}
                 </SView>
 
                 <SView center>
-                    <SText color={STheme.color.primary}>Cantidad</SText>
-                    <SText>{cantidad}</SText>
-                    <SText color={STheme.color.primary}>Precio</SText>
-                    <SText> Bs. {parseFloat(precio).toFixed(2)}</SText>
+                    <SText font={"Montserrat-Bold"} fontSize={13} color={STheme.color.primary}>Cantidad</SText>
+                    <SText font={"Montserrat-SemiBold"}>{cantidad}</SText>
+                    <SText font={"Montserrat-Bold"} fontSize={13} color={STheme.color.primary}>Precio</SText>
+                    <SText font={"Montserrat-SemiBold"}> Bs. {parseFloat(precio).toFixed(2)}</SText>
                     {
                         descuento > 0 ?
                             <>
-                                <SText color={STheme.color.danger}>Descuento</SText>
+                                <SText font={"Montserrat-Bold"} fontSize={13} color={STheme.color.danger}>Descuento</SText>
                                 <SText> Bs. {parseFloat(descuento).toFixed(2)}</SText>
                             </>
                             : null
@@ -356,12 +353,22 @@ class root extends Component {
     }
 
     cardTypePedido() {
-        return <SView col={'xs-12'} center card padding={10} borderRadius={5}>
-            <SText color={STheme.color.gray}>{this.state.data.delivery > 0 ? "Entrega a domicilio" : "Recoger del lugar"}</SText>
+        return <SView center col={'xs-12'} card padding={10} borderRadius={5}>
+            <SText font={"Montserrat-SemiBold"} color={STheme.color.primary}>{this.state.data.delivery > 0 ? "Entrega a domicilio" : "Recoger del lugar"}</SText>
+            {
+                this.state.data.delivery == 0 && this.state.data?.data_extra?.horario_recogida ?
+                    <SView row center>
+                        <SText fontSize={12} style={{ justifyContent: "center" }}>Horario estimado de recogida:</SText>
+                        <SText font={"Montserrat-SemiBold"} fontSize={16} style={{ paddingLeft: 5 }}>{this.state.data?.data_extra?.horario_recogida}</SText>
+                        <SText color={STheme.color.gray} fontSize={9} >* Recuerda que debes reservar este pedido y tenerlo listo a la hora estimada</SText>
+                    </SView>
+
+                    : null
+            }
         </SView>
     }
 
-    labelDetallePedido({ label, labelColor = STheme.color.gray, value, color = STheme.color.gray, font, simbol = "" }) {
+    labelDetallePedido({ label, labelColor = STheme.color.text, value, color = STheme.color.text, font, simbol = "" }) {
         return <SView row
             style={{
                 justifyContent: "space-between"
@@ -375,16 +382,16 @@ class root extends Component {
     totalProducto() {
         let total = 0
 
-        if(this.state?.data?.pedido_producto){
-
+        if (this.state?.data?.pedido_producto) {
+            Object.values(this.state?.data?.pedido_producto).map(prod => {
+                if (prod.precio_sin_descuento) {
+                    total += (prod.cantidad * prod.precio_sin_descuento)
+                } else {
+                    total += (prod.cantidad * prod.precio)
+                }
+            })
         }
-        Object.values(this.state?.data?.pedido_producto).map(prod => {
-            if (prod.precio_sin_descuento) {
-                total += (prod.cantidad * prod.precio_sin_descuento)
-            } else {
-                total += (prod.cantidad * prod.precio)
-            }
-        })
+
 
         return total;
     }
@@ -392,9 +399,11 @@ class root extends Component {
     totalSubProductoDetalle() {
         let total = 0
 
-        Object.values(this.state.data.pedido_producto).map(pp => {
-            total += pp.monto_total_subproducto_detalle
-        })
+        if (this.state.data.pedido_producto) {
+            Object.values(this.state.data.pedido_producto).map(pp => {
+                total += pp.monto_total_subproducto_detalle
+            })
+        }
 
         return total;
     }
@@ -402,14 +411,25 @@ class root extends Component {
     totalDescuentoIteamCubrePartner() {
         let total = 0
 
-        Object.values(this.state.data.pedido_producto).map(prod => {
-            if (prod.precio_sin_descuento) {
-                total += (prod.cantidad * prod.precio_sin_descuento) - (prod.cantidad * prod.precio)
-            }
-        })
+        if (this.state.data.pedido_producto) {
+            Object.values(this.state.data.pedido_producto).map(prod => {
+                if (prod.precio_sin_descuento) {
+                    total += (prod.cantidad * prod.precio_sin_descuento) - (prod.cantidad * prod.precio)
+                }
+            })
+        }
 
         return total;
     }
+
+    tipoDePago(tipo_pago) {
+        if (tipo_pago && tipo_pago?.length > 0) {
+            return !!tipo_pago.find(o => o.type == "efectivo") ? "Efectivo" : `Online - ${tipo_pago[0].type}`;
+        } else {
+            return "El pago con QR nunca se pago";
+        }
+    }
+
 
     detallePedido() {
         let data = this.state.data
@@ -421,9 +441,10 @@ class root extends Component {
 
         let total = totalTapeke
             + totalProducto + totalSubProd - (descuento)
+
         return <>
-            <SText font={"Montserrat-SemiBold"}>DETALLE DE COMPRA</SText>
-            {this.labelDetallePedido({ label: "Método de pago", value: "Online", color: STheme.color.text, font: 'Montserrat-SemiBold' })}
+            <SText font={"Montserrat-Bold"}>DETALLE DE COMPRA</SText>
+            {this.labelDetallePedido({ label: "Método de pago", value: this.tipoDePago(data?.tipo_pago), color: STheme.color.text, font: 'Montserrat-Bold' })}
             {this.labelDetallePedido({ label: "Total Tapekes", value: totalTapeke ?? 0 })}
             {this.labelDetallePedido({ label: "Total Producto", value: totalProducto ?? 0 })}
             {this.labelDetallePedido({ label: "Total SubProducto", value: totalSubProd ?? 0 })}
@@ -572,7 +593,11 @@ class root extends Component {
             {this.detallePedido()}
             <SHr h={20} />
             {/* TODO componente Mapas */}
-            <MapaRastreo key_pedido={this.pk} data={this.state.data} />
+            {
+                this.state.data.delivery > 0 ?
+                    <MapaRastreo key_pedido={this.pk} data={this.state.data} />
+                    : null
+            }
             {/* <SView center border={"#FF00FF"}>
                 <SText font={'Montserrat-Bold'}>Aca va el componente mapa para el rastreo y botónes de cambio de estados</SText>
             </SView> */}

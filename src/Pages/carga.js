@@ -46,7 +46,6 @@ navigate=false;
             }
 
         })
-        console.log("sakdnalkdnaslkdnaslkdnaslkdnasldasnlkdnalksdnaslkdnsadas d;asl dalks jdlaskdlaksj");
         SSocket.sendPromise({
             component: "enviroment",
             type: "getByKey",

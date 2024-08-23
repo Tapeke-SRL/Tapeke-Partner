@@ -186,7 +186,7 @@ export default class root extends Component {
                 <SView col={"xs-12"} row>
                     <SView flex >
                         <SText font={"Montserrat-Medium"}>{"Usuarios"}</SText>
-                        <SText fontSize={10} color={STheme.color.gray}>{"Personal que tiene acceso /control de tu comercio"}</SText>
+                        <SText fontSize={10} color={STheme.color.gray}>{"Personal que tiene acceso / control de tu comercio"}</SText>
                     </SView>
                     <SView width={130} height={26} backgroundColor={STheme.color.primary} borderRadius={8} center onPress={() => {
                         SNavigation.navigate("/roles/add", { key_restaurante: this.key_restaurante })

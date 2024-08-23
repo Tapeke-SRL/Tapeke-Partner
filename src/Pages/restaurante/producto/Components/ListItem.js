@@ -34,6 +34,8 @@ const tiempoHabilitacion = (item) => {
 }
 export default ({ item, section, index, key_restaurante, onChange, image_time }) => {
 
+    console.log(item);
+
     const hanlePress = (e) => {
         Vibration.vibrate(100)
         e.currentTarget.measure((x, y, width, height, pageX, pageY) => {
