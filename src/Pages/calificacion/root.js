@@ -71,7 +71,8 @@ class root extends Component {
                 </SView>
 
                 <SView center>
-                    <SText font={'Montserrat-Regular'} fontSize={14}>Tu calificación promedio actual</SText>
+                    {/* <SText font={'Montserrat-Regular'} fontSize={14}>Tu calificación promedio actual</SText> */}
+                    <SText font={'Montserrat'} fontSize={14}>Tu calificación promedio actual</SText>
                 </SView>
             </SView>
         )
@@ -145,10 +146,9 @@ class root extends Component {
             <Container center={false}>
                 <SView>
                     <SHr />
-                    <SText font={'Montserrat-ExtraBold'} fontSize={14}>CALIFICACIÓN Y COMENTARIOS</SText>
-
+                    {/* <SText font={'Montserrat-ExtraBold'} fontSize={14}>CALIFICACIÓN Y COMENTARIOS</SText> */}
+                    <SText font={'Montserrat-Bold'} fontSize={14}>CALIFICACIÓN Y COMENTARIOS</SText>
                     <SText font={"Montserrat-SemiBold"} color={STheme.color.primary} fontSize={12}>{restaurante.nombre}</SText>
-
                     <SHr />
                 </SView>
                 <SHr />

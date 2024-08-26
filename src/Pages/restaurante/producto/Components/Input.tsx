@@ -1,5 +1,5 @@
 import React, { Component, forwardRef, useImperativeHandle, useRef, useState } from 'react';
-import { View, Text, TextInput, KeyboardAvoidingView, Platform, KeyboardTypeOptions, TextInputProps } from 'react-native';
+import { View, Text, TextInput, KeyboardAvoidingView, Platform, KeyboardTypeOptions, TextInputProps, TouchableOpacity } from 'react-native';
 import { SColType, SHr, SInput, SNavigation, SPage, SText, STheme, SThread, SView } from 'servisofts-component';
 
 const color = "#000000"
@@ -52,9 +52,10 @@ const Input = forwardRef((props: InputProps, ref) => {
     return <SView col={props.col}>
         <SText fontSize={10} font={"Montserrat-Bold"} color={color}>{props.label}</SText>
         <SHr h={3} />
-        <SView style={{
+        <TouchableOpacity style={{
             width: "100%",
             height: props.height ?? 34,
+
         }} onPress={props.onPress}>
             <TextInput
                 ref={inputRef}
@@ -80,11 +81,12 @@ const Input = forwardRef((props: InputProps, ref) => {
                 }, props.inputStyle ?? {}]}
                 keyboardType={props.keyboardType ?? "default"}
                 multiline={props.multiline}
+                pointerEvents={(props.onPress) ? "none" : "auto"}
                 onSubmitEditing={props.onSubmitEditing}
                 placeholderTextColor={colorGray2}
                 editable={!props.onPress && !props.disabled}
                 placeholder={props.placeholder} />
-        </SView>
+        </TouchableOpacity>
         <SText fontSize={6.5} font={"Montserrat-SemiBold"} color={colorGray2}>{props.info}</SText>
     </SView>
 })

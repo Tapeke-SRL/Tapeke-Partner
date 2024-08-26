@@ -67,7 +67,7 @@
 		54DDCBFAD13C4FD6B22CEF81 /* index.native.d.ts in Resources */ = {isa = PBXBuildFile; fileRef = 8BF051DB50FF4650B848896C /* index.native.d.ts */; };
 		6822589C929A42B49CBCA99C /* index.native.js in Resources */ = {isa = PBXBuildFile; fileRef = A1173F91ADA4497C96A6468F /* index.native.js */; };
 		58F2CFE0CA2445ED945E7812 /* index.native.tsx in Resources */ = {isa = PBXBuildFile; fileRef = 530705634CB1438D8F0826D9 /* index.native.tsx */; };
-		3599B66331354EB7A71DA7D7 /* index.tsx in Resources */ = {isa = PBXBuildFile; fileRef = 3AD70CE5CEA841D8B361D00D /* index.tsx */; };
+		38E6A75DC4DD40D38FB04396 /* index.tsx in Resources */ = {isa = PBXBuildFile; fileRef = 3A1E476A50014323AE4F4780 /* index.tsx */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -140,7 +140,7 @@
 		8BF051DB50FF4650B848896C /* index.native.d.ts */ = {isa = PBXFileReference; name = "index.native.d.ts"; path = "../node_modules/servisofts-component/font/index.native.d.ts"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		A1173F91ADA4497C96A6468F /* index.native.js */ = {isa = PBXFileReference; name = "index.native.js"; path = "../node_modules/servisofts-component/font/index.native.js"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		530705634CB1438D8F0826D9 /* index.native.tsx */ = {isa = PBXFileReference; name = "index.native.tsx"; path = "../node_modules/servisofts-component/font/index.native.tsx"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		3AD70CE5CEA841D8B361D00D /* index.tsx */ = {isa = PBXFileReference; name = "index.tsx"; path = "../node_modules/servisofts-component/font/index.tsx"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		3A1E476A50014323AE4F4780 /* index.tsx */ = {isa = PBXFileReference; name = "index.tsx"; path = "../node_modules/servisofts-component/font/index.tsx"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -277,7 +277,7 @@
 				8BF051DB50FF4650B848896C /* index.native.d.ts */,
 				A1173F91ADA4497C96A6468F /* index.native.js */,
 				530705634CB1438D8F0826D9 /* index.native.tsx */,
-				3AD70CE5CEA841D8B361D00D /* index.tsx */,
+				3A1E476A50014323AE4F4780 /* index.tsx */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -443,7 +443,7 @@
 				54DDCBFAD13C4FD6B22CEF81 /* index.native.d.ts in Resources */,
 				6822589C929A42B49CBCA99C /* index.native.js in Resources */,
 				58F2CFE0CA2445ED945E7812 /* index.native.tsx in Resources */,
-				3599B66331354EB7A71DA7D7 /* index.tsx in Resources */,
+				38E6A75DC4DD40D38FB04396 /* index.tsx in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -599,7 +599,7 @@
 				CODE_SIGN_ENTITLEMENTS = tapeke_restaurante_app/tapeke_restaurante_app.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10439;
+				CURRENT_PROJECT_VERSION = 10440;
 				DEVELOPMENT_TEAM = L7U7L69RH8;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -612,7 +612,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Tapeke Partner";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.4.39;
+				MARKETING_VERSION = 1.4.40;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -638,7 +638,7 @@
 				CODE_SIGN_ENTITLEMENTS = tapeke_restaurante_app/tapeke_restaurante_appRelease.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10439;
+				CURRENT_PROJECT_VERSION = 10440;
 				DEVELOPMENT_TEAM = L7U7L69RH8;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -650,7 +650,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Tapeke Partner";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.4.39;
+				MARKETING_VERSION = 1.4.40;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

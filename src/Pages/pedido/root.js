@@ -126,7 +126,8 @@ class root extends Component {
 
         let usuario = this.state.usuarios ? this.state.usuarios[this.state?.data?.key_usuario]?.usuario : null
         return <>
-            <SText font={'Montserrat-ExtraBold'} fontSize={16}>DATOS DEL CLIENTE</SText>
+            {/* <SText font={'Montserrat-ExtraBold'} fontSize={16}>DATOS DEL CLIENTE</SText> */}
+            <SText font={'Montserrat-Bold'} fontSize={16}>DATOS DEL CLIENTE</SText>
             <SText fontSize={11} color={STheme.color.gray}>(Si te falta algún item, para salvar el pedido, puedes comunicarte con el cliente presionando en el número de teléfono y ofrecer un producto equivalente al precio)</SText>
             <SHr />
 
@@ -220,11 +221,13 @@ class root extends Component {
         let data = this.state.data;
         return <SView row>
             <SView flex>
-                <SText font={'Montserrat-ExtraBold'}>Datos de Facturación:</SText>
+                {/* <SText font={'Montserrat-ExtraBold'}>Datos de Facturación:</SText> */}
+                <SText font={'Montserrat-Bold'}>Datos de Facturación:</SText>
                 <SText color={data?.factura?.razon_social ? STheme.color.text : STheme.color.gray}>RS: {data?.factura?.razon_social || data?.factura?.razon_social != '' ? data?.factura?.razon_social : "* usuario no puso RS"}</SText>
                 <SText color={data?.factura?.nit ? STheme.color.text : STheme.color.gray}>NIT: {data?.factura?.nit || data?.factura?.nit != '' ? data?.factura?.nit : "* usuario no puso nit"}</SText>
                 <SHr />
-                <SText font={'Montserrat-ExtraBold'}>Nota del cliente:</SText>
+                {/* <SText font={'Montserrat-ExtraBold'}>Nota del cliente:</SText> */}
+                <SText font={'Montserrat-Bold'}>Nota del cliente:</SText>
                 <SText color={data?.nota_cliente ? STheme.color.text : STheme.color.gray}>{data?.nota_cliente ? data?.nota_cliente : "* El cliente no puso nota"}</SText>
             </SView>
 
@@ -268,7 +271,8 @@ class root extends Component {
                     justifyContent: "space-between"
                 }}
             >
-                <SText font={'Montserrat-ExtraBold'}>DETALLE DEL PEDIDO</SText>
+                {/* <SText font={'Montserrat-ExtraBold'}>DETALLE DEL PEDIDO</SText> */}
+                <SText font={'Montserrat-Bold'}>DETALLE DEL PEDIDO</SText>
                 <SView center>
                     <SText font={'Montserrat-Bold'}>#{data.key.slice(0, 6)}</SText>
                     <SText fontSize={10}>Código del pedido</SText>

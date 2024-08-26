@@ -76,7 +76,8 @@ class historialPedido extends Component {
         return <Container center={false}>
             <SView>
                 <SHr />
-                <SText font={'Montserrat-ExtraBold'} fontSize={16}>HISTORIAL DE PEDIDO</SText>
+                <SText font={'Montserrat-Bold'} fontSize={16}>HISTORIAL DE PEDIDO</SText>
+                {/* <SText font={'Montserrat-ExtraBold'} fontSize={16}>HISTORIAL DE PEDIDO</SText> */}
                 <SText font={"Montserrat-SemiBold"} color={STheme.color.primary} fontSize={14}>{restaurante.nombre}</SText>
                 <SHr />
             </SView>

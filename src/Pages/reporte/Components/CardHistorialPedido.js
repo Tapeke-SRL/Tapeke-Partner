@@ -33,7 +33,8 @@ class CardHistorialPedido extends React.Component {
                     <SView >
                         <SView row flex>
                             <SText
-                                font={'Montserrat-Regular'}
+                                // font={'Montserrat-Regular'}
+                                font={'Montserrat'}
                                 fontSize={12}
                             >
                                 Cliente:
@@ -45,7 +46,8 @@ class CardHistorialPedido extends React.Component {
                                         maxWidth: 180,
                                     }}
                                     fontSize={12}
-                                    font={'Montserrat-Regular'}
+                                    // font={'Montserrat-Regular'}
+                                    font={'Montserrat'}
                                 >{this.props.usuario.Nombres} {this.props.usuario.Apellidos}</SText>
                                 : <SText>No se pillo el usuario</SText>
                             }
@@ -55,7 +57,8 @@ class CardHistorialPedido extends React.Component {
                     </SView>
                     <SView center>
                         <SText
-                            font={'Montserrat-Regular'}
+                            // font={'Montserrat-Regular'}
+                            font={'Montserrat'}
                             fontSize={12}
                         >
                             #{this.data.key.slice(0, 6)}

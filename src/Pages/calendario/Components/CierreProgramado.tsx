@@ -95,7 +95,7 @@ export default class CierreProgramado extends React.Component<{ key_restaurante:
             data={data.sort((a: any, b: any) => a.fecha_cierre > b.fecha_cierre ? 1 : -1)}
             ItemSeparatorComponent={() => <SHr />}
             renderItem={({ item, index }) => {
-                return <SView col={"xs-12"} row>
+                return <SView col={"xs-12"} row height={50}>
                     <SView flex card center padding={8}>
                         <SText font={"Montserrat-Bold"} color={STheme.color.primary} col={"xs-12"}>{"Cierre programado"}</SText>
                         <SHr h={4} />
@@ -148,6 +148,7 @@ export default class CierreProgramado extends React.Component<{ key_restaurante:
             {this.renderList()}
             <SHr h={32} />
             {this.renderAddCierre()}
+            <SHr h={32}/>
         </SView>
     }
 }

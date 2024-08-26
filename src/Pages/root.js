@@ -50,7 +50,8 @@ class index extends Component {
                     paddingLeft: 16
                 }}
             >
-                <SText font={"Montserrat-ExtraBold"} fontSize={13} color={STheme.color.text}>{`${obj.nombre}  `}</SText>
+                {/* <SText font={"Montserrat-ExtraBold"} fontSize={13} color={STheme.color.text}>{`${obj.nombre}  `}</SText> */}
+                <SText font={"Montserrat-Bold"} fontSize={13} color={STheme.color.text}>{`${obj.nombre}  `}</SText>
                 <SText fontSize={11} style={{ fontStyle: "italic" }}>{`${obj.direccion.slice(0, 52)}`}</SText>
                 <SText fontSize={11}>{`${obj.telefono}`}</SText>
             </SView>
@@ -94,7 +95,8 @@ class index extends Component {
 
         return <SView col={"xs-12"}>
             <SView>
-                <SText font={"Montserrat-ExtraBold"} fontSize={14}>MIS COMERCIOS</SText>
+                {/* <SText font={"Montserrat-ExtraBold"} fontSize={14}>MIS COMERCIOS</SText> */}
+                <SText font={"Montserrat-Bold"} fontSize={14}>MIS COMERCIOS</SText>
                 <SText font={"Montserrat"} color={STheme.lightGray} fontSize={10}>(Selecciona uno de tus comercios para operar)</SText>
             </SView>
             <SHr h={15} />

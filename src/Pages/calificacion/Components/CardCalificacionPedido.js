@@ -22,12 +22,8 @@ class CardCalificacionPedido extends React.Component {
                 <SView col={"xs-12"} row center>
                     <SView>
                         <SView row>
-                            <SText
-                                font={'Montserrat-Regular'}
-                                fontSize={12}
-                            >
-                                Cliente:
-                            </SText>
+                            {/* <SText font={'Montserrat-Regular'} fontSize={12}>Cliente:</SText> */}
+                            <SText font={'Montserrat'} fontSize={12}>Cliente:</SText>
                             {this.props.usuario ?
                                 <SText
                                     style={{
@@ -35,7 +31,8 @@ class CardCalificacionPedido extends React.Component {
                                         maxWidth: 180,
                                     }}
                                     fontSize={12}
-                                    font={'Montserrat-Regular'}
+                                    // font={'Montserrat-Regular'}
+                                    font={'Montserrat'}
                                 >{this.props.usuario.Nombres} {this.props.usuario.Apellidos}</SText>
                                 : <SLoad />
                             }
@@ -85,7 +82,7 @@ class CardCalificacionPedido extends React.Component {
                         >{this.data?.comentario ? this.data?.comentario : "Sin Comentario"}</SText>
                     </SView>
                 </SView>
-            </SView>
+            </SView >
         )
     }
 
