@@ -9,7 +9,6 @@ export default class SelectHabilitado extends Component {
         };
     }
 
-
     renderItem(props) {
         const { key, color, label } = props;
         return <SView col={"xs-11"} flex center onPress={() => {
@@ -45,12 +44,13 @@ export default class SelectHabilitado extends Component {
 
         return minutes;
     }
+
     render() {
         return (
             <SView
                 withoutFeedback
                 style={[{
-                    width: 220,
+                    width: 230,
                     height: 176,
                     // padding: 8,
                     justifyContent: "center",
@@ -63,14 +63,15 @@ export default class SelectHabilitado extends Component {
                     borderRadius: 8
 
                 }, this.props.style]}>
+                {/* {this.renderItem({ key: (-1).toFixed(0), color: STheme.color.success, label: "Disponible por 1 minuto" })} */}
+                {/* {this.renderItem({ key: (-60).toFixed(0), color: STheme.color.success, label: "Disponible por 1 hora" })} */}
+                {/* {this.renderItem({ key: (1).toFixed(0), color: STheme.color.danger, label: "No disponible por 1 minuto" })} */}
                 {this.renderItem({ key: "true", color: STheme.color.success, label: "Disponible" })}
-                {this.renderItem({ key: (-1).toFixed(0), color: STheme.color.success, label: "Disponible por 1 minuto" })}
-                {this.renderItem({ key: (-60).toFixed(0), color: STheme.color.success, label: "Disponible por 1 hora" })}
-                {this.renderItem({ key: "false", color: STheme.color.danger, label: "No disponible" })}
-                {this.renderItem({ key: (1).toFixed(0), color: STheme.color.danger, label: "No disponible por 1 minuto" })}
-                {this.renderItem({ key: (60).toFixed(0), color: STheme.color.danger, label: "No disponible por 1 hora" })}
-                {this.renderItem({ key: (60 * 12).toFixed(0), color: STheme.color.danger, label: "No disponible por 12 horas" })}
-                {this.renderItem({ key: (this.minutesUntilEndOfDay()).toFixed(0), color: STheme.color.danger, label: "No disponible por este día" })}
+                {this.renderItem({ key: (60).toFixed(0), color: STheme.color.danger, label: `${this.props.labelClose ? this.props.labelClose : "Cerrar"} por 1 hora` })}
+                {this.renderItem({ key: (60 * 4).toFixed(0), color: STheme.color.danger, label: `${this.props.labelClose ? this.props.labelClose : "Cerrar"} por 4 horas` })}
+                {this.renderItem({ key: (60 * 12).toFixed(0), color: STheme.color.danger, label: `${this.props.labelClose ? this.props.labelClose : "Cerrar"} por 12 horas` })}
+                {this.renderItem({ key: (this.minutesUntilEndOfDay()).toFixed(0), color: STheme.color.danger, label: `${this.props.labelClose ? this.props.labelClose : "Cerrar"} durante todo día` })}
+                {this.renderItem({ key: "false", color: STheme.color.danger, label: `${this.props.labelClose ? this.props.labelClose : "Cerrar"} Indefinidamente` })}
             </SView>
         );
     }

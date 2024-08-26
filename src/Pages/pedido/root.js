@@ -459,10 +459,10 @@ class root extends Component {
         return <>
             <SText font={"Montserrat-Bold"}>DETALLE DE COMPRA</SText>
             {this.labelDetallePedido({ label: "Método de pago", value: this.tipoDePago(data?.tipo_pago), color: STheme.color.text, font: 'Montserrat-Bold' })}
-            {this.labelDetallePedido({ label: "Total Tapekes", value: totalTapeke ?? 0 })}
-            {this.labelDetallePedido({ label: "Total Producto", value: totalProducto ?? 0 })}
-            {this.labelDetallePedido({ label: "Total SubProducto", value: totalSubProd ?? 0 })}
-            {this.labelDetallePedido({ label: "Descuento cubre Partner", value: descuento, color: STheme.color.danger, simbol: "-" })}
+            {totalTapeke > 0 ? this.labelDetallePedido({ label: "Total Tapekes", value: totalTapeke ?? 0 }) : null}
+            {totalProducto > 0 ? this.labelDetallePedido({ label: "Total Producto", value: totalProducto }) : null}
+            {totalSubProd > 0 ? this.labelDetallePedido({ label: "Total SubProducto", value: totalSubProd ?? 0 }) : null}
+            {descuento > 0 ? this.labelDetallePedido({ label: "Descuento cubre Partner", value: descuento, color: STheme.color.danger, simbol: "-" }) : null}
             <SHr color={STheme.color.gray} h={1} />
             {this.labelDetallePedido({ label: "Total:", labelColor: STheme.color.text, value: total, color: STheme.color.text })}
         </>

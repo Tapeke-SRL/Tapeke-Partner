@@ -37,7 +37,8 @@ class root extends Component {
         try {
             ver = await Roles.getPermiso({ key_rol: Model.restaurante.Action.getSelectKeyRol(), url: "/_partner/ganancias", permiso: "ver" })
         } catch (error) {
-            SNotification.send({                title: "Acceso denegado",
+            SNotification.send({
+                title: "Acceso denegado",
                 body: "No tienes permisos para ver esta pagina.",
                 color: STheme.color.danger,
                 time: 5000,
@@ -69,6 +70,16 @@ class root extends Component {
         }).then(resp => {
             this.setState({ data: resp.data })
             this.setState({ ultima_conciliacion: resp.ultima_conciliacion })
+        }).catch(e => {
+            console.error(e)
+        })
+
+        SSocket.sendPromise({
+            component: "pedido",
+            type: "getPedidosMontosExtrasConciliacionRestaurante",
+            key_restaurante: Model.restaurante.Action.getSelect()?.key,
+        }).then(resp => {
+            this.setState({ montoExtras: resp.data })
         }).catch(e => {
             console.error(e)
         })
@@ -112,6 +123,8 @@ class root extends Component {
             totalDescDelivery: 0,
             totalDescuento: 0,
 
+            totalDescuentoCancelacion: 0,
+
             totalPorConciliar: 0
         }
 
@@ -152,7 +165,15 @@ class root extends Component {
         this.keys_pedidos = [];
         let totalDesc = this.calcularDescuentoCobertura(null);
 
-        // this.pedidoPorConciliarFilterDate?.map(obj => {
+        if (this.state.montoExtras) {
+            Object.values(this.state?.montoExtras).map(obj => {
+                if (obj.montos_extras.multa_comercio) {
+                    total.totalDescuentoCancelacion += obj?.montos_extras?.multa_comercio?.monto ?? 0;
+                }
+            })
+        }
+
+        // this.pedidoPorConciliarFilterDate?.map(obj => { // TODO
         Object.values(this.state?.data).map(obj => {
 
             totalDesc = this.calcularDescuentoCobertura(obj);
@@ -201,7 +222,7 @@ class root extends Component {
 
 
         // TODO falta definir esté metodo
-        total.totalPorConciliar = total.linea + total.totalDescCubreTapeke - (total.totalDescCubrePartner + total.comision_linea + total.comision_efectivo);
+        total.totalPorConciliar = total.linea + total.totalDescCubreTapeke - (total.totalDescCubrePartner + total.comision_linea + total.comision_efectivo + total.totalDescuentoCancelacion);
 
         return total;
     }
@@ -412,7 +433,7 @@ class root extends Component {
         </>
     }
 
-    ganancias({ total_ingresos, linea, efectivo, comision_tapeke_efectivo, comision_tapeke_linea, deuda, descuento_cubre_tapeke, descuento_cubre_partner, total_por_conciliar }) {
+    ganancias({ total_ingresos, linea, efectivo, comision_tapeke_efectivo, comision_tapeke_linea, deuda, descuento_cubre_tapeke, descuento_cubre_partner, total_por_conciliar, descuento_cancelacion }) {
         return <SView col={"xs-12"} row center
             card
             style={{
@@ -439,6 +460,8 @@ class root extends Component {
             {this.labelGanancia({ label: `Comisión Tapeke Efectivo`, value: comision_tapeke_efectivo/* , color: STheme.color.danger, simbolo: "-" */ })}
 
             {this.labelGanancia({ label: `Comisión Tapeke Linea`, value: comision_tapeke_linea/* , color: STheme.color.danger, simbolo: "-" */ })}
+
+            {this.labelGanancia({ label: `Descuento por Cancelación`, value: descuento_cancelacion/* , color: STheme.color.danger, simbolo: "-" */ })}
 
             {this.labelGanancia({ label: `Total`, value: (total_por_conciliar) })}
 
@@ -491,7 +514,8 @@ class root extends Component {
                 deuda: this.deuda,
                 descuento_cubre_tapeke: total.totalDescCubreTapeke,
                 descuento_cubre_partner: total.totalDescCubrePartner,
-                total_por_conciliar: total.totalPorConciliar
+                total_por_conciliar: total.totalPorConciliar,
+                descuento_cancelacion: total.totalDescuentoCancelacion
             })}
             <SHr height={10} />
 
@@ -540,6 +564,7 @@ class root extends Component {
     render() {
         if (!this.state.ready) return <SLoad />
         if (!this.state.data) return <SLoad />
+        if (!this.state.montoExtras) return <SLoad />
 
         let totales = this.calcularMontos();
         return (<SPage hidden
