@@ -325,7 +325,7 @@ class index extends Component {
               <SHr h={30} />
               <SView row >
                 <SText fontSize={14} color={STheme.color.darkGray} >Vender Tapekes:  {this.data.tapeke_deshabilitado} </SText>
-                <SSwitch center size={20} loading={this.state.loading} onChange={this.habilitacion_tapeke.bind(this)} value={!this.data?.tapeke_deshabilitado ? !this.data?.tapeke_deshabilitado : true} />
+                <SSwitch center size={20} loading={this.state.loading} onChange={this.habilitacion_tapeke.bind(this)} value={!this.data?.tapeke_deshabilitado} />
               </SView>
             </SView>
           </SView>

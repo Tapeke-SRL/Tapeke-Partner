@@ -51,6 +51,7 @@ export default ({ item, section, index, key_restaurante, onChange, image_time })
                 key: key_popup,
                 type: "2",
                 content: <SelectHabilitado
+                    labelClose={"No Disponible"}
                     style={{
                         left: pageX - itemWidth + width + 8,
                         top: top,
