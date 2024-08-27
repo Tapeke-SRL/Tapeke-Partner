@@ -52,6 +52,7 @@ export default ({ item, section, index, key_restaurante, onChange, image_time })
                 type: "2",
                 content: <SelectHabilitado
                     labelClose={"No Disponible"}
+                    enable={true}
                     style={{
                         left: pageX - itemWidth + width + 8,
                         top: top,
