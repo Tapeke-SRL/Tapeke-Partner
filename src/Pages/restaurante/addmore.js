@@ -23,7 +23,7 @@ class index extends Component {
     if (!this.pack) return <SLoad />;
     return <Container>
       <SHr height={32} />
-      <SText center fontSize={16} bold>¿Quieres aumentas la cantidad de tapekes disponibles para esta fecha?</SText>
+      <SText center fontSize={16} bold>¿Quieres aumentar la cantidad de tapekes disponibles para esta fecha?</SText>
       <SHr height={32} />
       <SText>¿Cuántos tapekes quieres aumentar?</SText>
       <SHr h={16} />

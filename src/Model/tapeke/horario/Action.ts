@@ -30,7 +30,7 @@ export default class Action extends SAction {
         return horarios;
     }
 
-    getByKeyRestauranteProximo = (key:any, force:any) => {
+    getByKeyRestauranteProximo = (key: any, force: any) => {
         let { getByKeyRestauranteProximo, estado, key_restaurante_proximo } = this._getReducer();
         if (key_restaurante_proximo != key) {
             getByKeyRestauranteProximo = null;
@@ -44,11 +44,12 @@ export default class Action extends SAction {
             key_restaurante: key,
             estado: "cargando"
         }).then(e => {
-            console.log(e)
-            if(e.data.length === 0){
-                e.data.push({});
-            }else{
-                e.data = e.data;
+            if (e.data) {
+                if (e.data?.length === 0) {
+                    e.data.push({});
+                } else {
+                    e.data = e.data;
+                }
             }
             this._dispatch(e);
         })
@@ -109,7 +110,7 @@ export default class Action extends SAction {
     //     return list[0];
     // }
 
-    getByKeyRestaurante = ({ key }:any) => {
+    getByKeyRestaurante = ({ key }: any) => {
         // @ts-ignore
         var data = this.getAll();
         if (!data) return null;

@@ -63,6 +63,7 @@ class root extends Component {
     componentWillUnmount() {
         this.isRun = false;
     }
+
     hilo() {
         if (!this.isRun) return;
         this.loadData()
@@ -587,6 +588,7 @@ class root extends Component {
             <SHr height={40} />
         </SView>
     }
+
     renderConductor() {
         if (!this.state.data) return null;
         if (!this.state.data.key_conductor) return null;
@@ -619,6 +621,24 @@ class root extends Component {
             </SView>
         </SView>
     }
+
+    cardState() {
+        let state = this.state.data.state;
+
+        let includeState = ["entregado_conductor", "conductor_llego", "entregado"];
+        let excludeState = ["cancelado", "no_recogido", "anulado"];
+
+        let textoState = ""
+
+        if (includeState.includes(state) || excludeState.includes(state)) {
+            textoState = `${state.replace("_", " ")}` 
+        }
+
+        return <SView center card padding={15}>
+            <SText font={"Montserrat-SemiBold"} color={STheme.color.primary}>{`${textoState}`}</SText>
+        </SView>
+    }
+
     renderContent() {
         if (!this.state.data) return <SLoad />;
 
@@ -643,7 +663,7 @@ class root extends Component {
             <SHr h={20} />
             {this.detallePedido()}
             <SHr h={20} />
-            {/* TODO componente Mapas */}
+
             {
                 this.state.data.delivery > 0 && validateState() ?
                     <>
@@ -654,10 +674,8 @@ class root extends Component {
             }
 
             {
-                this.state.data.state == "entregado_conductor" ?
-                    <SView center card padding={15}>
-                        <SText font={"Montserrat-SemiBold"} color={STheme.color.primary}>El pedido ya se entrego al conducto</SText>
-                    </SView>
+                !validateState() ?
+                    this.cardState()
                     : null
             }
 

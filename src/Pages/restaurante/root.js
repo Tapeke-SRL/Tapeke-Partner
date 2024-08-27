@@ -11,6 +11,7 @@ import CargaIcon from './CargaIcon';
 import BarraCargando from '../../Components/BarraCargando';
 import { Dimensions, Vibration } from 'react-native';
 import SelectHabilitado from './producto/Components/SelectHabilitado';
+import PopupCerrarRestaurante from './Components/PopupCerrarRestaurante'
 
 const tiempoHabilitacion = (item: any) => {
 
@@ -200,81 +201,124 @@ class index extends Component {
     const key_popup = "popupkey";
     let top = 225;
     let left = 1000;
-    SPopup.open({
-      key: key_popup,
-      type: "2",
-      content: <SelectHabilitado
-        style={{
-          top: top,
-          // left: left,
-        }}
-        onSelect={(select: any) => {
-          let tipo = false;
-          console.log(select.key)
-          let fecha_habilitacion_automatica = "null"
-          if (select.key != "true" && select.key != "false") {
-            console.log("entro aca")
-            let num = select.key;
-            if (select.key < 0) {
-              tipo = true;
-              num = num * -1;
+
+    if (!this.data.habilitado) {
+      let tipo = true;
+      let fecha_habilitacion_automatica = "null"
+
+      SSocket.sendPromise({
+        component: "restaurante",
+        type: "editar",
+        key_usuario: Model.usuario.Action.getKey(),
+        data: {
+          key: this.pk,
+          habilitado: tipo,
+          accion_habilitacion_automatica: (tipo) ? "false" : "true",
+          fecha_habilitacion_automatica: fecha_habilitacion_automatica
+        }
+
+      }).then(res => {
+        this.data.habilitado = res.data.habilitado;
+        this.data.fecha_habilitacion_automatica = res.data.fecha_habilitacion_automatica;
+
+        Model.restaurante.Action._dispatch({
+          ...res,
+          data: this.data
+        });
+        this.setState({ ...this.state })
+      }).catch(e => {
+        console.error(e);
+      })
+
+    } else {
+      SPopup.open({
+        key: key_popup,
+        type: "2",
+        content: <SelectHabilitado
+          // openPopup={true}
+          // popup={
+          //   SPopup.open({
+          //     key: "PopupCerrarRestaurante",
+          //     content: <PopupCerrarRestaurante keyPopup={"PopupCerrarRestaurante"} />
+          //   })
+          // }
+
+          style={{
+            top: top,
+          }}
+          onSelect={(select: any) => {
+
+            if(select.label != "Cerrar Indefinidamente")
+            SPopup.open({
+              key: "PopupCerrarRestaurante",
+              content: <PopupCerrarRestaurante keyPopup={"PopupCerrarRestaurante"} />
+            })
+
+            let tipo = false;
+            let fecha_habilitacion_automatica = "null"
+
+            if (select.key != "true" && select.key != "false") {
+              console.log("entro aca")
+              let num = select.key;
+              if (select.key < 0) {
+                tipo = true;
+                num = num * -1;
+              } else {
+                tipo = false;
+              }
+              fecha_habilitacion_automatica = new SDate().addMinute(parseInt(num)).toString("yyyy-MM-ddThh:mm:ss");
             } else {
-              tipo = false;
+              tipo = (select.key == "true")
             }
-            fecha_habilitacion_automatica = new SDate().addMinute(parseInt(num)).toString("yyyy-MM-ddThh:mm:ss");
-          } else {
-            tipo = (select.key == "true")
-            console.log("entro aca", tipo)
-          }
-          console.log(tipo)
-          SSocket.sendPromise({
-            component: "restaurante",
-            type: "editar",
-            key_usuario: Model.usuario.Action.getKey(),
-            data: {
-              key: this.pk,
-              habilitado: tipo,
-              accion_habilitacion_automatica: (tipo) ? "false" : "true",
-              fecha_habilitacion_automatica: fecha_habilitacion_automatica
-            }
+            SSocket.sendPromise({
+              component: "restaurante",
+              type: "editar",
+              key_usuario: Model.usuario.Action.getKey(),
+              data: {
+                key: this.pk,
+                habilitado: tipo,
+                accion_habilitacion_automatica: (tipo) ? "false" : "true",
+                fecha_habilitacion_automatica: fecha_habilitacion_automatica
+              }
 
-          }).then(f => {
-            this.data.habilitado = f.data.habilitado;
-            this.data.fecha_habilitacion_automatica = f.data.fecha_habilitacion_automatica;
+            }).then(f => {
+              this.data.habilitado = f.data.habilitado;
+              this.data.fecha_habilitacion_automatica = f.data.fecha_habilitacion_automatica;
 
-            Model.restaurante.Action._dispatch({
-              ...f,
-              data: this.data
-            });
-            this.setState({ ...this.state })
-            console.log(f);
-          }).catch(e => {
-            console.error(e);
-          })
-          SPopup.close(key_popup)
-        }
-        }
-      />
-    })
-    // })
+              Model.restaurante.Action._dispatch({
+                ...f,
+                data: this.data
+              });
+              this.setState({ ...this.state })
+            }).catch(e => {
+              console.error(e);
+            })
+            SPopup.close(key_popup)
+          }}
+        />
+      })
+    }
   }
   getCabecera(data) {
+    if (!this.loadData()) return null
+
     this.data = data;
     var usuario = Model.usuario.Action.getUsuarioLog();
 
     if (!usuario) return <SView />;
 
+    let fecha = new SDate(this.horario_proximo?.fecha, "yyyy-MM-dd");
+    let label = fecha.toString("DAY");
+    if (fecha.isCurDate()) {
+      label = "Hoy"
+    } ``
+    label = label + " " + this.horario_proximo.hora_inicio + " - " + this.horario_proximo.hora_fin
+
     return (
       <SView col={"xs-12"} row backgroundColor={STheme.color.card} center>
-        {/* <SHr height={18} /> */}
         <SView col={"xs-12"} center style={{ backgroundColor: STheme.color.white }}>
           <SHr height={20} />
           <SView col={"xs-11"} row center>
-            {/* <SView col={"xs-12"}> */}
-            {/* <SHr height={15} /> */}
-            {/* <SText fontSize={18} font={"Roboto"} style={{ fontWeight: "bold" }} color={STheme.color.darkGray}>Cliente</SText> */}
-            {/* <S Hr height={15} /> */}
-            {/* </SView> */}
             <SView col={"xs-12"} row >
               <SView center width={70} card height={70} style={{ borderRadius: 8, overflow: 'hidden', }}>
                 <SImage src={`${SSocket.api.root}restaurante/.128_${this.data.key}`} style={{ width: "100%", position: "relative", resizeMode: "cover" }} />
@@ -291,7 +335,14 @@ class index extends Component {
                     </SView>
                   </SView>
                   <SView col={"xs-12"} style={{ justifyContent: 'flex-start', }}>
-                    <SText color={STheme.color.darkGray} fontSize={14} font={"Roboto"}>Telf: {this.data.telefono}</SText>
+                    <SText color={STheme.color.darkGray} fontSize={14} font={"Montserrat"}>Telf: {this.data.telefono}</SText>
+                    <SHr />
+                    <SView row>
+                      <SView center>
+                        <SIcon center name="reloj" fill={STheme.color.primary} height={16} width={16} />
+                      </SView>
+                      <SText fontSize={14} style={{ paddingLeft: 2 }}>{label.replace(/^\w/, (c) => c.toUpperCase())}</SText>
+                    </SView>
                   </SView>
                 </SView>
                 <SHr height={5} />
@@ -774,6 +825,7 @@ class index extends Component {
 
   renderContenido() {
     if (!this.state.ready) return <SLoad />
+
     return <>
       <SHr height={20} />
       {this.render_content()}
