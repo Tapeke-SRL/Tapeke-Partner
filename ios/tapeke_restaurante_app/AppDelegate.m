@@ -44,6 +44,7 @@ static void InitializeFlipper(UIApplication *application) {
 
 //  [SSBackgroundLoca];
   [FIRApp configure];
+  [GMSServices provideAPIKey:@"AIzaSyCrpBhYNgOIQA8-A_gtB3b5jC0aEbSL0QU"];
   // [GMSServices provideAPIKey:@"sadasdas"];
 //  [SSBackgroundLocation componentDidMount];
 

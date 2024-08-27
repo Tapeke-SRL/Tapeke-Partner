@@ -11,6 +11,7 @@ import Input, { InputValidator } from './Components/Input';
 import FormularioProducto from './Components/FormularioProducto';
 import FormularioOpciones from './Components/FormularioOpciones';
 import VentanaLista from "./list";
+import PageTitle from '../../../Components/PageTitle';
 const color = "#000000"
 const colorGray = "#999999"
 const colorGray2 = "#BBBBBB"
@@ -39,7 +40,8 @@ const FotoDePerfil = ({ key_producto, onChange }) => {
         </SView>
         <SHr h={4} />
         <SText fontSize={10} font={"Montserrat-SemiBold"} color={colorGray}>{"Agregar foto del producto/item"}</SText>
-        <SText fontSize={10} font={"Montserrat-MediumItalic"} color={colorGray2}>{"jpeg,png,1024x1024px máximo 1Mb"}</SText>
+        {/* <SText fontSize={10} font={"Montserrat-MediumItalic"} color={colorGray2}>{"jpeg,png,1024x1024px máximo 1Mb"}</SText> */}
+        <SText fontSize={10} font={"Montserrat"} color={colorGray2}>{"jpeg,png,1024x1024px máximo 1Mb"}</SText>
     </SView>
 }
 
@@ -204,10 +206,11 @@ export default class edit extends Component {
             <SPage hidden footer={this.renderSaveChange()}>
                 <Container loading={!this.state.ready || !this.state.data}>
                     <SHr />
-                    <SView col={"xs-12"}>
+                    <PageTitle title={this.pk?"EDITAR PRODUCTO":'AGREGAR PRODUCTO'}/>
+                    {/* <SView col={"xs-12"}>
                         <SText font={"Montserrat-Bold"}>{"AGREGAR PRODUCTO"}</SText>
                         <SText color={STheme.color.primary} fontSize={12} font={"Montserrat-Bold"}>{"Mi Restaurante - Beni"}</SText>
-                    </SView>
+                    </SView> */}
                     <SHr h={32} />
                     <FotoDePerfil key_producto={this.pk} onChange={(e) => {
                         this.imageToUpload = e[0];

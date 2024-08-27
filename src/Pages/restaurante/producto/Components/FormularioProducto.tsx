@@ -67,7 +67,7 @@ export default class FormularioProducto extends Component<any> {
                     ref={ref => this._inputs["index"] = ref}
                     col={"xs-4.5"}
                     label={"Index"}
-                    defaultValue={data.index}
+                    defaultValue={(data.index??"")+""}
                     filter={(e: any) => {
                         return e.replace(/[^0-9]/g, '');
                     }}

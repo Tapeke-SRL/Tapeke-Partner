@@ -340,8 +340,8 @@ export default class list extends Component {
             }}
             sections={this.state.data.map(sec => ({
                 ...sec,
-                data: this.state.openSections[sec.key] ? sec.data : [renderEmptySection]
-            }))}
+                data: this.state.openSections[sec.key] ? sec.data.sort((a, b) => a.index > b.index ? 1 : -1) : [renderEmptySection]
+            })).sort((a, b) => a.index > b.index ? 1 : -1)}
             keyExtractor={(item, index) => item.key}
             // SectionSeparatorComponent={renderSectionSeparator}
             renderItem={({ item, index, section }) => (typeof item === 'function' ? item() : renderItem({ item, index, section }))}

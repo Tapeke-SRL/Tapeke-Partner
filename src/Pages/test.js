@@ -1,65 +1,33 @@
-import { Text, View } from 'react-native'
 import React, { Component } from 'react'
-import { SButtom, SDate, SInput, SPage, SText, SView } from 'servisofts-component'
-import Model from '../Model'
-import { connect } from 'react-redux';
-
-
-import notifee, { EventType, AndroidStyle } from '@notifee/react-native';
-
-
-const BuildNotification = async (notification) => {
-    console.log('Message receivedddd. ', notification);
-
-    let notify = {
-        title: notification?.data?.title,
-        body: notification?.data?.body,
-        data: notification?.data,
-        ios: {
-            attachments: [
-
-            ]
-        },
-        android: {
-
-            channelId: "default_channel_id",
-            smallIcon: 'icon_notification_partner', // optional, defaults to 'ic_launcher'.
-            color: '#ffffff',
-            // largeIcon: notification?.data?.image,
-
-            pressAction: {
-                id: 'default'
-            }
-        },
-    }
-    if (notification?.data?.image) {
-        notify.android.largeIcon = notification?.data?.image;
-        notify.ios.attachments.push({ url: notification?.data?.image });
-    }
-    await notifee.displayNotification(notify);
-}
-
+import { SMapView, SPage, SText, SView, } from 'servisofts-component'
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 class test extends Component {
-
-
-    hanldrePress = () => {
-        BuildNotification({
-            data: {
-                title: "test",
-                body: "algo de descripcion",
-            }
-        })
-    }
     render() {
         return (
-            <SPage>
-                <SButtom type='danger' onPress={this.hanldrePress}>SEND</SButtom>
+            <SPage disableScroll>
+                <MapView
+                    provider={""}
+                    style={{
+                        width:"100%",
+                        height: "100%"
+                    }}
+
+                    initialRegion={{
+                        latitude: 1,
+                        longitude: 1,
+                        latitudeDelta: 0.1,
+                        longitudeDelta: 0.1
+                    }}
+                >
+                    <SMapView.SMarker latitude={0.1} longitude={0.1}>
+                        <SView>
+                            <SText>{"Hola"}</SText>
+                        </SView>
+                    </SMapView.SMarker>
+                </MapView>
             </SPage>
         )
     }
 }
 
-const initStates = (state) => {
-    return { state }
-};
-export default connect(initStates)(test);
+export default test

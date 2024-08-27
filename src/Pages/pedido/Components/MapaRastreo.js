@@ -32,7 +32,15 @@ export default class MapaRastreo extends Component {
     }
 
     buscarPosicionUsuario(key_usuario) {
-        if (!key_usuario) return;
+        if (!key_usuario) {
+            const { restaurante, } = this.props.data
+            this.mapa.animateToRegion({
+                latitude: restaurante.latitude, longitude: restaurante.longitude,
+                latitudeDelta: 0.03,
+                longitudeDelta: 0.03
+            })
+            return;
+        }
         SSocket.sendPromise({
             component: "background_location",
             type: "getByKey",
@@ -70,16 +78,14 @@ export default class MapaRastreo extends Component {
     getMapa() {
         const { restaurante } = this.props.data
         let size = 50
-
         return <SMapView
             ref={ref => this.mapa = ref}
             initialRegion={{
-                latitude: restaurante.latitude,
-                longitude: restaurante.longitude,
+                latitude: restaurante.latitude ?? 0,
+                longitude: restaurante.longitude ?? 0,
                 latitudeDelta: 0.03,
                 longitudeDelta: 0.03
             }}>
-            {/* <SMapView.SMarker latitude={direccion.latitude} longitude={direccion.longitude} /> */}
             <SMapView.SMarker width={size} height={size} latitude={restaurante.latitude} longitude={restaurante.longitude} >
                 <MarkerRestaurante data={this.props.data?.restaurante} size={size} />
             </SMapView.SMarker>
