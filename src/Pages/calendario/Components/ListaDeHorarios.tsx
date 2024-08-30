@@ -100,10 +100,13 @@ export default class ListaDeHorarios extends React.Component<{
                 }}
                 renderItem={({index, item}) => {
                     return (
-                        <SView height={60} col={'xs-12'} row>
+                        <SView
+                            col={'xs-12'}
+                            row
+                            style={{minHeight: 60, paddingTop: 5}}
+                        >
                             <SView
                                 width={100}
-                                height
                                 style={{
                                     justifyContent: 'center',
                                 }}
@@ -114,7 +117,6 @@ export default class ListaDeHorarios extends React.Component<{
                             </SView>
                             <SView
                                 flex
-                                height
                                 style={{
                                     alignItems: 'flex-end',
                                     justifyContent: 'center',
@@ -150,8 +152,6 @@ export default class ListaDeHorarios extends React.Component<{
                             dia={item}
                             data={dataDia}
                             onSave={e => {
-                                this.state.data[item.dia] = e;
-                                this.setState({onEdit: null});
                                 SSocket.sendPromise({
                                     component: 'horario',
                                     type: 'editarNuevo',
@@ -162,6 +162,8 @@ export default class ListaDeHorarios extends React.Component<{
                                 })
                                     .then(res => {
                                         console.log(res);
+                                        this.state.data[item.dia] = e;
+                                        this.setState({onEdit: null});
                                     })
                                     .catch(err => {
                                         if (err.error) {
