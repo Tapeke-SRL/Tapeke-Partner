@@ -31,7 +31,7 @@ export default class PopupErrorHorario extends Component {
     }
     render() {
         return (
-            <SView center width={"xs-12"} height backgroundColor={STheme.color.background} borderRadius={20} padding={20}>
+            <SView center col={"xs-12"} height backgroundColor={STheme.color.background} borderRadius={20} padding={20}>
                 <SText center color={STheme.color.danger} fontSize={14}>Errores Detectados</SText>
                 <SHr />
                 {this.renderCardError(this.props.errorHorario)}
