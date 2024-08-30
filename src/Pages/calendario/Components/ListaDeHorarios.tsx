@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList} from 'react-native';
+import { FlatList } from 'react-native';
 import {
     SHr,
     SImage,
@@ -16,13 +16,13 @@ import EditarHorario from './EditarHorario';
 import Model from '../../../Model';
 
 const Dias = [
-    {label: 'Lunes', dia: '0'},
-    {label: 'Martes', dia: '1'},
-    {label: 'Miercoles', dia: '2'},
-    {label: 'Jueves', dia: '3'},
-    {label: 'Viernes', dia: '4'},
-    {label: 'Sabado', dia: '5'},
-    {label: 'Domingo', dia: '6'},
+    { label: 'Lunes', dia: '0' },
+    { label: 'Martes', dia: '1' },
+    { label: 'Miercoles', dia: '2' },
+    { label: 'Jueves', dia: '3' },
+    { label: 'Viernes', dia: '4' },
+    { label: 'Sabado', dia: '5' },
+    { label: 'Domingo', dia: '6' },
 ];
 export default class ListaDeHorarios extends React.Component<{
     key_restaurante: string;
@@ -48,7 +48,7 @@ export default class ListaDeHorarios extends React.Component<{
                 Object.values(e.data).map((a: any) => {
                     dataDias[a.dia + ''].push(a);
                 });
-                this.setState({data: dataDias});
+                this.setState({ data: dataDias });
             })
             .catch(e => {
                 console.error(e);
@@ -98,12 +98,13 @@ export default class ListaDeHorarios extends React.Component<{
                         />
                     );
                 }}
-                renderItem={({index, item}) => {
+                renderItem={({ index, item }) => {
                     return (
                         <SView
                             col={'xs-12'}
                             row
-                            style={{minHeight: 60, paddingTop: 5}}
+                            center
+                            style={{ minHeight: 60, paddingTop: 5 }}
                         >
                             <SView
                                 width={100}
@@ -128,9 +129,10 @@ export default class ListaDeHorarios extends React.Component<{
                             {!this.props.edit ? null : (
                                 <SView
                                     width={30}
+                                    height={30}
                                     padding={2}
                                     onPress={() => {
-                                        this.setState({onEdit: item});
+                                        this.setState({ onEdit: item });
                                     }}
                                 >
                                     <SImage
@@ -163,7 +165,7 @@ export default class ListaDeHorarios extends React.Component<{
                                     .then(res => {
                                         console.log(res);
                                         this.state.data[item.dia] = e;
-                                        this.setState({onEdit: null});
+                                        this.setState({ onEdit: null });
                                     })
                                     .catch(err => {
                                         if (err.error) {
