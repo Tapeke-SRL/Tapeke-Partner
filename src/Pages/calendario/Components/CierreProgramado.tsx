@@ -24,7 +24,7 @@ export default class CierreProgramado extends React.Component<{ key_restaurante:
         })
     }
     renderAddCierre() {
-        if(!this.props.add_cierre) return null;
+        if (!this.props.add_cierre) return null;
         return <SText font={"Montserrat-Bold"} color={STheme.color.primary} onPress={() => {
             SPopup.open({
                 key: "popupadd",
@@ -68,7 +68,7 @@ export default class CierreProgramado extends React.Component<{ key_restaurante:
                                 }).catch(e => {
                                     SNotification.send({
                                         title: "No se completo la accion.",
-                                        body: "Ocurrio un error al agregar el cierre.",
+                                        body: e.error ?? "Ocurrio un error al agregar el cierre.",
                                         color: STheme.color.danger,
                                         time: 5000,
                                     })
@@ -148,7 +148,7 @@ export default class CierreProgramado extends React.Component<{ key_restaurante:
             {this.renderList()}
             <SHr h={32} />
             {this.renderAddCierre()}
-            <SHr h={32}/>
+            <SHr h={32} />
         </SView>
     }
 }
