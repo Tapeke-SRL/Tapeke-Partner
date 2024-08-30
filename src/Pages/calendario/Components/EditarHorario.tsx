@@ -22,7 +22,13 @@ export default class EditarHorario extends React.Component<{ dia: any, data: any
         let mm = parts[1] || '';
 
         // Limitar los valores de las horas y minutos
-        if (hh.length > 2) hh = hh.slice(0, 2);
+        if (hh.length > 2) {
+            mm = hh.slice(2, 4);
+            hh = hh.slice(0, 2);
+            
+            console.log("hay mm ", hh,":",mm)
+
+        }
         if (mm.length > 2) mm = mm.slice(0, 2);
 
         // Asegurarse de que horas y minutos sean válidos
@@ -30,10 +36,16 @@ export default class EditarHorario extends React.Component<{ dia: any, data: any
         if (mm.length === 2 && parseInt(mm, 10) > 59) mm = '59';
 
         // Unir de nuevo si hay minutos
-        if (hh.length === 2 && !filtered.includes(':')) {
+        if (hh.length === 2 && filtered.includes(':')) {
             filtered = `${hh}:${mm}`;
         } else {
-            filtered = `${hh}${mm ? ':' + mm : ''}`;
+            let adyen = ""
+            console.log(e);
+            if (filtered.includes(":")) {
+                console.log(e);
+                adyen = ":"
+            }
+            filtered = `${hh}${mm ? ':' + mm : adyen}`;
         }
 
         return filtered;
