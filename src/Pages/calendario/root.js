@@ -86,7 +86,7 @@ export default class root extends Component {
 
         return <SPage hidden onRefresh={() => {
             this.setState({ loading: true })
-            new SThread(200, "load", false).start(()=>{
+            new SThread(200, "load", false).start(() => {
                 this.setState({ loading: false })
             })
         }}>
@@ -94,7 +94,7 @@ export default class root extends Component {
                 <SHr />
                 <PageTitle title={"HORARIOS"} />
                 <SHr />
-                <SView border={"#FF00FF"} col={"xs-12"} row style={{ justifyContent: "space-evenly" }}>
+                <SView col={"xs-12"} row style={{ justifyContent: "space-evenly" }}>
                     <SView flex row center
                         style={{
                             ...style,

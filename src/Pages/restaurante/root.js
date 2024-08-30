@@ -45,9 +45,6 @@ const tiempoHabilitacion = (item: any) => {
   return `${label}\npor ${horas % 24} horas`;
 }
 
-
-
-
 class index extends Component {
   static TOPBAR = <><TopBar type={"usuario"} />
     <SView backgroundColor={"#96BE00"} height={20} col={"xs-12"}></SView>
