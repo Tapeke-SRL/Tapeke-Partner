@@ -20,7 +20,8 @@ export default class PopupCerrarRestaurante extends Component {
                 <SHr />
                 <SView>
                     <SText center color={STheme.color.gray} fontSize={11}>
-                        Tu comercio abrirá automáticamente el día de mañana o en el subsiguiente horario de atención.
+                        {`Tu comercio abrirá automáticamente ${this.props.labelText ? `dentro de ${this.props.labelText > 1 ? `${this.props.labelText} horas` : `${this.props.labelText} hora`}` : "el día de mañana o en el subsiguiente horario de atención"
+                            }.`}
                     </SText>
                     <SHr />
                     <SText center color={STheme.color.gray} fontSize={11}>Puedes volver a abrir tu comercio en cualquier momento</SText>
