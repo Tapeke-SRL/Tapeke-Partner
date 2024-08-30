@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
-import { SHr, SIcon, SImage, SNavigation, SNotification, SPage, SText, STheme, SView } from 'servisofts-component';
+import { SHr, SIcon, SImage, SNavigation, SNotification, SPage, SText, STheme, SThread, SView } from 'servisofts-component';
 import TopBar from '../../Components/TopBar';
 import PBarraFooter from '../../Components/PBarraFooter';
 import PageTitle from '../../Components/PageTitle';
@@ -79,8 +79,13 @@ export default class root extends Component {
     render() {
         const restaurante = Model.restaurante.Action.getSelect();
 
-        return <SPage hidden>
-            <Container>
+        return <SPage hidden onRefresh={() => {
+            this.setState({ loading: true })
+            new SThread(200, "load", false).start(()=>{
+                this.setState({ loading: false })
+            })
+        }}>
+            <Container loading={this.state.loading}>
                 <SHr />
                 <PageTitle title={"HORARIOS"} />
                 <SHr />

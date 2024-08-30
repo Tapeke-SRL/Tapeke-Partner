@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, RefreshControl } from 'react-native';
 import {
     SHr,
     SImage,
@@ -82,6 +82,12 @@ export default class ListaDeHorarios extends React.Component<{
     render() {
         return (
             <FlatList
+                scrollEnabled={false}
+                // refreshControl={<RefreshControl refreshing={false} onRefresh={() => {
+                //     // this.state.data = null;
+                //     // this.setState({ data: "" })
+                //     this.componentDidMount();
+                // }} />}
                 style={{
                     width: '100%',
                 }}
