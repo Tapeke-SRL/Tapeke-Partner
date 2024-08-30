@@ -23,7 +23,7 @@ export default class FilterDate extends Component {
         };
 
         this.styleText = {
-            fontSize: 11
+            fontSize: 9
         };
     }
 
