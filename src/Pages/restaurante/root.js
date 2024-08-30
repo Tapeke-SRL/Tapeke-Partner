@@ -235,30 +235,29 @@ class index extends Component {
         key: key_popup,
         type: "2",
         content: <SelectHabilitado
-          // openPopup={true}
-          // popup={
-          //   SPopup.open({
-          //     key: "PopupCerrarRestaurante",
-          //     content: <PopupCerrarRestaurante keyPopup={"PopupCerrarRestaurante"} />
-          //   })
-          // }
-
           style={{
             top: top,
           }}
           onSelect={(select: any) => {
 
-            if(select.label != "Cerrar Indefinidamente")
-            SPopup.open({
-              key: "PopupCerrarRestaurante",
-              content: <PopupCerrarRestaurante keyPopup={"PopupCerrarRestaurante"} />
-            })
+            if (select.label != "Cerrar Indefinidamente") {
+              let labelText;
+
+              if (select.label != "Cerrar durante todo día") {
+                labelText = (select.key / 60)
+              }
+
+              SPopup.open({
+                key: "PopupCerrarRestaurante",
+                content: <PopupCerrarRestaurante keyPopup={"PopupCerrarRestaurante"} labelText={labelText} />
+              })
+            }
+
 
             let tipo = false;
             let fecha_habilitacion_automatica = "null"
 
             if (select.key != "true" && select.key != "false") {
-              console.log("entro aca")
               let num = select.key;
               if (select.key < 0) {
                 tipo = true;
