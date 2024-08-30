@@ -62,9 +62,9 @@ export default class root extends Component {
         }).then(e => {
             this.setState({ edit: e })
         }).catch(e => {
-
         })
     }
+
     getPermisoAgregarCierre() {
         Roles.getPermiso({
             key_rol: Model.restaurante.Action.getSelectKeyRol(),
@@ -79,36 +79,39 @@ export default class root extends Component {
     render() {
         const restaurante = Model.restaurante.Action.getSelect();
 
+        let style = {
+            padding: 5,
+            borderRadius: 16
+        }
+
         return <SPage hidden>
             <Container>
                 <SHr />
                 <PageTitle title={"HORARIOS"} />
                 <SHr />
-                <SView col={"xs-12"} row>
-                    <SView flex row style={{
-                        padding: 6, backgroundColor: this.state.type == "horario" ? STheme.color.primary : STheme.color.lightGray, borderRadius: 16
-                    }} center onPress={() => this.setState({ type: "horario" })}>
-                        {/* <SView width={4} /> */}
+                <SView border={"#FF00FF"} col={"xs-12"} row style={{ justifyContent: "space-evenly" }}>
+                    <SView flex row center
+                        style={{
+                            ...style,
+                            backgroundColor: this.state.type == "horario" ? STheme.color.primary : STheme.color.lightGray,
+                        }}
+                        onPress={() => this.setState({ type: "horario" })}>
                         <SView width={16} height={16}>
-                            {/* <SImage src={require("../../Assets/img/")} /> */}
                             <SIcon name='reloj' fill={this.state.type == "horario" ? STheme.color.white : STheme.color.gray} />
                         </SView>
-                        {/* <SView width={4} /> */}
-                        <SText fontSize={11} font={"Montserrat-SemiBold"} color={this.state.type == "horario" ? STheme.color.white : STheme.color.gray} style={{ paddingLeft: 5 }}>{"Horario normal"}</SText>
-                        {/* <SView width={4} /> */}
+                        <SText fontSize={10} font={"Montserrat-SemiBold"} color={this.state.type == "horario" ? STheme.color.white : STheme.color.gray} style={{ paddingLeft: 5 }}>{"Horario normal"}</SText>
                     </SView>
-                    <SView width={50} />
-                    <SView flex row style={{
-                        padding: 5,
-                        backgroundColor: this.state.type == "cierre" ? STheme.color.primary : STheme.color.lightGray,
-                        borderRadius: 16
-                    }} center onPress={() => this.setState({ type: "cierre" })}>
-                        {/* <SView width={4} /> */}
+                    <SView width={15} />
+                    <SView flex row center
+                        style={{
+                            ...style,
+                            backgroundColor: this.state.type == "cierre" ? STheme.color.primary : STheme.color.lightGray,
+                        }}
+                        onPress={() => this.setState({ type: "cierre" })}>
                         <SView width={16} height={16}>
                             <SIcon name='Calendario' fill={this.state.type == "cierre" ? STheme.color.white : STheme.color.gray} />
                         </SView>
-                        {/* <SView width={4} /> */}
-                        <SText fontSize={11} font={"Montserrat-SemiBold"} color={this.state.type == "cierre" ? STheme.color.white : STheme.color.gray} style={{ paddingLeft: 5 }}>{"Cierres programados"}</SText>
+                        <SText fontSize={10} font={"Montserrat-SemiBold"} color={this.state.type == "cierre" ? STheme.color.white : STheme.color.gray} style={{ paddingLeft: 5 }}>{"Cierres programados"}</SText>
                         {/* <SView width={4} /> */}
                     </SView>
                 </SView>
