@@ -177,11 +177,7 @@ export default class ListaDeHorarios extends React.Component<{
                                         if (err.error) {
                                             SPopup.open({
                                                 key: 'PopupErrorHorario',
-                                                content: (
-                                                    <PopupErrorHorario
-                                                        errorHorario={err.error}
-                                                    />
-                                                ),
+                                                content: (<PopupErrorHorario errorHorario={err.error} />),
                                             });
                                         }
                                         console.log(err);
