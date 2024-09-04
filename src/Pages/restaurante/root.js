@@ -364,7 +364,7 @@ class index extends Component {
 
                     </SView>
                     <SView width={4} />
-                    <SText color={"#666"} fontSize={10} >{tiempoHabilitacion(this.data)}</SText>
+                    <SText color={"#666"} fontSize={10} >{tiempoHabilitacion(this.data)}</ST  ext>
                   </SView>
                 </SView> */}
 
@@ -372,7 +372,7 @@ class index extends Component {
               <SHr h={30} />
               <SView row >
                 <SText fontSize={14} flex color={STheme.color.darkGray} >Vender Tapekes:  {this.data.tapeke_deshabilitado} </SText>
-                <SSwitch center size={20} loading={this.state.loading} onChange={this.habilitacion_tapeke.bind(this)} value={!this.data?.tapeke_deshabilitado ? !this.data?.tapeke_deshabilitado : true} />
+                <SSwitch center size={20} loading={this.state.loading} onChange={this.habilitacion_tapeke.bind(this)} value={!this.data?.tapeke_deshabilitado} />
               </SView>
             </SView>
           </SView>
