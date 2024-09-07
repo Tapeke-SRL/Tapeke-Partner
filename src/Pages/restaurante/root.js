@@ -61,12 +61,19 @@ class index extends Component {
       usuarios: {}
     };
     this.pk = SNavigation.getParam("pk");
+    if (!this.pk) {
+      this.pk = SNavigation.getParam("key_restaurante");
+    }
+    
     this.isRun = false;
     this.remplasoElRol = false;
 
   }
 
   componentDidMount() {
+    if(!this.pk){
+      SNavigation.goBack();
+    }
     new SThread(200).start(() => {
 
       this.setState({ ready: true })

@@ -2,4 +2,4 @@
 
 . .env
 
-scp -r build/* $SSH_USER@$SSH_IP:$SERVER_BUILD_PATH/
+scp -r build/* $SSH_SERVER_HOST:$SERVER_BUILD_PATH/
