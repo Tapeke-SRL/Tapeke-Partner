@@ -9,7 +9,7 @@ export default class PBarraFooter extends Component {
 		this.state = {
 		};
 		this.page = SNavigation.getParam("page");
-		this.key_restaurante = SNavigation.getParam("pk", Model.restaurante.Action.getKey());
+		this.key_restaurante = Model.restaurante.Action.getKey()
 	}
 
 	getItem({ key, title, icon, image, url, params, width }) {

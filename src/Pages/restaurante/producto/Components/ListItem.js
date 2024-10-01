@@ -128,7 +128,7 @@ export default ({ item, section, index, key_restaurante, onChange, image_time })
             alignItems: "flex-end"
         }} height>
             <BtnEditar onPress={() => {
-                SNavigation.navigate("/restaurante/producto/edit", { key_restaurante: key_restaurante, pk: item.key })
+                SNavigation.navigate("/restaurante/producto/edit", { key_restaurante: key_restaurante, key_producto: item.key })
             }} />
         </SView>
     </SView >

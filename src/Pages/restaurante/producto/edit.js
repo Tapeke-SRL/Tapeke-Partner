@@ -59,7 +59,7 @@ export default class edit extends Component {
         };
 
         this.key_restaurante = SNavigation.getParam("key_restaurante")
-        this.pk = SNavigation.getParam("pk")
+        this.key_producto = SNavigation.getParam("key_producto")
         this.noPrevent = false;
     }
 
@@ -146,11 +146,11 @@ export default class edit extends Component {
         new SThread(100, "load",).start(() => {
             this.setState({ ready: true })
         })
-        if (this.pk) {
+        if (this.key_producto) {
             SSocket.sendPromise({
                 component: "restaurante",
                 type: "getProductosDetallePartner",
-                key_producto: this.pk,
+                key_producto: this.key_producto,
                 key_usuario: Model.usuario.Action.getKey(),
             }).then(e => {
                 this.setState({ data: e.data, original: JSON.parse(JSON.stringify(e.data)) })
@@ -206,13 +206,13 @@ export default class edit extends Component {
             <SPage hidden footer={this.renderSaveChange()}>
                 <Container loading={!this.state.ready || !this.state.data}>
                     <SHr />
-                    <PageTitle title={this.pk?"EDITAR PRODUCTO":'AGREGAR PRODUCTO'}/>
+                    <PageTitle title={this.key_producto?"EDITAR PRODUCTO":'AGREGAR PRODUCTO'}/>
                     {/* <SView col={"xs-12"}>
                         <SText font={"Montserrat-Bold"}>{"AGREGAR PRODUCTO"}</SText>
                         <SText color={STheme.color.primary} fontSize={12} font={"Montserrat-Bold"}>{"Mi Restaurante - Beni"}</SText>
                     </SView> */}
                     <SHr h={32} />
-                    <FotoDePerfil key_producto={this.pk} onChange={(e) => {
+                    <FotoDePerfil key_producto={this.key_producto} onChange={(e) => {
                         this.imageToUpload = e[0];
                     }} />
                     <SHr h={32} />
@@ -222,7 +222,7 @@ export default class edit extends Component {
                         <SText flex color={STheme.color.primary} fontSize={14} font={"Montserrat-Bold"}>{"OPCIONES"}</SText>
                         <BtnNaranja onPress={() => {
                             FormularioOpciones.openPopup({
-                                data: { key_producto: this.pk },
+                                data: { key_producto: this.key_producto },
                                 onChange: (subproductoedit) => {
                                     const existe = this.state.data.sub_productos.findIndex(a => a.key == subproductoedit.key);
                                     if (existe > -1) {
@@ -279,7 +279,7 @@ export default class edit extends Component {
                             })
                             if (this.imageToUpload) {
                                 console.log(this.imageToUpload)
-                                const resp = await Upload.sendPromise(this.imageToUpload, SSocket.api.root + "upload/producto/" + this.pk)
+                                const resp = await Upload.sendPromise(this.imageToUpload, SSocket.api.root + "upload/producto/" + this.key_producto)
                             }
                             SNotification.remove("guardando_producto")
                             SNotification.send({

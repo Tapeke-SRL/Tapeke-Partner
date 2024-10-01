@@ -60,9 +60,9 @@ class index extends Component {
     this.state = {
       usuarios: {}
     };
-    this.pk = SNavigation.getParam("pk");
+    this.pk = SNavigation.getParam("key_restaurante");
     if (!this.pk) {
-      this.pk = SNavigation.getParam("key_restaurante");
+      this.pk = SNavigation.getParam("pk");
     }
     
     this.isRun = false;
