@@ -2,6 +2,7 @@
 import { SReducer } from "servisofts-model";
 import { SNavigation, SThread } from 'servisofts-component';
 import Sounds from "../../../Components/Sounds";
+import Model from "../..";
 
 export default class Reducer extends SReducer {
 
@@ -23,6 +24,12 @@ export default class Reducer extends SReducer {
         const filterNewPedido = (pedido) => {
             if (state.data[pedido.key] && pedido.state == 'listo') {
                 new SThread(200, "newPedido", false).start(() => {
+                    const rest = Model.restaurante.Action.getSelect();
+                    if (rest?.key != pedido?.restaurante?.key) {
+                        console.log("sadasd", rest, pedido);
+                        return
+                    }
+
                     Sounds.play();
                     SNavigation.navigate("/pedido", { pk: pedido.key });
                 })
