@@ -252,16 +252,19 @@ class root extends Component {
             });
         }
 
+        // TODO aca va que este tipo de descuento lo cubre el partner.
         if (obj?.pedido_producto) {
-            // TODO aca va que este tipo de descuento lo cuebre el partner.
-            // const exclude = ['pollos campeón', 'sakura brasas']
-            const exclude = []
+            // TODO Configuración por si se quiere excluir algun restaurante de la configuración. 
+            const exclude = [] // Ej. = ['pollos campeón', 'sakura brasas']
+
             Object.values(obj.pedido_producto).map((prod) => {
-                if (prod.descuento_monto) {
+                if (prod.descuento_monto || prod.descuento_porcentaje) {
+                    // TODO Se define el porcentaje que cubre Tapeke según lo que pida administración.
                     let coberturaTapeke = 0;
                     if (exclude.some(nombre => obj.restaurante.nombre.toLowerCase().includes(nombre.toLowerCase()))) {
                         coberturaTapeke = 1;
                     }
+
                     let coberturaPartner = 1 - coberturaTapeke;
                     let monto = (prod.cantidad * (prod.precio_sin_descuento - prod.precio))
 
