@@ -221,8 +221,10 @@ class root extends Component {
         total.totalDescCubrePartner = total.totalDescCubrePartner - (total.totalDescEfectivo * totalDesc.porcentajeCubrePartner);
 
 
-        // TODO falta definir esté metodo
-        total.totalPorConciliar = total.linea + total.totalDescCubreTapeke - (total.totalDescCubrePartner + total.comision_linea + total.comision_efectivo + total.totalDescuentoCancelacion);
+        // total.totalPorConciliar = total.linea + total.totalDescCubreTapeke - (total.totalDescCubrePartner + total.comision_linea + total.comision_efectivo);
+
+        // TODO Calculo aprobado por la contadora
+        total.totalPorConciliar = total.linea - (total.comision_linea + total.comision_efectivo + total.totalDescCubreTapeke);
 
         return total;
     }
@@ -260,7 +262,7 @@ class root extends Component {
             Object.values(obj.pedido_producto).map((prod) => {
                 if (prod.descuento_monto || prod.descuento_porcentaje) {
                     // TODO Se define el porcentaje que cubre Tapeke según lo que pida administración.
-                    let coberturaTapeke = 0;
+                    let coberturaTapeke = 0; // TODO Cambiar porcentaje segun la solicitud.
                     if (exclude.some(nombre => obj.restaurante.nombre.toLowerCase().includes(nombre.toLowerCase()))) {
                         coberturaTapeke = 1;
                     }
