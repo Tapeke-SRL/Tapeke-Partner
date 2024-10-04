@@ -67,7 +67,7 @@ class root extends Component {
                     </SView>
                     <SText color={STheme.color.text} fontSize={60} style={{paddingLeft: 5}}>
                         {/* {parseFloat(this.state.media?.pedido_star_media ?? 0).toFixed(1).replace('.', ',')} TODO deberia ser este pero en cliente figura star_media */}
-                        {parseFloat(this.state.media?.star_media ?? 0).toFixed(1).replace('.', ',')}
+                        {parseFloat(this.state.media?.pedido_star_media ?? 0).toFixed(1).replace('.', ',')}
                     </SText>
                 </SView>
 
