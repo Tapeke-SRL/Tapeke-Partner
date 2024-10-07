@@ -130,8 +130,8 @@ export default class edit extends Component {
         e.preventDefault();
 
         SPopup.confirm({
-            title: "Salir sin guardar cambios?",
-            message: "Si confirma se perderan los cambios realizados.",
+            title: "¿Salir sin guardar cambios?",
+            message: "Si confirma se perderán los cambios realizados.",
             onClose: () => {
                 console.log("cancel")
             },
@@ -206,7 +206,7 @@ export default class edit extends Component {
             <SPage hidden footer={this.renderSaveChange()}>
                 <Container loading={!this.state.ready || !this.state.data}>
                     <SHr />
-                    <PageTitle title={this.key_producto?"EDITAR PRODUCTO":'AGREGAR PRODUCTO'}/>
+                    <PageTitle title={this.key_producto ? "EDITAR PRODUCTO" : 'AGREGAR PRODUCTO'} />
                     {/* <SView col={"xs-12"}>
                         <SText font={"Montserrat-Bold"}>{"AGREGAR PRODUCTO"}</SText>
                         <SText color={STheme.color.primary} fontSize={12} font={"Montserrat-Bold"}>{"Mi Restaurante - Beni"}</SText>
@@ -234,7 +234,6 @@ export default class edit extends Component {
                                     this.setState({ ...this.state })
                                 }
                             })
-
                         }}>{"+ Agregar Opciones"}</BtnNaranja>
                     </SView>
                     <SHr h={8} />

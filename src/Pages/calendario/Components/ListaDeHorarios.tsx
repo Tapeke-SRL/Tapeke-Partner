@@ -18,10 +18,10 @@ import Model from '../../../Model';
 const Dias = [
     { label: 'Lunes', dia: '0' },
     { label: 'Martes', dia: '1' },
-    { label: 'Miercoles', dia: '2' },
+    { label: 'Miércoles', dia: '2' },
     { label: 'Jueves', dia: '3' },
     { label: 'Viernes', dia: '4' },
-    { label: 'Sabado', dia: '5' },
+    { label: 'Sábado', dia: '5' },
     { label: 'Domingo', dia: '6' },
 ];
 export default class ListaDeHorarios extends React.Component<{
