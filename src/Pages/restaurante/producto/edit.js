@@ -258,11 +258,12 @@ export default class edit extends Component {
                                 color: STheme.color.danger,
                             })
                             return;
-                        } 
+                        }
 
-                        if(producto.descuento_monto > producto.precio){
+                        if (producto.descuento_monto > producto.precio) {
                             SNotification.send({
-                                body:  "El descuento monto no puede ser mayor al precio del producto.",
+                                title: 'Error',
+                                body: "El descuento monto no puede ser mayor al precio del producto.",
                                 time: 5000,
                                 color: STheme.color.danger,
                             })

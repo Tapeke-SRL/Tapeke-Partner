@@ -71,65 +71,77 @@ export default class FormularioProducto extends Component<any> {
                                 }}
                                 onSubmitName={'ACEPTAR'}
                                 onSubmit={(val: {
-                                    descuento_porcentaje: number;
-                                    descuento_monto: number;
+                                    descuento_porcentaje: string;
+                                    descuento_monto: string;
                                 }) => {
                                     props.close();
 
-                                    if (val.descuento_porcentaje) {
-                                        if (val.descuento_monto > 0) {
+                                    let descuento_monto = parseFloat(
+                                        val.descuento_monto
+                                    );
+
+                                    let descuento_porcentaje = parseFloat(
+                                        val.descuento_porcentaje
+                                    );
+
+                                    if (descuento_porcentaje) {
+                                        if (descuento_monto > 0) {
                                             SNotification.send({
                                                 body: 'Solo puede asignar un solo descuento a las vez.',
                                                 time: 5000,
                                                 color: STheme.color.danger,
-                                                title: '',
+                                                title: 'Error',
                                             });
                                             return;
                                         }
 
-                                        if (val.descuento_porcentaje <= 100) {
-                                            val.descuento_porcentaje =
-                                                val.descuento_porcentaje / 100;
+                                        if (descuento_porcentaje <= 100) {
+                                            descuento_porcentaje =
+                                                descuento_porcentaje / 100;
                                         } else {
                                             SNotification.send({
                                                 body: 'El porcentaje del descuento tiene que estar entre 0 y 100',
                                                 time: 5000,
                                                 color: STheme.color.danger,
-                                                title: '',
+                                                title: 'Error',
                                             });
                                             return;
                                         }
                                     }
 
-                                    if (val.descuento_monto) {
-                                        if (val.descuento_porcentaje > 0) {
+                                    if (descuento_monto) {
+                                        if (descuento_porcentaje > 0) {
                                             SNotification.send({
                                                 body: 'Solo puede asignar un solo descuento a las vez.',
                                                 time: 5000,
                                                 color: STheme.color.danger,
-                                                title: '',
+                                                title: 'Error',
                                             });
                                             return;
                                         }
 
                                         if (
-                                            val.descuento_monto >
+                                            descuento_monto >
                                             this._inputs['precio'].getValue()
                                         ) {
                                             SNotification.send({
                                                 body: 'El descuento monto no puede ser mayor al precio del producto.',
                                                 time: 5000,
                                                 color: STheme.color.danger,
-                                                title: '',
+                                                title: 'Error',
                                             });
                                             return;
                                         }
                                     }
 
                                     this.setState({
-                                        descuento_monto: val.descuento_monto,
+                                        descuento_monto: descuento_monto
+                                            ? descuento_monto
+                                            : 0,
                                         descuento_porcentaje:
-                                            val.descuento_porcentaje ?? 0,
+                                            descuento_porcentaje
+                                                ? descuento_porcentaje
+                                                : 0,
                                     });
                                 }}
                             />
