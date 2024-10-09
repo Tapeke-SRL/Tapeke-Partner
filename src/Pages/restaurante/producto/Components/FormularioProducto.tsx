@@ -234,6 +234,8 @@ export default class FormularioProducto extends Component<any> {
                     <SSwitch
                         key={producto?.key}
                         size={15}
+                        scale={2.3}
+                        color={STheme.color.white}
                         onChange={this.handleChange_descuento.bind(
                             this,
                             producto
