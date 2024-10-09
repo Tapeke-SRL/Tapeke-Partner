@@ -221,8 +221,10 @@ class root extends Component {
         total.totalDescCubrePartner = total.totalDescCubrePartner - (total.totalDescEfectivo * totalDesc.porcentajeCubrePartner);
 
 
-        // TODO falta definir esté metodo
-        total.totalPorConciliar = total.linea + total.totalDescCubreTapeke - (total.totalDescCubrePartner + total.comision_linea + total.comision_efectivo + total.totalDescuentoCancelacion);
+        // total.totalPorConciliar = total.linea + total.totalDescCubreTapeke - (total.totalDescCubrePartner + total.comision_linea + total.comision_efectivo);
+
+        // TODO Calculo aprobado por la contadora
+        total.totalPorConciliar = total.linea - (total.comision_linea + total.comision_efectivo + total.totalDescCubrePartner);
 
         return total;
     }
@@ -255,13 +257,19 @@ class root extends Component {
         // TODO aca va que este tipo de descuento lo cubre el partner.
         if (obj?.pedido_producto) {
             // TODO Configuración por si se quiere excluir algun restaurante de la configuración. 
-            const exclude = [] // Ej. = ['pollos campeón', 'sakura brasas']
+            const excludeRestaurantes = [] // Ej. = ['pollos campeón', 'sakura brasas']
+            const excludePedidos = [] // Ej. = ["70e831e6-9ada-4bd8-84f7-53e0ce958f60"]
 
             Object.values(obj.pedido_producto).map((prod) => {
                 if (prod.descuento_monto || prod.descuento_porcentaje) {
                     // TODO Se define el porcentaje que cubre Tapeke según lo que pida administración.
-                    let coberturaTapeke = 0;
-                    if (exclude.some(nombre => obj.restaurante.nombre.toLowerCase().includes(nombre.toLowerCase()))) {
+                    let coberturaTapeke = 0; // TODO Cambiar porcentaje segun la solicitud.
+
+                    if (
+                        excludeRestaurantes.some(nombre => obj.restaurante.nombre.toLowerCase().includes(nombre.toLowerCase()))
+                        ||
+                        excludePedidos.some(pk => prod.key_pedido.includes(pk))
+                    ) {
                         coberturaTapeke = 1;
                     }
 
