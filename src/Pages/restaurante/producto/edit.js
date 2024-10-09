@@ -245,7 +245,7 @@ export default class edit extends Component {
 
                         const faltantes = InputValidator({
                             data: producto,
-                            keys: ["nombre", "key_categoria_producto", "precio"]
+                            keys: ["nombre", "key_categoria_producto", "precio", "index"]
                         })
 
                         console.log(producto);
@@ -264,6 +264,16 @@ export default class edit extends Component {
                             SNotification.send({
                                 title: 'Error',
                                 body: "El descuento monto no puede ser mayor al precio del producto.",
+                                time: 5000,
+                                color: STheme.color.danger,
+                            })
+                            return;
+                        }
+
+                        if (producto.precio < 1) {
+                            SNotification.send({
+                                title: 'Error',
+                                body: "El producto debe tener un precio mayor a 0.",
                                 time: 5000,
                                 color: STheme.color.danger,
                             })
