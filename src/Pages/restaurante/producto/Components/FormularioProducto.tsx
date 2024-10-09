@@ -20,6 +20,9 @@ import {
     SView,
     STheme,
     SText,
+    SForm,
+    SPopup,
+    SNotification,
 } from 'servisofts-component';
 import Input from './Input';
 
@@ -39,10 +42,114 @@ export default class FormularioProducto extends Component<any> {
         this.state = {
             mayor_edad: this.props.producto?.mayor_edad ?? false,
             ley_seca: this.props.producto?.ley_seca ?? false,
-        };
 
-        // this.key_restaurante = SNavigation.getParam("key_restaurante")
-        // this.pk = SNavigation.getParam("pk")
+            descuento_monto: this.props.producto?.descuento_monto ?? 0,
+            descuento_porcentaje:
+                this.props.producto?.descuento_porcentaje ?? 0,
+        };
+    }
+
+    handleChange_descuento(data: any, val: any) {
+        if (val) {
+            SPopup.openContainer({
+                render: (props: {close: () => void}) => {
+                    return (
+                        <SView col={'xs-11'} center>
+                            <SHr h={30} />
+                            <SText bold>Crear un descuento de producto</SText>
+                            <SHr />
+                            <SForm
+                                inputs={{
+                                    descuento_monto: {
+                                        label: 'Descuento Monto',
+                                        type: 'number',
+                                    },
+                                    descuento_porcentaje: {
+                                        label: 'Descuento Porcentaje',
+                                        type: 'number',
+                                    },
+                                }}
+                                onSubmitName={'ACEPTAR'}
+                                onSubmit={(val: {
+                                    descuento_porcentaje: number;
+                                    descuento_monto: number;
+                                }) => {
+                                    props.close();
+
+                                    if (val.descuento_porcentaje) {
+                                        if (val.descuento_monto > 0) {
+                                            SNotification.send({
+                                                body: 'Solo puede asignar un solo descuento a las vez.',
+                                                time: 5000,
+                                                color: STheme.color.danger,
+                                                title: '',
+                                            });
+                                            return;
+                                        }
+
+                                        if (val.descuento_porcentaje <= 100) {
+                                            val.descuento_porcentaje =
+                                                val.descuento_porcentaje / 100;
+                                        } else {
+                                            SNotification.send({
+                                                body: 'El porcentaje del descuento tiene que estar entre 0 y 100',
+                                                time: 5000,
+                                                color: STheme.color.danger,
+                                                title: '',
+                                            });
+                                            return;
+                                        }
+                                    }
+
+                                    if (val.descuento_monto) {
+                                        if (val.descuento_porcentaje > 0) {
+                                            SNotification.send({
+                                                body: 'Solo puede asignar un solo descuento a las vez.',
+                                                time: 5000,
+                                                color: STheme.color.danger,
+                                                title: '',
+                                            });
+                                            return;
+                                        }
+
+                                        if (
+                                            val.descuento_monto >
+                                            this._inputs['precio'].getValue()
+                                        ) {
+                                            SNotification.send({
+                                                body: 'El descuento monto no puede ser mayor al precio del producto.',
+                                                time: 5000,
+                                                color: STheme.color.danger,
+                                                title: '',
+                                            });
+                                            return;
+                                        }
+                                    }
+
+                                    this.setState({
+                                        descuento_monto: val.descuento_monto,
+                                        descuento_porcentaje:
+                                            val.descuento_porcentaje ?? 0,
+                                    });
+                                }}
+                            />
+                            <SHr h={30} />
+                        </SView>
+                    );
+                },
+                key: undefined,
+            });
+        } else {
+            SPopup.confirm({
+                title: '¿Esta seguro de desactivar el descuento producto?',
+                onPress: () => {
+                    this.setState({
+                        descuento_monto: 0,
+                        descuento_porcentaje: 0,
+                    });
+                },
+            });
+        }
     }
 
     handleGuardar() {
@@ -64,8 +171,110 @@ export default class FormularioProducto extends Component<any> {
         this.props.producto.categoria =
             this._inputs['key_categoria_producto'].getData();
 
+        this.props.producto.key_restaurante = this.props.key_restaurante;
+
+        this.props.producto.descuento_porcentaje =
+            this.state.descuento_porcentaje;
+        this.props.producto.descuento_monto = this.state.descuento_monto;
+
         return resp;
-        console.log(resp);
+    }
+
+    componentDescuento(producto: any) {
+        let descuentoMonto =
+            producto.descuento_monto || producto.descuento_monto > 0
+                ? true
+                : false;
+        let descuentoPorcentaje =
+            producto.descuento_porcentaje || producto.descuento_porcentaje > 0
+                ? true
+                : false;
+
+        let descuentoBool = descuentoMonto || descuentoPorcentaje;
+
+        let colorDescuentoMontoText =
+            producto?.descuento_monto || producto?.descuento_monto > 0
+                ? '#000'
+                : STheme.color.gray;
+        let colorDescuentoPorcentajeText =
+            producto?.descuento_porcentaje || producto?.descuento_porcentaje > 0
+                ? '#000'
+                : STheme.color.gray;
+
+        return (
+            <SView col={'xs-6'} style={{}}>
+                <SView
+                    row
+                    flex
+                    style={{
+                        padding: 10,
+                        backgroundColor: '#F5F5F5',
+                        borderWidth: 1,
+                        borderColor: '#DDD',
+                        borderTopStartRadius: 10,
+                        borderTopEndRadius: 10,
+                        justifyContent: 'space-evenly',
+                    }}
+                >
+                    <SText center fontSize={10} font={'Montserrat-Bold'}>
+                        APLICAR DESCUENTO
+                    </SText>
+                    <SSwitch
+                        key={producto?.key}
+                        size={15}
+                        onChange={this.handleChange_descuento.bind(
+                            this,
+                            producto
+                        )}
+                        value={descuentoBool}
+                    />
+                </SView>
+                <SView
+                    row
+                    style={{
+                        padding: 10,
+                        borderLeftWidth: 1,
+                        borderRightWidth: 1,
+                        borderColor: '#DDD',
+                        justifyContent: 'space-between',
+                    }}
+                >
+                    <SText flex fontSize={11} color={colorDescuentoMontoText}>
+                        Descuento Monto
+                    </SText>
+                    <SText fontSize={11} color={colorDescuentoMontoText}>
+                        Bs. {producto?.descuento_monto ?? 0}
+                    </SText>
+                </SView>
+                <SView
+                    row
+                    style={{
+                        padding: 10,
+                        borderWidth: 1,
+                        borderColor: '#DDD',
+                        borderBottomStartRadius: 10,
+                        borderBottomEndRadius: 10,
+                        justifyContent: 'space-between',
+                    }}
+                >
+                    <SText
+                        flex
+                        fontSize={11}
+                        color={colorDescuentoPorcentajeText}
+                    >
+                        Descuento Porcentaje
+                    </SText>
+                    <SText fontSize={11} color={colorDescuentoPorcentajeText}>
+                        {producto?.descuento_porcentaje * 100}%
+                    </SText>
+                </SView>
+                <SHr />
+                <SText center fontSize={9} color={'#CCCCCC'}>
+                    Descuento al precio del produco. El cliente podrá ver el
+                    precio original y el precio final con descuento.
+                </SText>
+            </SView>
+        );
     }
 
     render() {
@@ -195,7 +404,6 @@ export default class FormularioProducto extends Component<any> {
                             scale={2.3}
                             size={16}
                             color={STheme.color.white}
-                            loading={this.state.loading}
                             onChange={value =>
                                 this.setState({mayor_edad: value})
                             }
@@ -212,38 +420,11 @@ export default class FormularioProducto extends Component<any> {
                             scale={2.3}
                             size={16}
                             color={STheme.color.white}
-                            loading={this.state.loading}
-                            onChange={value =>
-                                this.setState({ley_seca: value})
-                            }
+                            onChange={value => this.setState({ley_seca: value})}
                             value={this.state.ley_seca}
                         />
                     </SView>
                 </SView>
-                {/* <SView
-                    row
-                    col={'xs-12'}
-                    style={{
-                        justifyContent: 'space-between',
-                    }}
-                >
-                    <Input
-                        ref={ref => (this._inputs['mayor_edad'] = ref)}
-                        col={'xs-7'}
-                        defaultData={data.mayor_edad}
-                        defaultValue={data.mayor_edad}
-                        label={'Para mayor edad'}
-                        info={'Ejemplo: Cerveza, Cigarros, Alcohol'}
-                    />
-
-                    <Input
-                        ref={ref => (this._inputs['ley_seca'] = ref)}
-                        col={'xs-4.5'}
-                        defaultValue={data.ley_seca}
-                        label={'Ley Seca'}
-                        info={'¿Este producto se excluirá en ley seca?'}
-                    />
-                </SView> */}
                 <SHr h={16} />
                 <SView row center col={'xs-12'}>
                     <Input
@@ -283,6 +464,13 @@ export default class FormularioProducto extends Component<any> {
                             this._inputs['limite_compra'].focus()
                         }
                     />
+                </SView>
+                <SHr h={16} />
+                <SView center>
+                    {this.componentDescuento({
+                        descuento_monto: this.state.descuento_monto,
+                        descuento_porcentaje: this.state.descuento_porcentaje,
+                    })}
                 </SView>
             </SView>
         );

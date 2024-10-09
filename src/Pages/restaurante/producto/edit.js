@@ -184,7 +184,6 @@ export default class edit extends Component {
             resp[k] = this._inputs[k].getValue();
         })
         console.log(resp);
-
     }
 
     renderSaveChange() {
@@ -242,11 +241,15 @@ export default class edit extends Component {
                     <BtnNaranja onPress={() => {
                         this.formProducto.handleGuardar();
 
+                        let producto = this.state.data;
 
                         const faltantes = InputValidator({
-                            data: this.state.data,
+                            data: producto,
                             keys: ["nombre", "key_categoria_producto", "precio"]
                         })
+
+                        console.log(producto);
+
                         if (faltantes.length > 0) {
                             SNotification.send({
                                 title: "Complete lo campos requeridos.",
@@ -255,7 +258,17 @@ export default class edit extends Component {
                                 color: STheme.color.danger,
                             })
                             return;
+                        } 
+
+                        if(producto.descuento_monto > producto.precio){
+                            SNotification.send({
+                                body:  "El descuento monto no puede ser mayor al precio del producto.",
+                                time: 5000,
+                                color: STheme.color.danger,
+                            })
+                            return;
                         }
+
                         SNotification.send({
                             key: "guardando_producto",
                             title: "Producto",
@@ -266,7 +279,7 @@ export default class edit extends Component {
                         SSocket.sendPromise({
                             component: "producto",
                             type: "guardar",
-                            data: this.state.data,
+                            data: producto,
                             key_usuario: Model.usuario.Action.getKey(),
                         }).then(async (e) => {
                             SNotification.send({
@@ -289,7 +302,7 @@ export default class edit extends Component {
                             })
 
                             if (VentanaLista.INSTANCE) {
-                                VentanaLista.INSTANCE.onChangeProducto(this.state.data);
+                                VentanaLista.INSTANCE.onChangeProducto(producto);
                             }
                             this.noPrevent = true;
                             SNavigation.goBack();
