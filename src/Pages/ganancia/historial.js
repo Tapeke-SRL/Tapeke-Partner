@@ -35,7 +35,7 @@ class historial extends Component {
         if (!this.state.data) return <SLoad type='skeleton' col={"xs-12"} height={50} />
         return <SList
             data={this.state.data}
-            order={[{ key: "fecha", order: "desc", peso: 1, }]}
+            order={[{ key: "fecha_on", order: "desc", peso: 1, }]}
             render={(obj) => {
                 return <Conciliacion_item data={obj} />
             }} />

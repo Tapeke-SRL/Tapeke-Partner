@@ -41,7 +41,7 @@ class historialDetalle extends Component {
             type: "getConciliadas",
             key_conciliacion_restaurante: this.pk
         }).then(resp => {
-            this.setState({ dataPedidos: resp.data })
+           this.setState({ dataPedidos: resp.data })
         }).catch(e => {
             console.error(e)
         })

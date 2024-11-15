@@ -56,7 +56,7 @@ class Pedido_item extends Component {
                     {new SDate(fecha, "yyyy-MM-dd").getDayOfWeekJson().textSmall}
                 </SText>
                 <SText fontSize={10} color={STheme.color.gray}>
-                    {fecha}
+                    {new SDate(fecha, "yyyy-MM-dd").toString('dd/MM/yyyy')}
                 </SText>
 
             </SView>

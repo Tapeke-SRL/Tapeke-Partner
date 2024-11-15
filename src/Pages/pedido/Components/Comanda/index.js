@@ -297,7 +297,7 @@ class Comanda extends React.Component {
                     <hr style={{ ...this.styles.separadorAltura }} />
                     <div style={{ ...this.styles.divSpaceBetween }}>
                         <div>
-                            <p style={{ fontSize: 14, fontWeight: 'bold', textAlign: 'center', margin: 0 }}>{`# ${this.data?.key.slice(-6)}`}</p>
+                            <p style={{ fontSize: 14, fontWeight: 'bold', textAlign: 'center', margin: 0 }}>{`# ${this.data?.key.slice(0, 6)}`}</p>
                             <p style={{ fontSize: 8, width: 'auto', textAlign: 'center', margin: 0 }}>Código de pedido</p>
                         </div>
 

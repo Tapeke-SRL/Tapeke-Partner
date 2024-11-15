@@ -39,7 +39,7 @@ class CardCalificacionPedido extends React.Component {
                         </SView>
 
                         <SText fontSize={12}>{new SDate(this.data?.fecha_on).toString("yyyy-MM-dd hh:mm")}</SText>
-                        <SText fontSize={12}>Código de pedido: #{this.data?.key.slice(0, 6)}</SText>
+                        <SText fontSize={12}>Código de pedido: #{this.data?.key_pedido.slice(0, 6)}</SText>
                     </SView>
 
                     <SView flex>
