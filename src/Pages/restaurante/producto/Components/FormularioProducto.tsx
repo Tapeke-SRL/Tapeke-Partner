@@ -234,6 +234,8 @@ export default class FormularioProducto extends Component<any> {
                     <SSwitch
                         key={producto?.key}
                         size={15}
+                        scale={2.3}
+                        color={STheme.color.white}
                         onChange={this.handleChange_descuento.bind(
                             this,
                             producto
@@ -312,7 +314,7 @@ export default class FormularioProducto extends Component<any> {
                     <Input
                         ref={ref => (this._inputs['index'] = ref)}
                         col={'xs-4.5'}
-                        label={'Index'}
+                        label={'Index *'}
                         defaultValue={(data.index ?? '') + ''}
                         filter={(e: any) => {
                             return e.replace(/[^0-9]/g, '');
@@ -388,12 +390,12 @@ export default class FormularioProducto extends Component<any> {
                         ref={ref => (this._inputs['limite_compra'] = ref)}
                         col={'xs-4.5'}
                         defaultValue={data.limite_compra}
-                        label={'Límite de Compra'}
+                        label={'Límite de Compra *'}
                         filter={(e: any) => {
                             return e.replace(/[^0-9]/g, '');
                         }}
                         info={
-                            'Cantidad de productos/items que se podrá comprar en cada pedido'
+                            'Cantidad de productos/items que se podrá comprar en cada pedido, si pones 0 no abra limite.'
                         }
                         placeholder={'0'}
                         keyboardType={'numeric'}
