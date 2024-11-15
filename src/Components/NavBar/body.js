@@ -189,6 +189,7 @@ export default class body extends React.Component {
                         label: "Cerrar sesión", image: require("../../Assets/img/cerrar_sesion.png"), requireUser: true,
                         onPress: () => {
                             // Model._events.CLEAR();
+                            Model.restaurante.Action.select(null);
                             Model.usuario.Action.unlogin();
                             SNavigation.reset("/", { noDir: true });
                             NavBar.close();

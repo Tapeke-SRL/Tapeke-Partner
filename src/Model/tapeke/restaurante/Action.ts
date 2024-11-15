@@ -33,6 +33,11 @@ export default class Action extends SAction {
     }
 
     select(obj) {
+        if(!obj){
+            SStorage.removeItem("rest_select");
+            this._getReducer().rest_select = null;
+            return;
+        }
         SStorage.setItem("rest_select", JSON.stringify(obj));
         this._getReducer().rest_select = obj;
     }
