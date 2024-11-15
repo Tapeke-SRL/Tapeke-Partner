@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { SButtom, SForm, SHr, SIcon, SInput, SNavigation, SPage, SPopup, SText, STheme, SView } from 'servisofts-component';
+import Model from '../Model';
 
 class index extends Component {
     constructor(props) {
@@ -8,9 +9,14 @@ class index extends Component {
         this.state = {
         };
     }
+    componentDidMount() {
+        if (Model.usuario.Action.getUsuarioLog()) {
+            SNavigation.goBack();
+        }
+    }
 
     render() {
-        
+
         return (
             <SPage title={'welcome'} hidden disableScroll >
                 <SView center col={"xs-12"} height>

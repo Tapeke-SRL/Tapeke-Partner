@@ -5,12 +5,18 @@ import { SHr, SIcon, SNavigation, SPage, SPopup, SText, SView } from 'servisofts
 import SectionFooter from './components/SectionFooter';
 import SectionForm from './components/SectionForm';
 import SectionHeader from './components/SectionHeader';
+import Model from '../../Model';
 
 class login extends Component {
     constructor(props) {
         super(props);
         this.state = {
         };
+    }
+    componentDidMount() {
+        if (Model.usuario.Action.getUsuarioLog()) {
+            SNavigation.goBack();
+        }
     }
 
     render() {
