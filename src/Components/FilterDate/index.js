@@ -14,8 +14,6 @@ export default class FilterDate extends Component {
             }
         };
 
-        this.props.onDateChange(this.state.fecha_inicio, this.state.fecha_fin);
-
         this.styleView = {
             margin: 1,
             padding: 2,
@@ -25,6 +23,10 @@ export default class FilterDate extends Component {
         this.styleText = {
             fontSize: 9
         };
+    }
+
+    componentDidMount() {
+        this.props.onDateChange(this.state.fecha_inicio, this.state.fecha_fin);
     }
 
     getFechaAtras(n) {

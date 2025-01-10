@@ -29,8 +29,9 @@ export default class Reducer extends SReducer {
                         console.log("sadasd", rest, pedido);
                         return
                     }
-
+                    
                     Sounds.play();
+                    console.log("debió sonar");
                     SNavigation.navigate("/pedido", { pk: pedido.key });
                 })
             }
