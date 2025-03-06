@@ -323,6 +323,9 @@ class root extends Component {
             }
             return det.map(det => {
                 return Object.values(det.sub_producto_detalle).map(subdet => {
+                    if (subdet.precio && subdet.cantidad) {
+                        precio += (subdet.precio ?? 0 * subdet.cantidad ?? 0) * cantidad ?? 0;
+                    }
                     return <SText color={STheme.color.gray} fontSize={10} key={det.key}>{`${subdet.cantidad ? subdet.cantidad + "x" : ""} ${subdet.nombre} ${subdet.precio > 0 ? "- " + (subdet.precio * subdet.cantidad) + " Bs." : ""}`}</SText>
                 })
             })
@@ -418,7 +421,7 @@ class root extends Component {
 
         if (this.state.data.pedido_producto) {
             Object.values(this.state.data.pedido_producto).map(pp => {
-                total += pp.monto_total_subproducto_detalle
+                total += ((pp.monto_total_subproducto_detalle) * pp.cantidad)
             })
         }
 
@@ -488,10 +491,10 @@ class root extends Component {
         </SView>
     }
 
-    renderButtomAcceptar() {
+    renderButtomEntregar() {
         const data = this.state.data;
         if (!this.state.entregar) return null;
-        if (data.delivery > 0 || data?.state != "listo") return null;
+        // if (data.delivery > 0 || data?.state != "listo") return null; // TODO cambiar para la nueva versión Driver
 
         return (
             <SView col={'xs-12'} center>
@@ -614,7 +617,7 @@ class root extends Component {
             {this.cardState()}
 
             <SHr h={20} />
-            {this.renderButtomAcceptar()}
+            {this.renderButtomEntregar()}
             <SHr h={20} />
             {this.componentSoporte()}
             <SHr h={20} />
