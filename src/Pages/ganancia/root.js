@@ -241,8 +241,9 @@ class root extends Component {
         if (obj?.descuentos) {
             Object.values(obj.descuentos).map((desc) => {
                 if (desc.cobertura) {
-                    let coberturaTapeke = desc.total_descuento_producto * (desc.cobertura ?? 0);
-                    let coberturaPartner = desc.total_descuento_producto - coberturaTapeke;
+                    let descuentoTotal = (desc.total_descuento_producto ?? 0) + (desc.total_descuento_tapeke ?? 0);
+                    let coberturaTapeke = descuentoTotal * (desc.cobertura ?? 0);
+                    let coberturaPartner = descuentoTotal - coberturaTapeke;
 
                     // TODO implementacion de descuentos delivery que cubre partner.
 

@@ -289,7 +289,7 @@ class root extends Component {
                         image: require("../../Assets/img/BOLSA-TAPEKE-MENU-APP.png"),
                         title: "Tapeke",
                         cantidad: data.cantidad,
-                        precio: (data.cantidad * data.precio),
+                        precio: (data.cantidad * data.precio) - data.total_descuento_tapeke,
                         detalle: detalleTapeke
                     })
                     : null
@@ -453,7 +453,7 @@ class root extends Component {
 
     detallePedido() {
         let data = this.state.data
-        let totalTapeke = (data.cantidad * data.precio)
+        let totalTapeke = (data.cantidad * data.precio) - data.total_descuento_tapeke;
         let totalProducto = this.totalProducto()
         let totalSubProd = this.totalSubProductoDetalle();
 
