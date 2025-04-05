@@ -168,7 +168,7 @@ class index extends Component {
 
   hilo() {
     if (!this.isRun) return;
-    new SThread(1000 * 60, "hilo_pedido", true).start(() => {
+    new SThread(1000 * 30, "hilo_pedido", true).start(() => {
       this.hilo();
       Model.horario.Action.getByKeyRestauranteProximo(this.pk, true)
     })

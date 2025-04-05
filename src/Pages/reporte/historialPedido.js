@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { SDate, SHr, SList, SNavigation, SPage, SPopup, SText, STheme, SView, SLoad, SThread } from 'servisofts-component';
+import { SDate, SHr, SList, SNavigation, SPage, SPopup, SText, STheme, SView, SLoad, SThread, SIcon } from 'servisofts-component';
 import Container from '../../Components/Container';
 import SSocket from 'servisofts-socket';
 import Model from '../../Model'
@@ -72,15 +72,27 @@ class historialPedido extends Component {
         // if (!this.state.data) return <SLoad />
 
         return <Container center={false}>
-            <SView>
-                <SHr />
-                <SText font={'Montserrat-Bold'} fontSize={16}>HISTORIAL DE PEDIDO</SText>
-                {/* <SText font={'Montserrat-ExtraBold'} fontSize={16}>HISTORIAL DE PEDIDO</SText> */}
-                <SText font={"Montserrat-SemiBold"} color={STheme.color.primary} fontSize={14}>{restaurante.nombre}</SText>
-                <SHr />
+            <SView flex row style={{justifyContent: 'space-between', alignItems: 'flex-end'}}>
+                <SView>
+                    <SHr />
+                    <SText font={'Montserrat-Bold'} fontSize={16}>HISTORIAL DE PEDIDO</SText>
+                    {/* <SText font={'Montserrat-ExtraBold'} fontSize={16}>HISTORIAL DE PEDIDO</SText> */}
+                    <SText font={"Montserrat-SemiBold"} color={STheme.color.primary} fontSize={14}>{restaurante.nombre}</SText>
+                    <SHr />
+                </SView>
+                <SView onPress={env => {
+                    SNavigation.navigate("/ganancia/tablaPedido", { historialPedido: true, fecha_inicio: this.filterDate.state.fecha_inicio, fecha_fin: this.filterDate.state.fecha_fin });
+                }} center>
+                    <SIcon
+                        name={"Excel"}
+                        fill={STheme.color.text}
+                        width={40}
+                        height={40}
+                    />
+                </SView>
             </SView>
             <SHr />
-            <FilterDate onDateChange={this.handleDateChange} />
+            <FilterDate ref={(ref) => { this.filterDate = ref }} onDateChange={this.handleDateChange} />
             <SHr />
 
             <SView center col={"xs-12"}>

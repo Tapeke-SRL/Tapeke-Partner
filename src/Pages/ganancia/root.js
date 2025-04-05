@@ -547,10 +547,10 @@ class root extends Component {
                     borderRadius: 8
                 }}
                 onPress={() => {
-                    SPopup.dateBetween("Selecciona las fechas", (evt) => {
-                        evt.conciliado = false
-                        SNavigation.navigate("/ganancia/tablaPedido", evt);
-                    });
+                    SNavigation.navigate("/ganancia/tablaPedido", { conciliado: false });
+                    // SPopup.dateBetween("Selecciona las fechas", (evt) => {
+                    //     evt.conciliado = false
+                    // });
                 }}
             >
                 <SText fontSize={12} color={STheme.color.white} bold>Ver tabla pedidos por conciliar</SText>
