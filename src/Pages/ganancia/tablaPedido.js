@@ -4,6 +4,8 @@ import SSocket from 'servisofts-socket'
 import { BuildCustomHeader } from '.'
 import { connect } from 'react-redux'
 import Model from '../../Model'
+import historial from './historial'
+import historialPedido from '../reporte/historialPedido'
 
 class tablaPedido extends Component {
   conciliado;
@@ -14,8 +16,13 @@ class tablaPedido extends Component {
   constructor(props) {
     super(props);
     this.params = SNavigation.getAllParams() ?? {}
+    this.title = ''
     if (SNavigation.getParam("conciliado")) {
-      this.conciliado = JSON.parse(SNavigation.getParam("conciliado"));
+      this.conciliado = SNavigation.getParam("conciliado");
+    }
+
+    if (SNavigation.getParam("historialPedido")) {
+      this.historialPedido = SNavigation.getParam("historialPedido");
     }
   }
 
@@ -28,41 +35,42 @@ class tablaPedido extends Component {
   }
 
   getDatos() {
-    let component;
-    let type;
-
-    if (this.conciliado) {
-      component = "pedido";
-      type = "getConciliadas";
+    let peticion = {};
+    if (this.historialPedido) {
+      peticion = {
+        component: 'pedido',
+        type: 'getByRestauranteEntreFechas',
+        fecha_inicio: this.params.fecha_inicio,
+        fecha_fin: this.params.fecha_fin,
+      };
     } else {
-      component = "pedido";
-      type = "getPendientesConciliacion";
+      peticion = {
+        component: "pedido",
+        type: this.conciliado ? "getConciliadas" : "getPendientesConciliacion",
+      };
+      this.title = this.conciliado ? "conciliados" : "no conciliados";
     }
 
     SSocket.sendPromise({
-      component: component,
-      type: type,
+      ...peticion,
       key_restaurante: Model.restaurante.Action.getSelect()?.key,
       // key_conciliacion_restaurante: this.params.key_conciliacion_restaurante
     }).then(resp => {
+      // if (this.params.fecha_fin && this.params.fecha_inicio) {
+      //   const fechaInicio = new SDate(this.params.fecha_inicio, "yyyy-MM-dd")
+      //   const fechaFin = new SDate(this.params.fecha_fin, "yyyy-MM-dd");
 
-      if (this.params.fecha_fin && this.params.fecha_inicio) {
-        const fechaInicio = new SDate(this.params.fecha_inicio, "yyyy-MM-dd")
-        const fechaFin = new SDate(this.params.fecha_fin, "yyyy-MM-dd");
+      //   let datosFiltrados = Object.values(resp.data).filter(d => {
+      //     let fecha = new SDate(d.fecha, "yyyy-MM-dd")
+      //     if (fecha.isAfter(fechaInicio) && fecha.isBefore(fechaFin)) {
+      //       return d;
+      //     }„ŒŒ
+      //   });
 
-        let datosFiltrados = Object.values(resp.data).filter(d => {
-          let fecha = new SDate(d.fecha, "yyyy-MM-dd")
-          if (fecha.isAfter(fechaInicio) && fecha.isBefore(fechaFin)) {
-            return d;
-          }
-        });
-
-
-        this.setState({ data: datosFiltrados })
-      } else {
-        this.setState({ data: resp })
-      }
-
+      //   this.setState({ data: datosFiltrados })
+      // } else {
+      this.setState({ data: resp.data })
+      // }
     }).catch(e => {
       console.error(e)
     })
@@ -150,19 +158,24 @@ class tablaPedido extends Component {
     let totalDesc = {
       totalDescCubreTapeke: 0,
       totalDescCubrePartner: 0,
-      // porcentajeCubreTapeke: 0,
-      // porcentajeCubrePartner: 0,
+      porcentajeCubreTapeke: 0,
+      porcentajeCubrePartner: 0,
     };
+
 
     if (obj?.descuentos) {
       Object.values(obj.descuentos).map((desc) => {
         if (desc.cobertura) {
-          let coberturaTapeke = desc.total_descuento_producto * (desc.cobertura ?? 0);
-          let coberturaPartner = desc.total_descuento_producto - coberturaTapeke;
+          let descuentoTotal = (desc.total_descuento_producto ?? 0) + (desc.total_descuento_tapeke ?? 0);
+          let coberturaTapeke = descuentoTotal * (desc.cobertura ?? 0);
+          let coberturaPartner = descuentoTotal - coberturaTapeke;
+
+          // TODO implementacion de descuentos delivery que cubre partner.
+
           totalDesc.totalDescCubreTapeke += parseFloat(coberturaTapeke, 2);
           totalDesc.totalDescCubrePartner += parseFloat(coberturaPartner, 2);
-          // totalDesc.porcentajeCubreTapeke = desc.cobertura;
-          // totalDesc.porcentajeCubrePartner = 1 - desc.cobertura;
+          totalDesc.porcentajeCubreTapeke = desc.cobertura;
+          totalDesc.porcentajeCubrePartner = 1 - desc.cobertura;
         }
       });
     }
@@ -281,8 +294,9 @@ class tablaPedido extends Component {
   }
 
   render() {
+
     return <SPage
-      title={`Historial de pedidos ${this.conciliado ? "conciliados" : "no conciliados"}`}
+      title={`Historial de pedidos ${this.title}`}
       disableScroll
     >{this.renderTable()}</SPage>
   }

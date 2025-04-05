@@ -34,7 +34,8 @@ class root extends Component {
         super(props);
         this.state = {
             usuarios: {},
-            timeImage: new Date().getTime()
+            timeImage: new Date().getTime(),
+            entregar: false
         };
         this.pk = SNavigation.getParam('pk');
     }
@@ -52,6 +53,7 @@ class root extends Component {
             this.setState({ entregar: true })
             console.log(e);
         }).catch(e => {
+
         })
 
         // this.loadData()
@@ -287,7 +289,7 @@ class root extends Component {
                         image: require("../../Assets/img/BOLSA-TAPEKE-MENU-APP.png"),
                         title: "Tapeke",
                         cantidad: data.cantidad,
-                        precio: (data.cantidad * data.precio),
+                        precio: (data.cantidad * data.precio) - data.total_descuento_tapeke,
                         detalle: detalleTapeke
                     })
                     : null
@@ -321,6 +323,9 @@ class root extends Component {
             }
             return det.map(det => {
                 return Object.values(det.sub_producto_detalle).map(subdet => {
+                    if (subdet.precio && subdet.cantidad) {
+                        precio += (subdet.precio ?? 0 * subdet.cantidad ?? 0) * cantidad ?? 0;
+                    }
                     return <SText color={STheme.color.gray} fontSize={10} key={det.key}>{`${subdet.cantidad ? subdet.cantidad + "x" : ""} ${subdet.nombre} ${subdet.precio > 0 ? "- " + (subdet.precio * subdet.cantidad) + " Bs." : ""}`}</SText>
                 })
             })
@@ -416,7 +421,7 @@ class root extends Component {
 
         if (this.state.data.pedido_producto) {
             Object.values(this.state.data.pedido_producto).map(pp => {
-                total += pp.monto_total_subproducto_detalle
+                total += ((pp.monto_total_subproducto_detalle) * pp.cantidad)
             })
         }
 
@@ -448,7 +453,7 @@ class root extends Component {
 
     detallePedido() {
         let data = this.state.data
-        let totalTapeke = (data.cantidad * data.precio)
+        let totalTapeke = (data.cantidad * data.precio) - data.total_descuento_tapeke;
         let totalProducto = this.totalProducto()
         let totalSubProd = this.totalSubProductoDetalle();
 
@@ -486,33 +491,14 @@ class root extends Component {
         </SView>
     }
 
-    renderButtomAcceptar() {
+    renderButtomEntregar() {
         const data = this.state.data;
         if (!this.state.entregar) return null;
-        if (data.delivery > 0 && data?.state != "esperando_conductor") return null;
-        if (data.delivery <= 0 && data?.state != "listo") return null;
+        // if (data.delivery > 0 || data?.state != "listo") return null; // TODO cambiar para la nueva versión Driver
 
-        return <SView
-            col={'xs-12'}
-            center
-        >
-            <SHr height={40} />
-            {data.state == 'en_camino' ||
-                data.state == 'entregado' ||
-                data.state == 'no_recogido' ? (
-                <SView
-                    col={'xs-11'}
-                    center
-                    backgroundColor={'#96BE00'}
-                    style={{ borderRadius: 4, overflow: 'hidden' }}
-                >
-                    <SHr height={20} />
-                    <SView col={'xs-11'}>
-                        <PedidoState data={data} />
-                    </SView>
-                    <SHr height={20} />
-                </SView>
-            ) : (
+        return (
+            <SView col={'xs-12'} center>
+                <SHr height={40} />
                 <SButtom
                     style={{
                         backgroundColor: STheme.color.primary,
@@ -525,68 +511,28 @@ class root extends Component {
                             data?.restaurante?.key !=
                             Model.restaurante.Action.getSelect()?.key
                         ) {
-                            SPopup.alert(
-                                'Este pedido es de otro restaurante.'
-                            );
+                            SPopup.alert('Este pedido es de otro restaurante.');
                             SNavigation.reset('/');
                             return;
                         }
-                        var mensaje = '';
-                        if (
-                            data.state != 'listo' &&
-                            data.state != 'esperando_conductor'
-                        ) {
-                            switch (data.state) {
-                                case 'buscando_conductor':
-                                    Popups.Alert.open({
-                                        title: 'No se puede entregar el pedido.',
-                                        label: 'No puede entregar porque seguimos buscando Driver para este pedido',
-                                    });
-                                    break;
-                                case 'pagado':
-                                    Popups.Alert.open({
-                                        title: 'No se puede entregar el pedido.',
-                                        label: 'No puede entregar porque aun no se encuentra listo o es para otro horario.',
-                                    });
-                                    break;
-                                case 'entregado_conductor':
-                                    Popups.Alert.open({
-                                        title: 'No se puede entregar el pedido.',
-                                        label: 'No puede entregar porque este pedido ya fue entregado a un driver.',
-                                    });
-                                    break;
-                                default:
-                                    Popups.Alert.open({
-                                        title: 'No se puede entregar el pedido.',
-                                        label:
-                                            'No puedes entregar el pedido cuando se encuentra en estado ' +
-                                            data.state,
-                                    });
-                                    break;
-                            }
-                        } else {
-                            Model.pedido.Action.entregar(
-                                this.pk,
-                                this.props
-                            )
-                                .then(e => {
-                                    Model.pedido.Action.CLEAR();
-                                    SNavigation.goBack();
-                                })
-                                .catch(e => {
-                                    Popups.Alert.open({
-                                        title: 'No se puede entregar el pedido.',
-                                        label: e.error,
-                                    });
+                        Model.pedido.Action.entregar(this.pk, this.props)
+                            .then(e => {
+                                Model.pedido.Action.CLEAR();
+                                SNavigation.goBack();
+                            })
+                            .catch(e => {
+                                Popups.Alert.open({
+                                    title: 'No se puede entregar el pedido.',
+                                    label: e.error,
                                 });
-                        }
+                            });
                     }}
                 >
                     <SText color={'#fff'}>ENTREGAR</SText>
                 </SButtom>
-            )}
-            <SHr height={40} />
-        </SView>
+                <SHr height={40} />
+            </SView>
+        );
     }
 
     renderConductor() {
@@ -625,14 +571,9 @@ class root extends Component {
     cardState() {
         let state = this.state.data.state;
 
-        let includeState = ["entregado_conductor", "conductor_llego", "entregado"];
-        let excludeState = ["cancelado", "no_recogido", "anulado"];
-
         let textoState = ""
 
-        if (includeState.includes(state) || excludeState.includes(state)) {
-            textoState = `${state.replace("_", " ")}` 
-        }
+        textoState = `${state.replace("_", " ").toUpperCase()}`
 
         return <SView center card padding={15}>
             <SText font={"Montserrat-SemiBold"} color={STheme.color.primary}>{`${textoState}`}</SText>
@@ -673,17 +614,10 @@ class root extends Component {
                     : null
             }
 
-            {
-                !validateState() ?
-                    this.cardState()
-                    : null
-            }
+            {this.cardState()}
 
-            {/* <SView center border={"#FF00FF"}>
-                <SText font={'Montserrat-Bold'}>Aca va el componente mapa para el rastreo y botónes de cambio de estados</SText>
-            </SView> */}
             <SHr h={20} />
-            {this.renderButtomAcceptar()}
+            {this.renderButtomEntregar()}
             <SHr h={20} />
             {this.componentSoporte()}
             <SHr h={20} />

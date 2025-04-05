@@ -118,8 +118,11 @@ class Comanda extends React.Component {
         if (obj?.descuentos) {
             Object.values(obj.descuentos).map((desc) => {
                 if (desc.cobertura) {
-                    let coberturaTapeke = desc.total_descuento_producto * (desc.cobertura ?? 0);
-                    let coberturaPartner = desc.total_descuento_producto - coberturaTapeke;
+                    // let descuentoTotal = (desc.total_descuento_producto ?? 0) + (desc.total_descuento_tapeke ?? 0);
+                    let descuentoTotal = (desc.total_descuento_producto ?? 0);
+                    let coberturaTapeke = descuentoTotal * (desc.cobertura ?? 0);
+                    let coberturaPartner = descuentoTotal - coberturaTapeke;
+
 
                     totalDesc.totalDescCubreTapeke += parseFloat(coberturaTapeke, 2);
                     totalDesc.totalDescCubrePartner += parseFloat(coberturaPartner, 2);
@@ -154,7 +157,7 @@ class Comanda extends React.Component {
             total: 0,
         }
 
-        totales.totalTapeke = (this.data?.cantidad * this.data?.precio);
+        totales.totalTapeke = ((this.data?.cantidad * this.data?.precio) -  this.data.total_descuento_tapeke);
 
         if (!!this.data?.pedido_producto) {
             Object.values(this.data?.pedido_producto).map(prod => {
@@ -177,7 +180,7 @@ class Comanda extends React.Component {
         let totalDesc = this.calcularDescuentoCubreTapeke(this.data);
         totales.totalDescCubrePartner = totalDesc.totalDescCubrePartner;
 
-        totales.total = (totales.totalTapeke + totales.totalProducto + totales.totalSubProducto) - totales.totalDescCubrePartner;
+        totales.total = (totales.totalTapeke + totales.totalProducto + totales.totalSubProducto);
         return totales;
     }
 
@@ -340,7 +343,7 @@ class Comanda extends React.Component {
 
                                 <div style={{ ...this.styles.divSpaceBetween }}>
                                     <p style={{ ...this.styles.textClass }}>{this.data.cantidad} x     -</p>
-                                    <p style={{ ...this.styles.textClass, textAlign: 'right' }}>Bs. {SMath.formatMoney(this.data.precio * this.data.cantidad)}</p>
+                                    <p style={{ ...this.styles.textClass, textAlign: 'right' }}>Bs. {SMath.formatMoney((this.data.precio * this.data.cantidad)  -  this.data.total_descuento_tapeke)}</p>
                                 </div>
                             </>
                             : null

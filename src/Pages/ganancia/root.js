@@ -241,8 +241,9 @@ class root extends Component {
         if (obj?.descuentos) {
             Object.values(obj.descuentos).map((desc) => {
                 if (desc.cobertura) {
-                    let coberturaTapeke = desc.total_descuento_producto * (desc.cobertura ?? 0);
-                    let coberturaPartner = desc.total_descuento_producto - coberturaTapeke;
+                    let descuentoTotal = (desc.total_descuento_producto ?? 0) + (desc.total_descuento_tapeke ?? 0);
+                    let coberturaTapeke = descuentoTotal * (desc.cobertura ?? 0);
+                    let coberturaPartner = descuentoTotal - coberturaTapeke;
 
                     // TODO implementacion de descuentos delivery que cubre partner.
 
@@ -546,10 +547,10 @@ class root extends Component {
                     borderRadius: 8
                 }}
                 onPress={() => {
-                    SPopup.dateBetween("Selecciona las fechas", (evt) => {
-                        evt.conciliado = false
-                        SNavigation.navigate("/ganancia/tablaPedido", evt);
-                    });
+                    SNavigation.navigate("/ganancia/tablaPedido", { conciliado: false });
+                    // SPopup.dateBetween("Selecciona las fechas", (evt) => {
+                    //     evt.conciliado = false
+                    // });
                 }}
             >
                 <SText fontSize={12} color={STheme.color.white} bold>Ver tabla pedidos por conciliar</SText>
