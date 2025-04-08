@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Configurar variables
+SSH_USER="rickypazd"
+SSH_HOST="192.168.3.3"
+REMOTE_PATH="~/Documents/GitHub/Tapeke-SRL/Tapeke-Partner/android/app/build/outputs/apk/debug/app-debug.apk"
+LOCAL_PATH="./android/app/build/outputs/apk/debug/"
+
+# Crear el directorio local si no existe
+mkdir -p "$LOCAL_PATH"
+
+# Copiar el APK desde el servidor remoto
+scp "$SSH_USER@$SSH_HOST:$REMOTE_PATH" "$LOCAL_PATH"
+
+# Verificar si la copia fue exitosa
+if [ $? -eq 0 ]; then
+    echo "✅ APK copiado correctamente a $LOCAL_PATH"
+else
+    echo "❌ Error al copiar el APK"
+    exit 1
+fi
