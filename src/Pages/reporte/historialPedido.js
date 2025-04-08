@@ -34,6 +34,8 @@ class historialPedido extends Component {
 
 
     handleDateChange = (fecha_inicio, fecha_fin) => {
+        this.fecha_inicio = fecha_inicio;
+        this.fecha_fin = fecha_fin
         SSocket.sendPromise({
             component: 'pedido',
             type: 'getByRestauranteEntreFechas',
@@ -113,8 +115,11 @@ class historialPedido extends Component {
         return (
             <SPage
                 hidden
-                onRefresh={() => {
-                    this.getData()
+                onRefresh={(e) => {
+                    if(this.fecha_inicio && this.fecha_fin){
+                        this.handleDateChange(this.fecha_inicio, this.fecha_fin)
+                    }
+                    
                 }}
             >
                 {this.renderContenido()}
