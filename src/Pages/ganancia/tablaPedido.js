@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { SDate, SLoad, SNavigation, SPage, SMath, STable2, SView } from 'servisofts-component'
+import { SDate, SLoad, SNavigation, SPage, SMath, STable2, SPopup } from 'servisofts-component'
 import SSocket from 'servisofts-socket'
 import { BuildCustomHeader } from '.'
 import { connect } from 'react-redux'
@@ -54,23 +54,27 @@ class tablaPedido extends Component {
     SSocket.sendPromise({
       ...peticion,
       key_restaurante: Model.restaurante.Action.getSelect()?.key,
-      // key_conciliacion_restaurante: this.params.key_conciliacion_restaurante
     }).then(resp => {
-      // if (this.params.fecha_fin && this.params.fecha_inicio) {
-      //   const fechaInicio = new SDate(this.params.fecha_inicio, "yyyy-MM-dd")
-      //   const fechaFin = new SDate(this.params.fecha_fin, "yyyy-MM-dd");
-
-      //   let datosFiltrados = Object.values(resp.data).filter(d => {
-      //     let fecha = new SDate(d.fecha, "yyyy-MM-dd")
-      //     if (fecha.isAfter(fechaInicio) && fecha.isBefore(fechaFin)) {
-      //       return d;
-      //     }„ŒŒ
-      //   });
-
-      //   this.setState({ data: datosFiltrados })
-      // } else {
-      this.setState({ data: resp.data })
-      // }
+      let keys = [...new Set(
+        Object.values(resp.data)
+          .flatMap(a => [a.key_usuario, a.key_conductor])
+          .filter(key => key !== null)
+      )];
+      SSocket.sendPromise({
+        version: "2.0",
+        service: "usuario",
+        component: "usuario",
+        type: "getAllKeys",
+        keys: keys,
+      }).then(e2 => {
+        Object.values(resp.data).map(a => {
+          a.usuario = e2?.data[a.key_usuario]?.usuario ?? {}
+          a.usuario_conductor = e2?.data[a.key_conductor]?.usuario ?? {}
+        })
+        this.setState({ data: resp.data })
+      }).catch(e2 => {
+        SPopup.alert(e2.error)
+      })
     }).catch(e => {
       console.error(e)
     })
@@ -255,13 +259,8 @@ class tablaPedido extends Component {
   }
 
   renderTable() {
-    // let users = Model.usuario.Action.getAll()
     if (!this.state.data) return <SLoad />
-    // if (!users) return <SLoad />
     return <STable2
-      cellStyle={{
-        height:30
-      }}
       header={
         [
           { key: "index", label: "#" },
@@ -269,8 +268,8 @@ class tablaPedido extends Component {
           { key: "fecha", label: "Fecha de Entrega", order: "desc", width: 100 },
           { key: "key", label: "Key Pedido", width: 250 },
           { key: "state", label: "Estado", width: 80 },
-          // { key: "key_usuario", label: "Usuario", width: 200, render: a => a ? users[a]?.Nombres + " " + users[a]?.Apellidos : "No se pillo el usuario" },
-          // { key: "key_conductor", label: "Driver", width: 200, render: a => a ? users[a]?.Nombres + " " + users[a]?.Apellidos : "Recoger del lugar" },
+          { key: "usuario", label: "Usuario", width: 250, center: true, render: val => `${val.Nombres} ${val.Apellidos}` },
+          { key: "usuario_conductor", label: "Driver", width: 250, center: true, render: val => Object.values(val).length > 0 ? `${val.Nombres} ${val.Apellidos}` : "No tiene driver" },
 
           { key: "cantidad", label: "Cantidad Tapekes", width: 110 },
           { key: "precio", label: "Precio Unitario Tapekes", width: 150, render: a => "Bs. " + SMath.formatMoney(a, 2) },
