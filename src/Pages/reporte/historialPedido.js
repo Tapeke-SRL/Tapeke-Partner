@@ -22,8 +22,10 @@ class historialPedido extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            loading: false,
         };
         this.params = SNavigation.getAllParams();
+
     }
 
     componentDidMount() {
@@ -36,6 +38,7 @@ class historialPedido extends Component {
     handleDateChange = (fecha_inicio, fecha_fin) => {
         this.fecha_inicio = fecha_inicio;
         this.fecha_fin = fecha_fin
+        this.setState({ loading: true })
         SSocket.sendPromise({
             component: 'pedido',
             type: 'getByRestauranteEntreFechas',
@@ -43,9 +46,11 @@ class historialPedido extends Component {
             fecha_inicio: fecha_inicio,
             fecha_fin: fecha_fin
         }).then(rest => {
+            this.setState({ loading: false })
             this.getUser(rest.data);
             this.setState({ data: rest.data })
         }).catch(e => {
+            this.setState({ loading: false })
             console.log(e.data);
         })
     };
@@ -74,7 +79,7 @@ class historialPedido extends Component {
         // if (!this.state.data) return <SLoad />
 
         return <Container center={false}>
-            <SView flex row style={{justifyContent: 'space-between', alignItems: 'flex-end'}}>
+            <SView flex row style={{ justifyContent: 'space-between', alignItems: 'flex-end' }}>
                 <SView>
                     <SHr />
                     <SText font={'Montserrat-Bold'} fontSize={16}>HISTORIAL DE PEDIDO</SText>
@@ -97,17 +102,24 @@ class historialPedido extends Component {
             <FilterDate ref={(ref) => { this.filterDate = ref }} onDateChange={this.handleDateChange} />
             <SHr />
 
-            <SView center col={"xs-12"}>
-                <SList
-                    data={this.state.data}
-                    limit={10}
-                    order={[{ key: "fecha_on", type: "date", order: "desc" }]}
-                    render={(obj) => {
-                        let usuario = this.state.usuarios ? this.state.usuarios[obj.key_usuario]?.usuario : false;
-                        return <CardHistorialPedido data={obj} usuario={usuario} />
-                    }}
-                />
-            </SView>
+            {
+                this.state.loading ?
+                    <SView col={"xs-12"} center>
+                        <SLoad />
+                    </SView>
+                    : <SView center col={"xs-12"}>
+                        <SList
+                            data={this.state.data}
+                            limit={10}
+                            order={[{ key: "fecha_on", type: "date", order: "desc" }]}
+                            render={(obj) => {
+                                let usuario = this.state.usuarios ? this.state.usuarios[obj.key_usuario]?.usuario : false;
+                                return <CardHistorialPedido data={obj} usuario={usuario} />
+                            }}
+                        />
+                    </SView>
+            }
+
         </Container>
     }
 
@@ -116,10 +128,10 @@ class historialPedido extends Component {
             <SPage
                 hidden
                 onRefresh={(e) => {
-                    if(this.fecha_inicio && this.fecha_fin){
+                    if (this.fecha_inicio && this.fecha_fin) {
                         this.handleDateChange(this.fecha_inicio, this.fecha_fin)
                     }
-                    
+
                 }}
             >
                 {this.renderContenido()}
