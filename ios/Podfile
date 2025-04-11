@@ -88,7 +88,7 @@ post_install do |installer|
       config.build_settings['ENABLE_BITCODE'] = 'NO' 
     end
 
-  case target.name
+    case target.name
     when 'RCT-Folly'
       target.build_configurations.each do |config|
         # config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '9.0'
@@ -107,13 +107,14 @@ post_install do |installer|
         config.build_settings['OTHER_CPLUSPLUSFLAGS'] << '-DFMT_USE_CHAR8_T=0'
         config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
       end
-    end
     when 'hermes'
       target.build_configurations.each do |config|
+        config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
+        config.build_settings['CLANG_CXX_LIBRARY'] = 'libc++'
         config.build_settings['ENABLE_BITCODE'] = 'NO' 
       end
     end
-  end
+
 
   # Asegurar que las bibliotecas estándar de Swift están incluidas
   installer.aggregate_targets.each do |target|
