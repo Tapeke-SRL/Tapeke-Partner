@@ -15,13 +15,13 @@ jobs:
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
         run: .github/actions/decode_secrets.sh $SECRET_KEY
-     
-      - run: .github/actions/ios_create_keychain.sh
-
+      
       - name: Setup Xcode version
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: '15.3'
+
+  
       - name: Instalando el Node.js
         uses: actions/setup-node@v4
         with:
@@ -31,6 +31,7 @@ jobs:
 
       - run: npm ci -f
       - run: ./bin/version
+      - run: .github/actions/ios_create_keychain.sh
       - run: sudo gem install cocoapods -v 1.16.2
       # - run: grep -rl "s.dependency 'React/Core'" node_modules/ | xargs sed -i '' 's=React/Core=React-Core=g'
       - name: Limpiar Pods
