@@ -35,8 +35,6 @@ jobs:
       # - run: grep -rl "s.dependency 'React/Core'" node_modules/ | xargs sed -i '' 's=React/Core=React-Core=g'
       - name: Limpiar Pods
         run: |
-          rm -rf ~/Library/Caches/CocoaPods
-          rm -rf ios/Pods
           rm -rf ios/Podfile.lock
           
       - run: cd ios && pod install --repo-update

@@ -716,6 +716,7 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 10452;
 				DEVELOPMENT_TEAM = L7U7L69RH8;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = L7U7L69RH8;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Pods/GooglePlaces/Frameworks",
@@ -736,6 +737,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.servisofts.tapekeapprestaurante;
 				PRODUCT_NAME = tapeke_restaurante_app;
 				PROVISIONING_PROFILE_SPECIFIER = tapeke_partner;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tapeke_partner;
 				SWIFT_OBJC_BRIDGING_HEADER = "tapeke_restaurante_app-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
