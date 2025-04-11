@@ -46,9 +46,10 @@ target 'tapeke_restaurante_app' do
   config = use_native_modules!
   flags = get_default_flags()
   use_react_native!(:path => config[:reactNativePath],
-  :hermes_enabled => flags[:hermes_enabled],
-  # :fabric_enabled => flags[:fabric_enabled],
-  :fabric_enabled => false,
+  :hermes_enabled => false,
+  # :hermes_enabled => flags[:hermes_enabled],
+  :fabric_enabled => flags[:fabric_enabled],
+  # :fabric_enabled => false,
   :flipper_configuration => flipper_config,
   :app_path => "#{Pod::Config.instance.installation_root}/..",
   )
