@@ -462,7 +462,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#export NODE_BINARY=node\nexport NODE_BINARY=/Users/eportillo/.nvm/versions/node/v18.18.0/bin/node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
+			shellScript = "export NODE_BINARY=node\n#export NODE_BINARY=/Users/eportillo/.nvm/versions/node/v18.18.0/bin/node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		5740B59B80219320E6163D67 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -593,7 +593,7 @@
 				CODE_SIGN_ENTITLEMENTS = tapeke_restaurante_app/tapeke_restaurante_app.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10449;
+				CURRENT_PROJECT_VERSION = 10453;
 				DEVELOPMENT_TEAM = L7U7L69RH8;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -688,7 +688,7 @@
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/servisofts-socket\"",
 					/usr/lib/swift,
 				);
-				MARKETING_VERSION = 1.4.49;
+				MARKETING_VERSION = 1.4.53;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -714,8 +714,9 @@
 				CODE_SIGN_ENTITLEMENTS = tapeke_restaurante_app/tapeke_restaurante_appRelease.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10449;
+				CURRENT_PROJECT_VERSION = 10453;
 				DEVELOPMENT_TEAM = L7U7L69RH8;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = L7U7L69RH8;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Pods/GooglePlaces/Frameworks",
@@ -726,7 +727,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Tapeke Partner";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.4.49;
+				MARKETING_VERSION = 1.4.53;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -736,6 +737,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.servisofts.tapekeapprestaurante;
 				PRODUCT_NAME = tapeke_restaurante_app;
 				PROVISIONING_PROFILE_SPECIFIER = tapeke_partner;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tapeke_partner;
 				SWIFT_OBJC_BRIDGING_HEADER = "tapeke_restaurante_app-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

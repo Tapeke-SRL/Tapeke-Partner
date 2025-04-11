@@ -261,6 +261,9 @@ class tablaPedido extends Component {
   renderTable() {
     if (!this.state.data) return <SLoad />
     return <STable2
+      cellStyle={{
+        height:30
+      }}
       header={
         [
           { key: "index", label: "#" },
