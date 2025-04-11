@@ -21,7 +21,7 @@ export default class DetalleBox2 extends Component {
     }
 
     renderDetallePago() {
-        const { payment_type, precio, cantidad, delivery, descuentos, total_descuento_delivery, total_descuento_producto, pedido_producto, monto_total, monto_total_subproducto_detalle } = this.props.data;
+        const { payment_type, precio, cantidad, delivery, descuentos, total_descuento_delivery, total_descuento_producto, pedido_producto, monto_total, monto_total_subproducto_detalle, tarifa_servicio } = this.props.data;
         let delivery_incentivos = delivery;
         if (this.props.data.incentivos) {
             this.props.data.incentivos.map(a => delivery_incentivos += a.monto)
@@ -61,10 +61,25 @@ export default class DetalleBox2 extends Component {
                 </SView>
             })}
             <SHr height={this.props.interline} />
-            <SView row col={"xs-12"}>
-                <SText col={"xs-6"} fontSize={this.props.fontSize}>Delivery</SText>
-                <SText col={"xs-6"} fontSize={this.props.fontSize} style={{ alignItems: 'flex-end', }} >Bs. {SMath.formatMoney(delivery_incentivos - (total_descuento_delivery ?? 0))}</SText>
-            </SView>
+
+            {
+                tarifa_servicio ?
+                    <SView row col={"xs-12"}>
+                        <SText col={"xs-6"} fontSize={this.props.fontSize}>Tarifa de servicio</SText>
+                        <SText col={"xs-6"} fontSize={this.props.fontSize} style={{ alignItems: 'flex-end', }} >Bs. {SMath.formatMoney(tarifa_servicio.monto)}</SText>
+                    </SView>
+                    : null
+            }
+
+            {
+                delivery ?
+                    <SView row col={"xs-12"}>
+                        <SText col={"xs-6"} fontSize={this.props.fontSize}>Delivery</SText>
+                        <SText col={"xs-6"} fontSize={this.props.fontSize} style={{ alignItems: 'flex-end', }} >Bs. {SMath.formatMoney(delivery_incentivos - (total_descuento_delivery ?? 0) - tarifa_servicio.monto)}</SText>
+                    </SView>
+                    : null
+            }
+
             <SHr height={this.props.interline} />
             <SHr height={1} color={STheme.color.lightGray} />
             <SHr height={this.props.interline} />
