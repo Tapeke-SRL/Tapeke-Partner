@@ -1,7 +1,7 @@
 name: "CI/CD SERVISOFTS - IOS"
 on:
   push:
-    branches: ["_contexto_fun_necesarias"]
+    branches: ["contexto_fun_necesarias"]
 
 jobs:
   compile_ios:
