@@ -85,6 +85,7 @@ post_install do |installer|
       config.build_settings["ONLY_ACTIVE_ARCH"] = "NO"
       config.build_settings['OTHER_CPLUSPLUSFLAGS'] ||= ['$(inherited)']
       config.build_settings['OTHER_CPLUSPLUSFLAGS'] << '-DFMT_USE_CHAR8_T=0'
+      config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
     end
 
     case target.name
