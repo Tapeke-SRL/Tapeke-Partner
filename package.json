@@ -6,7 +6,8 @@
     "start": "react-native start",
     "build": "react-scripts build",
     "web": "react-scripts start",
-    "test": "bin/test"
+    "test": "bin/test",
+    "postinstall": "patch-package"
   },
   "author": "servisofts",
   "license": "ISC",
@@ -80,6 +81,8 @@
     "@types/react": "18.2.0",
     "@types/react-native": "^0.71.4",
     "metro-react-native-babel-preset": "0.73.8",
+    "patch-package": "^8.0.0",
+    "postinstall-postinstall": "^2.1.0",
     "react-scripts": "^5.0.1",
     "typescript": "4.8.4"
   },
