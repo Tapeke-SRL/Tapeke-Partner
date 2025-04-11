@@ -593,7 +593,7 @@
 				CODE_SIGN_ENTITLEMENTS = tapeke_restaurante_app/tapeke_restaurante_app.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10452;
+				CURRENT_PROJECT_VERSION = 10453;
 				DEVELOPMENT_TEAM = L7U7L69RH8;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -688,7 +688,7 @@
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/servisofts-socket\"",
 					/usr/lib/swift,
 				);
-				MARKETING_VERSION = 1.4.52;
+				MARKETING_VERSION = 1.4.53;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -714,7 +714,7 @@
 				CODE_SIGN_ENTITLEMENTS = tapeke_restaurante_app/tapeke_restaurante_appRelease.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10452;
+				CURRENT_PROJECT_VERSION = 10453;
 				DEVELOPMENT_TEAM = L7U7L69RH8;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = L7U7L69RH8;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -727,7 +727,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Tapeke Partner";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.4.52;
+				MARKETING_VERSION = 1.4.53;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
