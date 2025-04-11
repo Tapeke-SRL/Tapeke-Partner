@@ -106,10 +106,8 @@ class index extends Component {
           if (user_rest.key_rol != restSelectRol || !this.remplasoElRol) {
             this.remplasoElRol = true;
             Model.restaurante.Action.select(this.data);
-
           }
         }
-
       }
     }
     // console.log("Mi rol", restSelectRol);
@@ -428,8 +426,6 @@ class index extends Component {
       let montoTotal = 0;
       montoTotal += obj.total_productos
       montoTotal += ((obj.cantidad * obj.precio) - obj.total_descuento_tapeke)
-
-
 
       // var dataUsuario = Model.usuario.Action.getByKey(obj.key_usuario);
       var dataUsuario = this.state.usuarios[obj.key_usuario]?.usuario ?? {}
